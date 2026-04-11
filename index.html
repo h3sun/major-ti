@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>认知范式识别系统 · Major-TI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #fafaf8; --surface: #fff; --text-primary: #1a1a1a;
+      --text-secondary: #5a5a5a; --text-muted: #9b9b9b;
+      --accent: #1a1a1a; --border: #e8e8e4; --hover-bg: #f4f4f0;
+      --radius: 12px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans SC','PingFang SC',sans-serif;
+      background: var(--bg); color: var(--text-primary);
+      min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+    }
+    #progress-bar-wrap {
+      position: fixed; top:0; left:0; right:0;
+      height:3px; background:var(--border); z-index:100; display:none;
+    }
+    #progress-bar-fill { height:100%; background:var(--accent); transition:width .4s ease; width:0; }
+    .site-header {
+      width:100%; max-width:740px; padding:28px 24px 0;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .logo {
+      font-family:'Noto Serif SC',serif; font-size:14px; font-weight:600;
+      letter-spacing:.05em; opacity:.6;
+    }
+    .q-counter { font-size:13px; color:var(--text-muted); display:none; }
+    .container { width:100%; max-width:740px; padding:0 24px 80px; flex:1; }
+    .screen { display:none; }
+    .screen.active { display:block; }
+    .fade-in { animation:fadeIn .3s forwards; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+
+    /* ── Landing ── */
+    #screen-landing { padding-top:72px; text-align:center; }
+    .landing-badge {
+      display:inline-block; font-size:11px; font-weight:500; letter-spacing:.15em;
+      text-transform:uppercase; color:var(--text-muted);
+      border:1px solid var(--border); border-radius:100px; padding:5px 14px; margin-bottom:28px;
+    }
+    .landing-title {
+      font-family:'Noto Serif SC',serif;
+      font-size:clamp(28px,5.5vw,44px); font-weight:700; line-height:1.25; margin-bottom:20px;
+    }
+    .landing-sub {
+      font-size:15px; font-weight:300; color:var(--text-secondary);
+      line-height:1.9; max-width:500px; margin:0 auto 12px;
+    }
+    .landing-note { font-size:12px; color:var(--text-muted); margin-bottom:44px; font-style:italic; }
+    .landing-stats { display:flex; gap:28px; justify-content:center; margin-bottom:44px; flex-wrap:wrap; }
+    .stat-item { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .stat-num { font-family:'Noto Serif SC',serif; font-size:22px; font-weight:700; }
+    .stat-label { font-size:11px; color:var(--text-muted); }
+    .btn-start {
+      display:inline-block; background:var(--accent); color:#fff;
+      font-size:15px; font-weight:500; padding:14px 44px;
+      border-radius:100px; border:none; cursor:pointer;
+      letter-spacing:.03em; font-family:inherit;
+      transition:opacity .2s,transform .15s;
+    }
+    .btn-start:hover { opacity:.82; transform:translateY(-1px); }
+    .landing-chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:44px; }
+    .dim-chip {
+      font-size:11px; padding:5px 12px;
+      border:1px solid var(--border); border-radius:100px; color:var(--text-muted);
+    }
+
+    /* ── Transition ── */
+    #screen-transition { padding-top:80px; text-align:center; }
+    .trans-eyebrow {
+      font-size:11px; font-weight:600; letter-spacing:.15em; text-transform:uppercase;
+      color:var(--text-muted); margin-bottom:20px;
+    }
+    .trans-title {
+      font-family:'Noto Serif SC',serif;
+      font-size:clamp(22px,4vw,32px); font-weight:700; line-height:1.4; margin-bottom:12px;
+    }
+    .trans-sub { font-size:14px; color:var(--text-secondary); margin-bottom:44px; line-height:1.8; }
+    .trans-cards { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:44px; }
+    .trans-card {
+      padding:20px 28px; border-radius:var(--radius);
+      border:2px solid; min-width:140px;
+      display:flex; flex-direction:column; align-items:center; gap:6px;
+    }
+    .trans-card-label { font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; opacity:.6; }
+    .trans-card-name { font-family:'Noto Serif SC',serif; font-size:18px; font-weight:700; }
+    .trans-note {
+      font-size:13px; color:var(--text-muted); margin-bottom:40px;
+      max-width:400px; margin-left:auto; margin-right:auto; line-height:1.8;
+    }
+    .btn-continue {
+      background:var(--accent); color:#fff; font-size:15px; font-weight:500;
+      padding:13px 40px; border-radius:100px; border:none; cursor:pointer;
+      font-family:inherit; transition:opacity .2s,transform .15s;
+    }
+    .btn-continue:hover { opacity:.82; transform:translateY(-1px); }
+
+    /* ── Question ── */
+    #screen-question { padding-top:48px; }
+    .q-meta {
+      display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
+    }
+    .btn-back {
+      font-size:13px; color:var(--text-muted); background:none; border:none;
+      cursor:pointer; font-family:inherit; padding:0;
+      transition:color .15s; visibility:hidden;
+    }
+    .btn-back.visible { visibility:visible; }
+    .btn-back:hover { color:var(--text-primary); }
+    .q-type-badge {
+      font-size:10px; font-weight:600; letter-spacing:.12em;
+      text-transform:uppercase; padding:3px 9px; border-radius:100px; border:1px solid;
+    }
+    .badge-choice { color:#e8623a; border-color:#e8623a; }
+    .badge-tf { color:#7c3aed; border-color:#7c3aed; }
+    .q-dim-label {
+      font-size:11px; color:var(--text-muted); font-weight:500;
+      letter-spacing:.1em; text-transform:uppercase;
+    }
+    .q-phase-tag {
+      font-size:10px; padding:2px 8px; border-radius:100px;
+      background:#fef3c7; color:#92400e; font-weight:600; letter-spacing:.06em;
+    }
+    .q-text {
+      font-family:'Noto Serif SC',serif;
+      font-size:clamp(17px,3vw,22px); font-weight:600; line-height:1.7;
+      margin-bottom:32px;
+    }
+    .options-list { display:flex; flex-direction:column; gap:10px; }
+    .option-btn {
+      display:flex; align-items:flex-start; gap:14px; padding:16px 20px;
+      background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius);
+      cursor:pointer; text-align:left; width:100%; font-family:inherit;
+      transition:border-color .15s,background .15s,transform .1s;
+    }
+    .option-btn:hover { border-color:var(--accent); background:var(--hover-bg); transform:translateX(3px); }
+    .option-btn.selected { border-color:var(--accent); background:var(--hover-bg); }
+    .option-text { font-size:14px; line-height:1.75; color:var(--text-primary); font-weight:400; }
+    .tf-container { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:8px; }
+    .tf-btn {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:8px; padding:28px 16px; border:1.5px solid var(--border); border-radius:var(--radius);
+      cursor:pointer; background:var(--surface); font-family:inherit;
+      font-size:18px; font-weight:600; transition:border-color .15s,background .15s,transform .1s;
+    }
+    .tf-btn:hover { transform:translateY(-2px); }
+    .tf-btn-true:hover  { border-color:#16a34a; background:#f0fdf4; color:#16a34a; }
+    .tf-btn-false:hover { border-color:#dc2626; background:#fef2f2; color:#dc2626; }
+    .tf-btn.selected-true  { border-color:#16a34a; background:#f0fdf4; color:#16a34a; }
+    .tf-btn.selected-false { border-color:#dc2626; background:#fef2f2; color:#dc2626; }
+    .tf-btn-unknown:hover  { border-color:#6b7280; background:#f9fafb; color:#6b7280; }
+    .tf-btn.selected-unknown { border-color:#6b7280; background:#f9fafb; color:#6b7280; }
+    .tf-icon { font-size:28px; }
+    .tf-label { font-size:13px; font-weight:400; color:var(--text-muted); }
+
+    /* ── Result ── */
+    #screen-result { padding-top:48px; }
+    .result-header-grid {
+      display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px;
+    }
+    @media(max-width:520px){ .result-header-grid{grid-template-columns:1fr} }
+    .result-card {
+      padding:24px; border-radius:var(--radius); border:1.5px solid var(--border); background:var(--surface);
+    }
+    .rc-label {
+      font-size:10px; font-weight:600; letter-spacing:.15em; text-transform:uppercase;
+      color:var(--text-muted); margin-bottom:10px;
+    }
+    .rc-value { font-family:'Noto Serif SC',serif; font-size:clamp(18px,3vw,24px); font-weight:700; margin-bottom:4px; }
+    .rc-en { font-size:12px; color:var(--text-muted); margin-bottom:12px; }
+    .rc-desc { font-size:13px; line-height:1.8; color:var(--text-secondary); }
+    .score-pill {
+      display:inline-block; font-size:11px; font-weight:600;
+      padding:3px 10px; border-radius:100px; color:#fff; margin-bottom:10px;
+    }
+    .spec-chart { margin-bottom:28px; }
+    .spec-title {
+      font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+      color:var(--text-muted); margin-bottom:14px;
+    }
+    .spec-row { display:flex; flex-direction:column; gap:10px; }
+    .spec-item { display:flex; flex-direction:column; gap:5px; }
+    .spec-header { display:flex; justify-content:space-between; align-items:baseline; }
+    .spec-name { font-size:13px; font-weight:500; }
+    .spec-pct { font-size:12px; color:var(--text-muted); }
+    .spec-bar-bg { height:5px; background:var(--border); border-radius:100px; overflow:hidden; }
+    .spec-bar-fill { height:100%; border-radius:100px; transition:width 1s cubic-bezier(.16,1,.3,1); width:0; }
+    .tf-summary {
+      padding:20px 24px; background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--radius); margin-bottom:28px;
+    }
+    .tf-summary-title {
+      font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+      color:var(--text-muted); margin-bottom:14px;
+    }
+    .tf-result-list { display:flex; flex-direction:column; gap:8px; }
+    .tf-result-row { display:flex; gap:10px; align-items:flex-start; font-size:13px; line-height:1.6; color:var(--text-secondary); }
+    .tf-mark { flex-shrink:0; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; margin-top:1px; }
+    .tf-correct { background:#16a34a; }
+    .tf-incorrect { background:#dc2626; }
+    .tf-unknown { background:#6b7280; }
+    .result-quote { font-family:'Noto Serif SC',serif; font-size:14px; color:var(--text-muted); text-align:center; margin:0 0 36px; padding:0 12px; line-height:1.8; font-style:italic; }
+    .btn-retry {
+      background:transparent; color:var(--text-primary); font-size:14px; font-weight:500;
+      padding:12px 32px; border-radius:100px; border:1.5px solid var(--border);
+      cursor:pointer; font-family:inherit; transition:border-color .2s,background .2s;
+    }
+    .btn-retry:hover { border-color:var(--accent); background:var(--hover-bg); }
+    @media(max-width:480px){ .site-header{padding:18px 16px 0} .container{padding:0 16px 60px} }
+  </style>
+</head>
+<body>
+<div id="progress-bar-wrap"><div id="progress-bar-fill"></div></div>
+<header class="site-header">
+  <div class="logo">Major-TI</div>
+  <div class="q-counter" id="q-counter"></div>
+</header>
+<main class="container">
+
+  <!-- LANDING -->
+  <section class="screen active" id="screen-landing">
+    <div class="landing-badge">自适应认知范式识别系统</div>
+    <h1 class="landing-title">你的思维，<br/>出卖了你的学历与专业</h1>
+    <p class="landing-sub">
+      前 8 题广撒网，系统初步判断你最可能的专业方向，<br/>
+      再用 6 道定向题精准收网——<br/>
+      你越诚实，结果越准确。
+    </p>
+    <p class="landing-note">你的「误选」往往比「对选」更能暴露你的专业灵魂。</p>
+    <div class="landing-stats">
+      <div class="stat-item"><span class="stat-num">14</span><span class="stat-label">道题目</span></div>
+      <div class="stat-item"><span class="stat-num">自适应</span><span class="stat-label">动态题库</span></div>
+      <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">学历层次</span></div>
+      <div class="stat-item"><span class="stat-num">6</span><span class="stat-label">思维指纹</span></div>
+    </div>
+    <button class="btn-start" id="btn-start">开始审问</button>
+    <div class="landing-chips">
+      <span class="dim-chip">热力学直觉</span><span class="dim-chip">供需边界</span>
+      <span class="dim-chip">模型哲学</span><span class="dim-chip">证伪主义</span>
+      <span class="dim-chip">实验设计</span><span class="dim-chip">史料解读</span>
+      <span class="dim-chip">法哲学</span><span class="dim-chip">系统思维</span>
+    </div>
+  </section>
+
+  <!-- TRANSITION -->
+  <section class="screen" id="screen-transition">
+    <div class="trans-eyebrow">阶段一完成 · 初步画像</div>
+    <h2 class="trans-title">系统已识别出你的<br/>思维倾向</h2>
+    <p class="trans-sub">根据前 8 道题，你最可能属于以下两个专业方向之一</p>
+    <div class="trans-cards" id="trans-cards"></div>
+    <p class="trans-note">接下来 6 道题将从这两个方向的专业题库中抽取，<br/>帮助系统进一步区分，给出更精准的结论。</p>
+    <button class="btn-continue" id="btn-continue">继续第二阶段 →</button>
+  </section>
+
+  <!-- QUESTION -->
+  <section class="screen" id="screen-question">
+    <div class="q-meta">
+      <button class="btn-back" id="btn-back">← 上一题</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="q-phase-tag" id="q-phase-tag" style="display:none">定向题</span>
+        <span class="q-type-badge" id="q-type-badge"></span>
+        <span class="q-dim-label" id="q-dim-label"></span>
+      </div>
+    </div>
+    <div class="q-text" id="q-text"></div>
+    <div id="q-body"></div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="screen-result">
+    <div style="margin-bottom:8px">
+      <span style="font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted)">你的认知画像</span>
+    </div>
+    <div class="result-header-grid">
+      <div class="result-card" id="edu-card"></div>
+      <div class="result-card" id="spec-card"></div>
+    </div>
+    <div class="spec-chart">
+      <div class="spec-title">思维指纹分布</div>
+      <div class="spec-row" id="spec-row"></div>
+    </div>
+    <div class="tf-summary">
+      <div class="tf-summary-title">判断题解析</div>
+      <div class="tf-result-list" id="tf-list"></div>
+    </div>
+    <p class="result-quote" id="result-quote"></p>
+    <button class="btn-retry" id="btn-retry">再测一次</button>
+  </section>
+
+</main>
+<script>
+// ─────────────────────────────────────────
+//  STATIC DATA
+// ─────────────────────────────────────────
+const EDU_LEVELS = [
+  { key:'hs',  name:'经验主义者', en:'高中 / 大专水平', color:'#6b7280', scorePill:'基础认知层',
+    desc:'你的认知世界轮廓清晰：好人与坏人，对与错，原因与结果。这种直觉式判断力是人类智慧的本能，也是所有复杂思维的起点。当世界的「标准答案」消失时，会感到不适。',
+    quote:'「这不科学！课本上说了的。」', range:[0,10] },
+  { key:'bs',  name:'工具主义者', en:'本科水平', color:'#5b8cdb', scorePill:'学科工具层',
+    desc:'你手里有了锤子。能够用专业术语和学科框架分析问题，比感性认知进步了一大步。但当心——专业工具有时会让人产生「万物皆可锤」的幻觉，容易过度迷信本专业的方法论。',
+    quote:'「从我们专业的角度看，这其实是个很简单的问题。」', range:[11,22] },
+  { key:'ms',  name:'实证主义者', en:'硕士水平', color:'#8b5cf6', scorePill:'边界感知层',
+    desc:'你开始对「边界」产生强烈的感知。你知道数据会说谎，模型会失效，变量之间存在看不见的因果混淆。你能够在多变量环境中稳定思考，并理解工具在什么条件下会失效。',
+    quote:'「这个结论的适用边界在哪里？有没有对照组？」', range:[23,32] },
+  { key:'phd', name:'范式批判者', en:'博士水平', color:'#d97706', scorePill:'元认知层',
+    desc:'你已爬上「元认知」的高台。你不再寻找答案，而是审视问题本身的预设。能识别不同学科范式的底层逻辑，并在它们之间自由切换。你的代价：有时会觉得别人的讨论流于肤浅。',
+    quote:'「有意思的问题，比正确的答案更珍贵。」', range:[33,50] },
+];
+
+const SPECIALTIES = {
+  science:     { name:'理科思维',     en:'Natural Science',      color:'#3b82f6', desc:'你是第一性原理的信徒，相信宇宙在底层是用数学公式写成的。关键词：守恒、概率、可证伪、误差。你最不舒服的时刻：被要求「不管机制，直接给结论」。' },
+  engineering: { name:'工科思维',     en:'Engineering',          color:'#e8623a', desc:'你是现实系统的设计师与调试员。本能是把任何问题拆解成「输入-处理-输出」模块，找到卡壳的接口。你最不舒服的时刻：被告知「这不是工程问题，是价值观问题」。' },
+  life:        { name:'生命科学思维', en:'Life Sciences',        color:'#16a34a', desc:'你对生命系统的复杂性有天然的敬畏。你知道「正常值」是范围而非点，「健康」是动态平衡而非静态状态。你本能地问：「对照组怎么设计？样本基线齐同吗？」' },
+  economics:   { name:'经管思维',     en:'Economics / Management', color:'#059669', desc:'你透过激励机制看世界。在你眼里，人是理性经济体，社会是一个复杂的激励系统。你能快速识别「谁在这个系统里获益」。你最不舒服的时刻：被质疑「经济学把人性简化了」。' },
+  law:         { name:'法学思维',     en:'Law / Political Science', color:'#7c3aed', desc:'你是规则与程序的守护者。思维会自动把世界切割成权利与义务的版图：谁有权做什么、谁应该承担后果、程序是否合法。这让你在混沌中保持清醒。' },
+  humanities:  { name:'文史哲思维',   en:'Humanities',           color:'#db2777', desc:'你是历史迷雾和权力叙事的解码者。你的问题永远是：谁在讲这个故事？什么被刻意遗漏了？这个「理所当然」是如何被建构出来的？' },
+};
+
+// ─────────────────────────────────────────
+//  CORE QUESTIONS  (阶段一，所有人都答)
+// ─────────────────────────────────────────
+const CORE_QUESTIONS = [
+  {
+    type:'choice', dim:'热力学 · 系统与能效',
+    text:'在封闭的实验室里，杂乱的培养皿竟然自发整齐地排列出了几何图形。你的第一反应是——',
+    options:[
+      {text:'万物有灵，生命总会找到自己的出路。', edu:1, spec:{}},
+      {text:'别装了，谁偷偷给这玩意儿通电或者加热了？', edu:3, spec:{engineering:2}},
+      {text:'猴子敲出莎士比亚——概率之神今天翻了我的牌子。', edu:3, spec:{science:2}},
+      {text:'这不科学！课本上说熵增是不可逆的，我要去告诉老师。', edu:1, spec:{}},
+    ],
+  },
+  {
+    type:'choice', dim:'经济学 · 价格信号与资源配置',
+    text:'某市严禁房东涨租金来「保护租客」，结果大家反而租不到房了。你怎么看？',
+    options:[
+      {text:'房东们在集体抵制，建议加强道德审查和行政打击。', edu:1, spec:{}},
+      {text:'说明租赁合同的法律框架存在漏洞，需要立法修复。', edu:2, spec:{law:1}},
+      {text:'正常，价格被按住了，供需这条「隐形的手」就开始扇人耳光了。', edu:3, spec:{economics:2}},
+      {text:'这是资本对底层生存空间的进一步挤压与剥夺。', edu:3, spec:{humanities:1}},
+    ],
+  },
+  {
+    type:'choice', dim:'科学哲学 · 模型与现实',
+    text:'有人说「所有科学模型都是错的」，你的看法是——',
+    options:[
+      {text:'所以专家的话也别全信，都是蒙人的。', edu:1, spec:{}},
+      {text:'地图不是真实的土地，但能带你找到目的地就够了。', edu:3, spec:{science:1,engineering:1}},
+      {text:'那是模型还不够复杂，变量加够了，总能对上。', edu:2, spec:{engineering:1}},
+      {text:'模型不过是科学家群体构建出来的「权力话语」。', edu:4, spec:{humanities:2}},
+    ],
+  },
+  {
+    type:'choice', dim:'社会结构 · 纠纷处理路径',
+    text:'面对医患纠纷，你的第一个「抓手」是——',
+    options:[
+      {text:'先看谁是弱势群体，谁更惨，谁就更有道理。', edu:1, spec:{}},
+      {text:'翻《侵权责任法》和手术知情同意书，找程序漏洞。', edu:2, spec:{law:2}},
+      {text:'研究分级诊疗制度和医疗保险的资源错配，找到制度根源。', edu:4, spec:{engineering:1,life:1}},
+      {text:'要一分为二地看，医生和患者都有责任，没有绝对对错。', edu:1, spec:{}},
+    ],
+  },
+  {
+    type:'choice', dim:'艺术史学 · 审美方法论',
+    text:'在博物馆看一幅价值连城的抽象画，你大脑里的弹幕是——',
+    options:[
+      {text:'这画画得挺……解压的。（沉默三秒）走了。', edu:1, spec:{}},
+      {text:'这个色块的布局，明显是在致敬1920年代的风格派运动。', edu:2, spec:{humanities:1}},
+      {text:'这幅画的赞助人是谁？他想通过它向公众传达什么政治暗示？', edu:4, spec:{humanities:2}},
+      {text:'我三岁的儿子画得也差不多，这也能叫艺术？', edu:1, spec:{}},
+    ],
+  },
+  {
+    type:'choice', dim:'实验设计 · 方法论直觉',
+    text:'你做的实验结果非常完美，完全符合预期。你会——',
+    options:[
+      {text:'我真是个天才！准备写论文，走向人生巅峰。', edu:1, spec:{}},
+      {text:'坏了，是不是哪里的噪声被我当成信号了？赶紧检查仪器。', edu:4, spec:{science:1,life:1}},
+      {text:'正常，我就是按这个预设去调整实验参数的。（脸不红心不跳）', edu:1, spec:{}},
+      {text:'大概率是我的实习生把数据填错了，这也太巧了。', edu:3, spec:{science:1}},
+    ],
+  },
+  {
+    type:'choice', dim:'系统规划 · 线性 vs 复杂思维',
+    text:'你是城市规划师，要解决早高峰拥堵问题，你的第一直觉是——',
+    options:[
+      {text:'路不够宽，立交桥不够多，再修两条环线。', edu:1, spec:{engineering:1}},
+      {text:'早高峰过路费翻倍，用钱包帮大家克服「起床气」。', edu:3, spec:{economics:2}},
+      {text:'拥堵是下游反馈，关键在上游：为什么大家非得在同一时间去同一个地方？', edu:4, spec:{engineering:1,economics:1}},
+      {text:'回归小街区、高密度，让步行取代通勤。', edu:2, spec:{humanities:1}},
+    ],
+  },
+  {
+    type:'choice', dim:'史料学 · 互文性与叙事',
+    text:'处理历史档案时，发现两份记录对同一事件的描述截然相反。你会——',
+    options:[
+      {text:'寻找第三份档案，少数服从多数，投票表决。', edu:1, spec:{}},
+      {text:'对比记录者的物理距离和时间点，剔除「噪声」文献。', edu:2, spec:{science:1}},
+      {text:'太棒了！这正说明了当时社会权力结构的分层——不同阶层在讲不同的故事。', edu:4, spec:{humanities:2}},
+      {text:'其中一定有一个在撒谎，必有隐情，深挖！', edu:1, spec:{}},
+    ],
+  },
+];
+
+// ─────────────────────────────────────────
+//  ADAPTIVE POOL  (阶段二，按专业定向抽取)
+// ─────────────────────────────────────────
+const ADAPTIVE_POOL = {
+  science: [
+    {
+      type:'choice', dim:'科学边界 · 跨尺度识别',
+      text:'你看到声称「量子神药包治百病」的广告，识别骗局的底层逻辑是——',
+      options:[
+        {text:'卖得太贵了，价格这么高一定是在骗钱。', edu:1, spec:{}},
+        {text:'量子力学是微观物理，药物是宏观生化作用，中间缺乏跨尺度耦合机制。', edu:4, spec:{science:2}},
+        {text:'不管原理，直接看它有没有做过大规模随机双盲对照实验。', edu:3, spec:{life:2}},
+        {text:'上网搜一下，看有没有人举报过，看评论。', edu:1, spec:{}},
+      ],
+    },
+    {
+      type:'tf', dim:'量子力学 · 不确定性原理',
+      text:'「海森堡不确定性原理」的本质是测量仪器精度不足——理论上，足够精密的仪器可以同时精确测定粒子的位置和动量。',
+      correct:'错', correctSpec:{science:3},
+      commentary:'不确定性原理是量子系统的内在属性，与仪器无关。位置和动量是一对「共轭变量」，其不确定度之积存在理论下限（ΔxΔp ≥ ħ/2）——这是波函数的数学结构决定的，不是工程问题。爱因斯坦用一生反对这个结论，但实验一再证明：上帝确实掷骰子。',
+    },
+    {
+      type:'tf', dim:'科学方法论 · 奥卡姆剃刀',
+      text:'「奥卡姆剃刀」原则认为：在解释同一现象时，引入假设越少的理论在认识论上越应该被优先考虑。',
+      correct:'对', correctSpec:{science:2},
+      commentary:'「如无必要，勿增实体」是科学方法论的基础原则。它不是说简单理论一定正确，而是说：在预测能力相同时，假设更少的理论可证伪性更强，更容易被检验和推翻。这是科学与神学在方法论上的核心分野。',
+    },
+  ],
+
+  engineering: [
+    {
+      type:'tf', dim:'工程直觉 · 冗余与成本',
+      text:'在工程实践中，为了绝对安全，我们必须不计成本地将系统故障率降低至零。',
+      correct:'错', correctSpec:{engineering:2},
+      commentary:'故障率趋零的边际成本趋于无穷大，工程的核心是在成本约束下找到「足够安全」的平衡点。零故障率既不可能，也不是最优解——这是区分工程决策与理想主义的关键一步。',
+    },
+    {
+      type:'tf', dim:'计算理论 · 图灵完备性',
+      text:'一个系统具备「图灵完备性」，意味着它在理论上可以执行任何可计算的算法，并能模拟任何其他图灵完备系统。',
+      correct:'对', correctSpec:{engineering:2},
+      commentary:'所有图灵完备系统的计算能力在理论上等价，可以互相模拟。这意味着：Scratch、Excel 公式系统、甚至《我的世界》里用红石电路搭建的计算机，理论上和超级计算机「一样强大」——只是慢到宇宙热寂也算不完。',
+    },
+    {
+      type:'tf', dim:'软件工程 · 过早优化',
+      text:'「过早优化是万恶之源」——这句话的意思是：在性能瓶颈被实际测量出来之前，不应为假设中的性能问题修改结构清晰的代码。',
+      correct:'对', correctSpec:{engineering:2},
+      commentary:'高德纳（Donald Knuth）的名言。工程中正确的路径是：先让它正确运行，再通过实际测量找到真正的瓶颈，最后精准优化。提前优化的代码往往更难维护，而且问题往往不在你以为的地方。',
+    },
+  ],
+
+  life: [
+    {
+      type:'tf', dim:'循证医学 · 实验设计',
+      text:'随机双盲对照实验中，「双盲」的核心意义是：同时排除受试者的「安慰剂效应」，以及研究者自身的「观察者期望偏差」。',
+      correct:'对', correctSpec:{life:3},
+      commentary:'受试者不知道→排除安慰剂效应；研究者不知道→排除观察者期望偏差（评分时的无意识倾向）。两个「盲」缺一不可——历史上有大量药物在单盲实验中表现良好，双盲后效果烟消云散。',
+    },
+    {
+      type:'tf', dim:'统计直觉 · 因果与相关',
+      text:'只要样本量足够大，相关性就等同于因果关系。',
+      correct:'错', correctSpec:{life:2,science:1},
+      commentary:'样本量解决的是统计检验力问题，而非混淆变量问题。冰淇淋销量与溺水事故高度相关，但都是夏天的孩子。相关性≠因果性，是所有实证学科的入场券。',
+    },
+    {
+      type:'choice', dim:'转化医学 · 实验层级',
+      text:'一种新型抗生素在体外细胞实验中，对某耐药菌株表现出强效杀伤力。下一步最合理的结论是——',
+      options:[
+        {text:'该抗生素已证明有效，可以直接启动临床申请。', edu:1, spec:{}},
+        {text:'体外有效是必要条件，还需动物实验验证体内的安全性与有效性。', edu:3, spec:{life:3}},
+        {text:'这意味着该细菌的耐药机制可以被彻底攻克。', edu:2, spec:{life:1}},
+        {text:'体外结果已足够说明问题，可以推进产业化合作了。', edu:1, spec:{}},
+      ],
+    },
+  ],
+
+  economics: [
+    {
+      type:'tf', dim:'宏观经济学 · 菲利普斯曲线',
+      text:'菲利普斯曲线描述的是：通货膨胀率越高，失业率往往越低——二者在短期内存在此消彼长的权衡关系。',
+      correct:'对', correctSpec:{economics:3},
+      commentary:'这是凯恩斯主义宏观政策的核心悖论：用通胀换就业。菲利普斯1958年通过英国百年数据发现这一规律。但1970年代的「滞胀」同时打脸了两边，宣告简单菲利普斯曲线的失效——通胀和失业可以同时飙升。',
+    },
+    {
+      type:'tf', dim:'社会选择理论 · 阿罗不可能定理',
+      text:'根据「阿罗不可能定理」，在三个及以上候选方案中，不存在任何投票规则能同时满足「非独裁性」「帕累托效率」和「无关选项独立性」三个条件。',
+      correct:'对', correctSpec:{economics:3},
+      commentary:'肯尼斯·阿罗1951年的定理。它说明「完美的民主投票机制」在逻辑上不可能存在——你必须放弃其中一个看似合理的条件。这个定理让阿罗拿了诺贝尔经济学奖，也让无数政治学家头痛至今。',
+    },
+    {
+      type:'tf', dim:'创新经济学 · 熊彼特范式',
+      text:'任何创新，本质上都是对现有要素的重新组合。',
+      correct:'对', correctSpec:{economics:2},
+      commentary:'这是熊彼特在《经济发展理论》中的核心定义：创新 = 生产要素的新组合。蒸汽机、iPhone 和 ChatGPT，都是重组，不是无中生有。理解这一点，就理解了为什么「创新」本质上是一个组合优化问题。',
+    },
+  ],
+
+  law: [
+    {
+      type:'choice', dim:'法哲学 · 伦理学与程序正义',
+      text:'电车难题：必须二选一。若给出符合现代法治精神的回答，你会选——',
+      options:[
+        {text:'5 > 1，简单的数学题，救五个，没有悬念。', edu:2, spec:{economics:1}},
+        {text:'除非法律有明确授权，我无权剥夺任何无辜者的生命，哪怕是为了救更多人。', edu:4, spec:{law:2}},
+        {text:'我会跳下轨道，用自己去挡住电车。', edu:1, spec:{}},
+        {text:'这是伪命题，现实中总有第三种选择，这题没有意义。', edu:2, spec:{}},
+      ],
+    },
+    {
+      type:'tf', dim:'法律理论 · 法律实证主义',
+      text:'法律的效力来源于其内部逻辑的自洽性，而非外在的暴力强制。',
+      correct:'对', correctSpec:{law:2},
+      commentary:'这是凯尔森「纯粹法学」的核心命题：法律效力是规范性的（Normative），而非强制性的（Coercive）。承认这一点，说明你读过法哲学，而不只是在背法条。',
+    },
+    {
+      type:'tf', dim:'合同法 · 契约自由的边界',
+      text:'根据「契约自由原则」，两个完全民事行为能力的成年人只要自愿签订合同，该合同在法律上必然有效。',
+      correct:'错', correctSpec:{law:3},
+      commentary:'契约自由有边界：合同内容不得违反法律强制性规定，不得违背公序良俗，否则无效。「自愿」是必要条件，但远非充分条件。双方自愿签订的毒品交易合同、限制人身自由的协议，显然无效——法律不保护一切「自愿」。',
+    },
+  ],
+
+  humanities: [
+    {
+      type:'tf', dim:'哲学精度 · 文本解读',
+      text:'「凡是存在的就是合理的」——从哲学本意看，这句话描述的是因果逻辑的必然性，而非价值判断上的正当性。',
+      correct:'对', correctSpec:{humanities:2},
+      commentary:'黑格尔原文「was vernünftig ist, das ist wirklich」，描述理性与现实的辩证关系，而非为现实秩序背书。误读为「存在即合理（因此是好的）」是翻译与哲学训练的双重缺席。',
+    },
+    {
+      type:'tf', dim:'思想史 · 文艺复兴',
+      text:'「文艺复兴」的核心意义在于：以古希腊罗马的人文精神为资源，建立了以「人」为中心的话语体系，从而挑战了中世纪以「神」为中心的神学秩序。',
+      correct:'对', correctSpec:{humanities:2},
+      commentary:'文艺复兴（Renaissance = 再生）的核心是人文主义（Humanism）。通过重新发现经由阿拉伯世界保存的古典文献，思想家建立了与中世纪神学范式竞争的话语体系。它不只是艺术运动，更是一次认识论上的范式转移。',
+    },
+    {
+      type:'tf', dim:'史学方法论 · 叙事与权力',
+      text:'「历史是胜利者书写的」——从史学方法论角度，这意味着所有历史文献都是虚构的，历史研究因此无法得出任何可信结论。',
+      correct:'错', correctSpec:{humanities:2},
+      commentary:'这是对「历史叙事具有权力立场」命题的过度解读。正确理解是：叙事有立场，但不等于都是谎言。史学家的任务恰恰是通过互文性分析、交叉验证、发掘被压制的声音，来逼近更完整的历史图景。承认局限性，是史学成熟的标志，而非放弃研究的理由。',
+    },
+  ],
+};
+
+// ─────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────
+const CORE_COUNT = CORE_QUESTIONS.length; // 8
+let currentQ = 0;
+let allQuestions = [];      // core + selected adaptive
+let top2Specs = [];         // top 2 specialties after phase 1
+let eduScore = 0;
+const specScores = { science:0, engineering:0, life:0, economics:0, law:0, humanities:0 };
+const tfResults = [];
+const history = []; // { eduDelta, specDelta, isTF }
+const eduPts = { 1:0, 2:1, 3:2, 4:3 };
+
+// ─────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────
+function addSpec(obj) {
+  if (!obj) return;
+  Object.entries(obj).forEach(([k,v]) => { specScores[k] = (specScores[k]||0)+v; });
+}
+function subSpec(obj) {
+  if (!obj) return;
+  Object.entries(obj).forEach(([k,v]) => { specScores[k] = (specScores[k]||0)-v; });
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active','fade-in');
+}
+function updateProgress() {
+  const total = allQuestions.length;
+  const pct = total > 0 ? (currentQ / total) * 100 : 0;
+  document.getElementById('progress-bar-fill').style.width = pct + '%';
+  document.getElementById('q-counter').textContent = `${currentQ + 1} / ${total}`;
+  document.getElementById('btn-back').classList.toggle('visible', currentQ > 0);
+  // Phase tag
+  const tag = document.getElementById('q-phase-tag');
+  tag.style.display = currentQ >= CORE_COUNT ? 'inline-block' : 'none';
+}
+function shuffleArr(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+// Compute normalized spec scores based on questions actually seen
+function computeNormed(questionList) {
+  const max = { science:0, engineering:0, life:0, economics:0, law:0, humanities:0 };
+  questionList.forEach(q => {
+    if (q.type === 'choice') {
+      Object.keys(max).forEach(spec => {
+        const best = Math.max(...q.options.map(o => (o.spec&&o.spec[spec])||0));
+        max[spec] += best;
+      });
+    } else if (q.correctSpec) {
+      Object.entries(q.correctSpec).forEach(([k,v]) => { max[k] += v; });
+    }
+  });
+  const normed = {};
+  Object.keys(specScores).forEach(k => {
+    normed[k] = max[k] > 0 ? Math.min(specScores[k]/max[k], 1) : 0;
+  });
+  return normed;
+}
+
+// ─────────────────────────────────────────
+//  QUIZ FLOW
+// ─────────────────────────────────────────
+function startQuiz() {
+  currentQ = 0; eduScore = 0;
+  tfResults.length = 0; history.length = 0; top2Specs.length = 0;
+  Object.keys(specScores).forEach(k => specScores[k]=0);
+  allQuestions = [...CORE_QUESTIONS];
+  document.getElementById('progress-bar-wrap').style.display = 'block';
+  document.getElementById('q-counter').style.display = 'block';
+  renderQuestion();
+  showScreen('screen-question');
+}
+
+function renderQuestion() {
+  const q = allQuestions[currentQ];
+  updateProgress();
+  const badge = document.getElementById('q-type-badge');
+  if (q.type==='choice') { badge.textContent='单项选择'; badge.className='q-type-badge badge-choice'; }
+  else                   { badge.textContent='判断题';   badge.className='q-type-badge badge-tf'; }
+  document.getElementById('q-dim-label').textContent = q.dim;
+  document.getElementById('q-text').textContent = q.text;
+
+  const body = document.getElementById('q-body');
+  body.innerHTML = '';
+
+  if (q.type === 'choice') {
+    const list = document.createElement('div');
+    list.className = 'options-list';
+    shuffleArr(q.options.map(o=>({...o}))).forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerHTML = `<span class="option-text">${opt.text}</span>`;
+      btn.addEventListener('click', () => {
+        btn.classList.add('selected');
+        list.querySelectorAll('.option-btn').forEach(b => b.style.pointerEvents='none');
+        const ed = eduPts[opt.edu]||0;
+        eduScore += ed; addSpec(opt.spec);
+        history.push({ eduDelta:ed, specDelta:opt.spec||{}, isTF:false });
+        setTimeout(advance, 360);
+      });
+      list.appendChild(btn);
+    });
+    body.appendChild(list);
+  } else {
+    const wrap = document.createElement('div');
+    wrap.className = 'tf-container';
+    ['对','错'].forEach(ans => {
+      const isTrue = ans==='对';
+      const btn = document.createElement('button');
+      btn.className = `tf-btn ${isTrue?'tf-btn-true':'tf-btn-false'}`;
+      btn.innerHTML = `<span class="tf-icon">${isTrue?'○':'✕'}</span>
+        <span style="font-size:17px;font-weight:700">${ans}</span>
+        <span class="tf-label">${isTrue?'这个说法是正确的':'这个说法是错误的'}</span>`;
+      btn.addEventListener('click', () => {
+        btn.classList.add(isTrue?'selected-true':'selected-false');
+        wrap.querySelectorAll('.tf-btn').forEach(b=>b.style.pointerEvents='none');
+        const isCorrect = ans===q.correct;
+        const ed = isCorrect ? 2 : 0;
+        const sd = isCorrect ? (q.correctSpec||{}) : {};
+        eduScore += ed; if(isCorrect) addSpec(q.correctSpec);
+        tfResults.push({ correct:isCorrect, text:q.text, commentary:q.commentary, userAnswer:ans, correctAnswer:q.correct });
+        history.push({ eduDelta:ed, specDelta:sd, isTF:true });
+        setTimeout(advance, 360);
+      });
+      wrap.appendChild(btn);
+    });
+    // "我不知道" option — spans full width, no score
+    const unknownBtn = document.createElement('button');
+    unknownBtn.className = 'tf-btn tf-btn-unknown';
+    unknownBtn.style.gridColumn = '1 / -1';
+    unknownBtn.style.padding = '14px 16px';
+    unknownBtn.innerHTML = `<span style="font-size:15px;font-weight:700">我不知道</span>
+      <span class="tf-label">跳过，不计分，但仍显示解析</span>`;
+    unknownBtn.addEventListener('click', () => {
+      unknownBtn.classList.add('selected-unknown');
+      wrap.querySelectorAll('.tf-btn').forEach(b=>b.style.pointerEvents='none');
+      tfResults.push({ correct:false, skipped:true, text:q.text, commentary:q.commentary, userAnswer:'不知道', correctAnswer:q.correct });
+      history.push({ eduDelta:0, specDelta:{}, isTF:true });
+      setTimeout(advance, 360);
+    });
+    wrap.appendChild(unknownBtn);
+    body.appendChild(wrap);
+  }
+  const qs = document.getElementById('screen-question');
+  qs.classList.remove('fade-in'); void qs.offsetWidth; qs.classList.add('fade-in');
+}
+
+function advance() {
+  currentQ++;
+  if (currentQ === CORE_COUNT) {
+    // Phase 1 done → select adaptive questions and show transition
+    selectAdaptive();
+    showTransition();
+  } else if (currentQ < allQuestions.length) {
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function selectAdaptive() {
+  const normed = computeNormed(CORE_QUESTIONS);
+  const sorted = Object.entries(normed).sort((a,b)=>b[1]-a[1]);
+  top2Specs = [sorted[0][0], sorted[1][0]];
+  // Append 3 questions from each top specialty
+  const adaptive = [];
+  top2Specs.forEach(spec => {
+    shuffleArr(ADAPTIVE_POOL[spec]).slice(0,3).forEach(q => adaptive.push(q));
+  });
+  allQuestions = [...CORE_QUESTIONS, ...adaptive];
+}
+
+function showTransition() {
+  const cards = document.getElementById('trans-cards');
+  cards.innerHTML = '';
+  top2Specs.forEach((spec, i) => {
+    const sp = SPECIALTIES[spec];
+    const card = document.createElement('div');
+    card.className = 'trans-card';
+    card.style.borderColor = sp.color;
+    card.style.color = sp.color;
+    card.innerHTML = `
+      <div class="trans-card-label">${i===0?'主要倾向':'次要倾向'}</div>
+      <div class="trans-card-name">${sp.name}</div>
+    `;
+    cards.appendChild(card);
+  });
+  document.getElementById('progress-bar-fill').style.width = `${(CORE_COUNT/allQuestions.length)*100}%`;
+  showScreen('screen-transition');
+}
+
+function goBack() {
+  if (currentQ === 0) return;
+  const last = history.pop();
+  eduScore -= last.eduDelta;
+  subSpec(last.specDelta);
+  if (last.isTF) tfResults.pop();
+  currentQ--;
+  showScreen('screen-question');
+  renderQuestion();
+}
+
+// ─────────────────────────────────────────
+//  RESULTS
+// ─────────────────────────────────────────
+function showResults() {
+  document.getElementById('progress-bar-fill').style.width = '100%';
+  document.getElementById('q-counter').style.display = 'none';
+
+  const edu = EDU_LEVELS.find(e => eduScore>=e.range[0] && eduScore<=e.range[1])
+    || EDU_LEVELS[EDU_LEVELS.length-1];
+  const eduCard = document.getElementById('edu-card');
+  eduCard.style.borderColor = edu.color;
+  eduCard.innerHTML = `<div class="rc-label">推断学历层次</div>
+    <span class="score-pill" style="background:${edu.color}">${edu.scorePill}</span>
+    <div class="rc-value" style="color:${edu.color}">${edu.name}</div>
+    <div class="rc-en">${edu.en}</div>
+    <div class="rc-desc">${edu.desc}</div>`;
+
+  const normed = computeNormed(allQuestions);
+  const topSpec = Object.entries(normed).sort((a,b)=>b[1]-a[1])[0][0];
+  const sp = SPECIALTIES[topSpec];
+  const specCard = document.getElementById('spec-card');
+  specCard.style.borderColor = sp.color;
+  specCard.innerHTML = `<div class="rc-label">推断专业思维</div>
+    <span class="score-pill" style="background:${sp.color}">${sp.en}</span>
+    <div class="rc-value" style="color:${sp.color}">${sp.name}</div>
+    <div class="rc-en">${sp.en}</div>
+    <div class="rc-desc">${sp.desc}</div>`;
+
+  const specRow = document.getElementById('spec-row');
+  specRow.innerHTML = '';
+  Object.entries(normed).sort((a,b)=>b[1]-a[1]).forEach(([key,val]) => {
+    const pct = Math.round(val*100);
+    const item = document.createElement('div');
+    item.className = 'spec-item';
+    item.innerHTML = `<div class="spec-header">
+        <span class="spec-name">${SPECIALTIES[key].name}</span>
+        <span class="spec-pct">${pct}%</span>
+      </div>
+      <div class="spec-bar-bg">
+        <div class="spec-bar-fill" style="background:${SPECIALTIES[key].color}" data-pct="${pct}"></div>
+      </div>`;
+    specRow.appendChild(item);
+  });
+
+  const tfList = document.getElementById('tf-list');
+  tfList.innerHTML = '';
+  if (tfResults.length === 0) {
+    tfList.innerHTML = '<div style="font-size:13px;color:var(--text-muted)">本次未包含判断题。</div>';
+  } else {
+    tfResults.forEach(r => {
+      const row = document.createElement('div');
+      row.className = 'tf-result-row';
+      const markClass = r.skipped ? 'tf-unknown' : (r.correct ? 'tf-correct' : 'tf-incorrect');
+      const markIcon  = r.skipped ? '−' : (r.correct ? '✓' : '✕');
+      const statusText = r.skipped
+        ? `选择了「不知道」（正确答案：${r.correctAnswer}）`
+        : (r.correct ? '答对了' : `答错了（正确答案：${r.correctAnswer}）`);
+      row.innerHTML = `<span class="tf-mark ${markClass}">${markIcon}</span>
+        <div>
+          <div style="font-weight:500;margin-bottom:3px;font-size:12px;color:var(--text-primary)">${statusText}</div>
+          <div>${r.commentary}</div>
+        </div>`;
+      tfList.appendChild(row);
+    });
+  }
+
+  document.getElementById('result-quote').textContent = edu.quote;
+  showScreen('screen-result');
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.querySelectorAll('.spec-bar-fill').forEach(b => b.style.width = b.dataset.pct+'%');
+  }));
+}
+
+// ─────────────────────────────────────────
+//  EVENTS
+// ─────────────────────────────────────────
+document.getElementById('btn-start').addEventListener('click', startQuiz);
+document.getElementById('btn-back').addEventListener('click', goBack);
+document.getElementById('btn-continue').addEventListener('click', () => {
+  showScreen('screen-question');
+  renderQuestion();
+});
+document.getElementById('btn-retry').addEventListener('click', () => {
+  document.getElementById('progress-bar-wrap').style.display = 'none';
+  showScreen('screen-landing');
+});
+</script>
+</body>
+</html>
