@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cognitive Fingerprint System · Major-TI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #fafaf8; --surface: #fff; --text-primary: #1a1a1a;
+      --text-secondary: #5a5a5a; --text-muted: #9b9b9b;
+      --accent: #1a1a1a; --border: #e8e8e4; --hover-bg: #f4f4f0;
+      --radius: 12px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg); color: var(--text-primary);
+      min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+    }
+    #progress-bar-wrap {
+      position: fixed; top:0; left:0; right:0;
+      height:3px; background:var(--border); z-index:100; display:none;
+    }
+    #progress-bar-fill { height:100%; background:var(--accent); transition:width .4s ease; width:0; }
+    .site-header {
+      width:100%; max-width:740px; padding:28px 24px 0;
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .logo {
+      font-family:'Playfair Display',serif; font-size:14px; font-weight:600;
+      letter-spacing:.05em; opacity:.6;
+    }
+    .q-counter { font-size:13px; color:var(--text-muted); display:none; }
+    .container { width:100%; max-width:740px; padding:0 24px 80px; flex:1; }
+    .screen { display:none; }
+    .screen.active { display:block; }
+    .fade-in { animation:fadeIn .3s forwards; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
+
+    /* ── Landing ── */
+    #screen-landing { padding-top:72px; text-align:center; }
+    .landing-badge {
+      display:inline-block; font-size:11px; font-weight:500; letter-spacing:.15em;
+      text-transform:uppercase; color:var(--text-muted);
+      border:1px solid var(--border); border-radius:100px; padding:5px 14px; margin-bottom:28px;
+    }
+    .landing-title {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(28px,5.5vw,44px); font-weight:700; line-height:1.25; margin-bottom:20px;
+    }
+    .landing-sub {
+      font-size:15px; font-weight:300; color:var(--text-secondary);
+      line-height:1.9; max-width:500px; margin:0 auto 12px;
+    }
+    .landing-note { font-size:12px; color:var(--text-muted); margin-bottom:44px; font-style:italic; }
+    .landing-stats { display:flex; gap:28px; justify-content:center; margin-bottom:44px; flex-wrap:wrap; }
+    .stat-item { display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .stat-num { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; }
+    .stat-label { font-size:11px; color:var(--text-muted); }
+    .btn-start {
+      display:inline-block; background:var(--accent); color:#fff;
+      font-size:15px; font-weight:500; padding:14px 44px;
+      border-radius:100px; border:none; cursor:pointer;
+      letter-spacing:.03em; font-family:inherit;
+      transition:opacity .2s,transform .15s;
+    }
+    .btn-start:hover { opacity:.82; transform:translateY(-1px); }
+    .landing-chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:44px; }
+    .dim-chip {
+      font-size:11px; padding:5px 12px;
+      border:1px solid var(--border); border-radius:100px; color:var(--text-muted);
+    }
+
+    /* ── Transition ── */
+    #screen-transition { padding-top:80px; text-align:center; }
+    .trans-eyebrow {
+      font-size:11px; font-weight:600; letter-spacing:.15em; text-transform:uppercase;
+      color:var(--text-muted); margin-bottom:20px;
+    }
+    .trans-title {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(22px,4vw,32px); font-weight:700; line-height:1.4; margin-bottom:12px;
+    }
+    .trans-sub { font-size:14px; color:var(--text-secondary); margin-bottom:44px; line-height:1.8; }
+    .trans-cards { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:44px; }
+    .trans-card {
+      padding:20px 28px; border-radius:var(--radius);
+      border:2px solid; min-width:140px;
+      display:flex; flex-direction:column; align-items:center; gap:6px;
+    }
+    .trans-card-label { font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; opacity:.6; }
+    .trans-card-name { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; }
+    .trans-note {
+      font-size:13px; color:var(--text-muted); margin-bottom:40px;
+      max-width:420px; margin-left:auto; margin-right:auto; line-height:1.8;
+    }
+    .btn-continue {
+      background:var(--accent); color:#fff; font-size:15px; font-weight:500;
+      padding:13px 40px; border-radius:100px; border:none; cursor:pointer;
+      font-family:inherit; transition:opacity .2s,transform .15s;
+    }
+    .btn-continue:hover { opacity:.82; transform:translateY(-1px); }
+
+    /* ── Question ── */
+    #screen-question { padding-top:48px; }
+    .q-meta {
+      display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
+    }
+    .btn-back {
+      font-size:13px; color:var(--text-muted); background:none; border:none;
+      cursor:pointer; font-family:inherit; padding:0;
+      transition:color .15s; visibility:hidden;
+    }
+    .btn-back.visible { visibility:visible; }
+    .btn-back:hover { color:var(--text-primary); }
+    .q-type-badge {
+      font-size:10px; font-weight:600; letter-spacing:.12em;
+      text-transform:uppercase; padding:3px 9px; border-radius:100px; border:1px solid;
+    }
+    .badge-choice { color:#e8623a; border-color:#e8623a; }
+    .badge-tf { color:#7c3aed; border-color:#7c3aed; }
+    .q-dim-label {
+      font-size:11px; color:var(--text-muted); font-weight:500;
+      letter-spacing:.1em; text-transform:uppercase;
+    }
+    .q-phase-tag {
+      font-size:10px; padding:2px 8px; border-radius:100px;
+      background:#fef3c7; color:#92400e; font-weight:600; letter-spacing:.06em;
+    }
+    .q-text {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(17px,3vw,22px); font-weight:600; line-height:1.7;
+      margin-bottom:32px;
+    }
+    .options-list { display:flex; flex-direction:column; gap:10px; }
+    .option-btn {
+      display:flex; align-items:flex-start; gap:14px; padding:16px 20px;
+      background:var(--surface); border:1.5px solid var(--border); border-radius:var(--radius);
+      cursor:pointer; text-align:left; width:100%; font-family:inherit;
+      transition:border-color .15s,background .15s,transform .1s;
+    }
+    .option-btn:hover { border-color:var(--accent); background:var(--hover-bg); transform:translateX(3px); }
+    .option-btn.selected { border-color:var(--accent); background:var(--hover-bg); }
+    .option-text { font-size:14px; line-height:1.75; color:var(--text-primary); font-weight:400; }
+    .tf-container { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:8px; }
+    .tf-btn {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:8px; padding:28px 16px; border:1.5px solid var(--border); border-radius:var(--radius);
+      cursor:pointer; background:var(--surface); font-family:inherit;
+      font-size:18px; font-weight:600; transition:border-color .15s,background .15s,transform .1s;
+    }
+    .tf-btn:hover { transform:translateY(-2px); }
+    .tf-btn-true:hover  { border-color:#16a34a; background:#f0fdf4; color:#16a34a; }
+    .tf-btn-false:hover { border-color:#dc2626; background:#fef2f2; color:#dc2626; }
+    .tf-btn.selected-true  { border-color:#16a34a; background:#f0fdf4; color:#16a34a; }
+    .tf-btn.selected-false { border-color:#dc2626; background:#fef2f2; color:#dc2626; }
+    .tf-btn-unknown:hover  { border-color:#6b7280; background:#f9fafb; color:#6b7280; }
+    .tf-btn.selected-unknown { border-color:#6b7280; background:#f9fafb; color:#6b7280; }
+    .tf-icon { font-size:28px; }
+    .tf-label { font-size:13px; font-weight:400; color:var(--text-muted); }
+
+    /* ── Result ── */
+    #screen-result { padding-top:48px; }
+    .result-header-grid {
+      display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px;
+    }
+    @media(max-width:520px){ .result-header-grid{grid-template-columns:1fr} }
+    .result-card {
+      padding:24px; border-radius:var(--radius); border:1.5px solid var(--border); background:var(--surface);
+    }
+    .rc-label {
+      font-size:10px; font-weight:600; letter-spacing:.15em; text-transform:uppercase;
+      color:var(--text-muted); margin-bottom:10px;
+    }
+    .rc-value { font-family:'Playfair Display',serif; font-size:clamp(18px,3vw,24px); font-weight:700; margin-bottom:4px; }
+    .rc-en { font-size:12px; color:var(--text-muted); margin-bottom:12px; }
+    .rc-desc { font-size:13px; line-height:1.8; color:var(--text-secondary); }
+    .score-pill {
+      display:inline-block; font-size:11px; font-weight:600;
+      padding:3px 10px; border-radius:100px; color:#fff; margin-bottom:10px;
+    }
+    .spec-chart { margin-bottom:28px; }
+    .spec-title {
+      font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+      color:var(--text-muted); margin-bottom:14px;
+    }
+    .spec-row { display:flex; flex-direction:column; gap:10px; }
+    .spec-item { display:flex; flex-direction:column; gap:5px; }
+    .spec-header { display:flex; justify-content:space-between; align-items:baseline; }
+    .spec-name { font-size:13px; font-weight:500; }
+    .spec-pct { font-size:12px; color:var(--text-muted); }
+    .spec-bar-bg { height:5px; background:var(--border); border-radius:100px; overflow:hidden; }
+    .spec-bar-fill { height:100%; border-radius:100px; transition:width 1s cubic-bezier(.16,1,.3,1); width:0; }
+    .tf-summary {
+      padding:20px 24px; background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--radius); margin-bottom:28px;
+    }
+    .tf-summary-title {
+      font-size:11px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+      color:var(--text-muted); margin-bottom:14px;
+    }
+    .tf-result-list { display:flex; flex-direction:column; gap:8px; }
+    .tf-result-row { display:flex; gap:10px; align-items:flex-start; font-size:13px; line-height:1.6; color:var(--text-secondary); }
+    .tf-mark { flex-shrink:0; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; margin-top:1px; }
+    .tf-correct { background:#16a34a; }
+    .tf-incorrect { background:#dc2626; }
+    .tf-unknown { background:#6b7280; }
+    .result-quote { font-family:'Playfair Display',serif; font-size:14px; color:var(--text-muted); text-align:center; margin:0 0 36px; padding:0 12px; line-height:1.8; font-style:italic; }
+    .btn-retry {
+      background:transparent; color:var(--text-primary); font-size:14px; font-weight:500;
+      padding:12px 32px; border-radius:100px; border:1.5px solid var(--border);
+      cursor:pointer; font-family:inherit; transition:border-color .2s,background .2s;
+    }
+    .btn-retry:hover { border-color:var(--accent); background:var(--hover-bg); }
+    @media(max-width:480px){ .site-header{padding:18px 16px 0} .container{padding:0 16px 60px} }
+  </style>
+</head>
+<body>
+<div id="progress-bar-wrap"><div id="progress-bar-fill"></div></div>
+<header class="site-header">
+  <div class="logo">Major-TI</div>
+  <div class="q-counter" id="q-counter"></div>
+</header>
+<main class="container">
+
+  <!-- LANDING -->
+  <section class="screen active" id="screen-landing">
+    <div class="landing-badge">Adaptive Cognitive Fingerprint System</div>
+    <h1 class="landing-title">Your thinking<br/>betrays your degree.</h1>
+    <p class="landing-sub">
+      The first 8 questions cast a wide net — the system profiles your academic orientation.<br/>
+      Then 6 targeted questions close in for a precise verdict.<br/>
+      The more honest you are, the more accurate the result.
+    </p>
+    <p class="landing-note">Your "wrong" answers often reveal more than your "right" ones.</p>
+    <div class="landing-stats">
+      <div class="stat-item"><span class="stat-num">14</span><span class="stat-label">questions</span></div>
+      <div class="stat-item"><span class="stat-num">Adaptive</span><span class="stat-label">question bank</span></div>
+      <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">edu levels</span></div>
+      <div class="stat-item"><span class="stat-num">6</span><span class="stat-label">cognitive fingerprints</span></div>
+    </div>
+    <button class="btn-start" id="btn-start">Begin Interrogation</button>
+    <div class="landing-chips">
+      <span class="dim-chip">Thermodynamic Intuition</span>
+      <span class="dim-chip">Supply &amp; Demand</span>
+      <span class="dim-chip">Model Philosophy</span>
+      <span class="dim-chip">Falsificationism</span>
+      <span class="dim-chip">Experimental Design</span>
+      <span class="dim-chip">Archival Interpretation</span>
+      <span class="dim-chip">Legal Philosophy</span>
+      <span class="dim-chip">Systems Thinking</span>
+    </div>
+  </section>
+
+  <!-- TRANSITION -->
+  <section class="screen" id="screen-transition">
+    <div class="trans-eyebrow">Phase 1 Complete · Preliminary Profile</div>
+    <h2 class="trans-title">The system has identified<br/>your cognitive tendencies</h2>
+    <p class="trans-sub">Based on your first 8 answers, you most likely fall into one of these two areas</p>
+    <div class="trans-cards" id="trans-cards"></div>
+    <p class="trans-note">The next 6 questions will be drawn from the specialist question banks for these two areas,<br/>helping the system distinguish further and deliver a sharper verdict.</p>
+    <button class="btn-continue" id="btn-continue">Continue to Phase 2 →</button>
+  </section>
+
+  <!-- QUESTION -->
+  <section class="screen" id="screen-question">
+    <div class="q-meta">
+      <button class="btn-back" id="btn-back">← Previous</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="q-phase-tag" id="q-phase-tag" style="display:none">Targeted</span>
+        <span class="q-type-badge" id="q-type-badge"></span>
+        <span class="q-dim-label" id="q-dim-label"></span>
+      </div>
+    </div>
+    <div class="q-text" id="q-text"></div>
+    <div id="q-body"></div>
+  </section>
+
+  <!-- RESULT -->
+  <section class="screen" id="screen-result">
+    <div style="margin-bottom:8px">
+      <span style="font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted)">Your Cognitive Profile</span>
+    </div>
+    <div class="result-header-grid">
+      <div class="result-card" id="edu-card"></div>
+      <div class="result-card" id="spec-card"></div>
+    </div>
+    <div class="spec-chart">
+      <div class="spec-title">Cognitive Fingerprint Distribution</div>
+      <div class="spec-row" id="spec-row"></div>
+    </div>
+    <div class="tf-summary">
+      <div class="tf-summary-title">True / False Breakdown</div>
+      <div class="tf-result-list" id="tf-list"></div>
+    </div>
+    <p class="result-quote" id="result-quote"></p>
+    <button class="btn-retry" id="btn-retry">Retake the Test</button>
+  </section>
+
+</main>
+<script>
+// ─────────────────────────────────────────
+//  STATIC DATA
+// ─────────────────────────────────────────
+const EDU_LEVELS = [
+  { key:'hs',  name:'Empiricist', en:'High School / Vocational Level', color:'#6b7280', scorePill:'Intuitive Layer',
+    desc:'Your cognitive world has clean outlines: good and evil, right and wrong, cause and effect. This instinctive judgment is the baseline of human intelligence — and the starting point for all complex thought. When the "standard answer" disappears, discomfort follows.',
+    quote:'"This isn\'t scientific! The textbook says so."', range:[0,10] },
+  { key:'bs',  name:'Pragmatist', en:'Undergraduate Level', color:'#5b8cdb', scorePill:'Disciplinary Tool Layer',
+    desc:'You have a hammer now. You can analyze problems using professional vocabulary and disciplinary frameworks — a genuine step beyond intuition. But beware: specialist tools can create the illusion that every problem is a nail. Overconfidence in your own methodology is the undergraduate\'s signature vulnerability.',
+    quote:'"From our field\'s perspective, this is actually a pretty straightforward problem."', range:[11,22] },
+  { key:'ms',  name:'Evidentialist', en:'Graduate / Master\'s Level', color:'#8b5cf6', scorePill:'Boundary Awareness Layer',
+    desc:'You\'ve developed a sharp sensitivity to limits. You know data lies, models fail, and invisible confounds lurk between variables. You can reason steadily under multi-variable conditions and you understand when and why your tools break down.',
+    quote:'"What are the boundary conditions for this conclusion? Where\'s the control group?"', range:[23,32] },
+  { key:'phd', name:'Paradigm Critic', en:'Doctoral Level', color:'#d97706', scorePill:'Meta-cognitive Layer',
+    desc:'You\'ve climbed to the platform of meta-cognition. You no longer seek answers — you interrogate the assumptions behind the questions. You can recognize the underlying logic of different disciplinary paradigms and switch between them. The price: other people\'s discussions often feel shallow.',
+    quote:'"An interesting question is worth more than a correct answer."', range:[33,50] },
+];
+
+const SPECIALTIES = {
+  science:     { name:'Scientific Thinking',   en:'Natural Science',          color:'#3b82f6', desc:'You are a disciple of first principles, convinced that the universe is written in mathematics at its core. Keywords: conservation, probability, falsifiability, error margins. Your most uncomfortable moment: being asked to skip the mechanism and just hand over the conclusion.' },
+  engineering: { name:'Engineering Thinking',  en:'Engineering',              color:'#e8623a', desc:'You are a designer and debugger of real-world systems. Your instinct is to decompose any problem into input–process–output modules and locate the stuck interface. Your most uncomfortable moment: being told "this isn\'t an engineering problem — it\'s a values question."' },
+  life:        { name:'Life Science Thinking', en:'Life Sciences',            color:'#16a34a', desc:'You have a deep, instinctive reverence for the complexity of living systems. You know "normal values" are ranges, not points, and "health" is dynamic equilibrium, not a fixed state. Your default question: "How was the control group designed? Are the baselines comparable?"' },
+  economics:   { name:'Econ / Mgmt Thinking',  en:'Economics / Management',   color:'#059669', desc:'You see the world through incentive structures. In your eyes, people are rational agents and society is a complex incentive system. You rapidly identify who benefits in any given arrangement. Your most uncomfortable moment: being challenged that economics oversimplifies human nature.' },
+  law:         { name:'Legal Thinking',         en:'Law / Political Science',  color:'#7c3aed', desc:'You are a guardian of rules and procedure. Your mind automatically maps the world into rights and obligations: who is entitled to do what, who bears the consequences, whether the process was lawful. This keeps you clear-headed when everyone else is confused.' },
+  humanities:  { name:'Humanities Thinking',    en:'Humanities',               color:'#db2777', desc:'You are a decoder of historical fog and power narratives. Your question is always: who is telling this story? What was deliberately left out? How was this "self-evident truth" constructed in the first place?' },
+};
+
+// ─────────────────────────────────────────
+//  CORE QUESTIONS  (Phase 1 — everyone answers)
+// ─────────────────────────────────────────
+const CORE_QUESTIONS = [
+  {
+    type:'choice', dim:'Thermodynamics · Systems & Entropy',
+    text:'In a sealed laboratory, a chaotic petri dish spontaneously arranges itself into a perfect geometric pattern. Your first reaction is—',
+    options:[
+      {text:'All things have spirit. Life always finds its own path.', edu:1, spec:{}},
+      {text:'Give me a break — who secretly plugged this in or heated it up?', edu:3, spec:{engineering:2}},
+      {text:'A monkey typed Shakespeare. Probability\'s god just dealt me the hand.', edu:3, spec:{science:2}},
+      {text:'This isn\'t science! Textbooks say entropy increase is irreversible — I\'m filing a complaint.', edu:1, spec:{}},
+    ],
+  },
+  {
+    type:'choice', dim:'Economics · Price Signals & Resource Allocation',
+    text:'A city bans landlords from raising rent to "protect tenants" — and suddenly no one can find housing. Your take?',
+    options:[
+      {text:'Landlords are staging a collective boycott. Time for moral audits and administrative crackdowns.', edu:1, spec:{}},
+      {text:'The legal framework for rental contracts has loopholes that need legislative repair.', edu:2, spec:{law:1}},
+      {text:'Of course — pin down the price, and the invisible hand starts slapping people around.', edu:3, spec:{economics:2}},
+      {text:'This is capital further squeezing the working class\'s access to basic housing.', edu:3, spec:{humanities:1}},
+    ],
+  },
+  {
+    type:'choice', dim:'Philosophy of Science · Models vs. Reality',
+    text:'Someone claims "all scientific models are wrong." Your view?',
+    options:[
+      {text:'So don\'t trust experts either — they\'re all just bluffing.', edu:1, spec:{}},
+      {text:'A map isn\'t the territory, but if it gets you there, it\'s good enough.', edu:3, spec:{science:1,engineering:1}},
+      {text:'The model just isn\'t complex enough yet. Add enough variables and it\'ll match eventually.', edu:2, spec:{engineering:1}},
+      {text:'Models are nothing more than "power discourse" constructed by the scientific community.', edu:4, spec:{humanities:2}},
+    ],
+  },
+  {
+    type:'choice', dim:'Social Structures · Dispute Resolution',
+    text:'Facing a medical malpractice dispute, your first instinct is to—',
+    options:[
+      {text:'See who\'s more vulnerable — whoever is worse off is more in the right.', edu:1, spec:{}},
+      {text:'Pull up the tort liability law and the surgical consent form and look for procedural gaps.', edu:2, spec:{law:2}},
+      {text:'Study the tiered-care system and insurance resource misallocation to find the structural root cause.', edu:4, spec:{engineering:1,life:1}},
+      {text:'Look at both sides — doctors and patients both share responsibility. Nothing is absolutely right or wrong.', edu:1, spec:{}},
+    ],
+  },
+  {
+    type:'choice', dim:'Art History · Aesthetic Methodology',
+    text:'Standing before a priceless abstract painting at a museum, the ticker in your head reads—',
+    options:[
+      {text:'This painting is... quite... calming. (Three-second silence.) Let\'s move on.', edu:1, spec:{}},
+      {text:'This arrangement of color blocks is clearly paying homage to De Stijl from the 1920s.', edu:2, spec:{humanities:1}},
+      {text:'Who commissioned this? What political message was the patron trying to send?', edu:4, spec:{humanities:2}},
+      {text:'My three-year-old draws about the same thing. This passes as art?', edu:1, spec:{}},
+    ],
+  },
+  {
+    type:'choice', dim:'Experimental Design · Methodological Intuition',
+    text:'Your experiment produces results that are perfectly, exactly what you predicted. You would—',
+    options:[
+      {text:'I\'m a genius! Start writing the paper. Time to reach the top.', edu:1, spec:{}},
+      {text:'Something\'s wrong — did I mistake noise for signal somewhere? Better check the instruments.', edu:4, spec:{science:1,life:1}},
+      {text:'Normal. I tuned the experimental parameters to match this preset. (Straight-faced.)', edu:1, spec:{}},
+      {text:'Probably my intern entered the data wrong — this is way too clean to be real.', edu:3, spec:{science:1}},
+    ],
+  },
+  {
+    type:'choice', dim:'Urban Planning · Linear vs. Complex Systems',
+    text:'You\'re a city planner tasked with solving peak-hour traffic. Your first instinct is—',
+    options:[
+      {text:'The roads aren\'t wide enough and there aren\'t enough overpasses. Build two more ring roads.', edu:1, spec:{engineering:1}},
+      {text:'Double the tolls during peak hours — let wallets help people conquer their morning inertia.', edu:3, spec:{economics:2}},
+      {text:'Congestion is a downstream symptom. The real question is upstream: why does everyone need to be at the same place at the same time?', edu:4, spec:{engineering:1,economics:1}},
+      {text:'Return to small blocks, high density — let walking replace commuting.', edu:2, spec:{humanities:1}},
+    ],
+  },
+  {
+    type:'choice', dim:'Historiography · Intertextuality & Narrative',
+    text:'While processing historical archives, you discover two records that describe the same event in completely contradictory ways. You would—',
+    options:[
+      {text:'Find a third record, apply majority rule, and vote on which one is true.', edu:1, spec:{}},
+      {text:'Compare the recorders\' physical proximity and timestamps and filter out the "noise" document.', edu:2, spec:{science:1}},
+      {text:'Fascinating! This is evidence of social power stratification at the time — different classes were telling different stories.', edu:4, spec:{humanities:2}},
+      {text:'One of them is definitely lying. There\'s something hidden here. Dig deeper.', edu:1, spec:{}},
+    ],
+  },
+];
+
+// ─────────────────────────────────────────
+//  ADAPTIVE POOL  (Phase 2 — targeted by specialty)
+// ─────────────────────────────────────────
+const ADAPTIVE_POOL = {
+  science: [
+    {
+      type:'choice', dim:'Scale Boundaries · Cross-domain Detection',
+      text:'You see an ad claiming "quantum healing crystals cure all diseases." The underlying logic you use to detect the fraud is—',
+      options:[
+        {text:'Way overpriced — that price point alone is a red flag.', edu:1, spec:{}},
+        {text:'Quantum mechanics operates at the microscopic scale; drug action is macroscopic biochemistry — there\'s no established cross-scale coupling mechanism.', edu:4, spec:{science:2}},
+        {text:'Forget the mechanism — just check whether it has gone through a large-scale randomized double-blind controlled trial.', edu:3, spec:{life:2}},
+        {text:'Google it and see if anyone has filed complaints. Check the reviews.', edu:1, spec:{}},
+      ],
+    },
+    {
+      type:'tf', dim:'Quantum Mechanics · The Uncertainty Principle',
+      text:'The essence of the Heisenberg Uncertainty Principle is insufficient instrument precision. In theory, a sufficiently precise instrument could simultaneously measure a particle\'s position and momentum with perfect accuracy.',
+      correct:'False', correctSpec:{science:3},
+      commentary:'The Uncertainty Principle is an intrinsic property of quantum systems — it has nothing to do with instruments. Position and momentum are "conjugate variables" whose uncertainties multiply to a theoretical minimum (ΔxΔp ≥ ħ/2), determined by the mathematical structure of the wave function, not engineering limitations. Einstein spent his life opposing this conclusion. Experiments have repeatedly confirmed it: God does indeed play dice.',
+    },
+    {
+      type:'tf', dim:'Scientific Method · Occam\'s Razor',
+      text:'The principle of "Occam\'s Razor" holds that when explaining the same phenomenon, theories that introduce fewer assumptions should be epistemologically preferred.',
+      correct:'True', correctSpec:{science:2},
+      commentary:'"Entities should not be multiplied beyond necessity" is a foundational principle of scientific methodology. It doesn\'t mean simpler theories are always correct — it means that with equal predictive power, a theory with fewer assumptions is more falsifiable and easier to test and refute. This is the core methodological divide between science and theology.',
+    },
+  ],
+
+  engineering: [
+    {
+      type:'tf', dim:'Engineering Intuition · Redundancy & Cost',
+      text:'In engineering practice, for the sake of absolute safety, we must reduce system failure rate to zero regardless of cost.',
+      correct:'False', correctSpec:{engineering:2},
+      commentary:'The marginal cost of driving failure rate toward zero approaches infinity. Engineering\'s core discipline is finding the "safe enough" equilibrium within cost constraints. Zero failure rate is neither achievable nor optimal — this is the key distinction between engineering decisions and idealism.',
+    },
+    {
+      type:'tf', dim:'Computation Theory · Turing Completeness',
+      text:'A system that is "Turing complete" can theoretically execute any computable algorithm and simulate any other Turing-complete system.',
+      correct:'True', correctSpec:{engineering:2},
+      commentary:'All Turing-complete systems are theoretically equivalent in computational power and can mutually simulate one another. This means: Scratch, Excel formula systems, and even a computer built from Minecraft redstone circuits are theoretically "as powerful" as a supercomputer — just so slow that the universe would end before they finished computing.',
+    },
+    {
+      type:'tf', dim:'Software Engineering · Premature Optimization',
+      text:'"Premature optimization is the root of all evil" means: before a performance bottleneck is actually measured, you should not modify structurally clear code for hypothetical performance issues.',
+      correct:'True', correctSpec:{engineering:2},
+      commentary:'Donald Knuth\'s famous dictum. The correct engineering path: first make it work correctly, then use actual measurement to identify the real bottleneck, then optimize precisely. Prematurely optimized code is harder to maintain — and the problem is almost never where you assumed it would be.',
+    },
+  ],
+
+  life: [
+    {
+      type:'tf', dim:'Evidence-Based Medicine · Experimental Design',
+      text:'In a randomized double-blind controlled trial, the core purpose of "double-blind" is to simultaneously eliminate subjects\' "placebo effect" and researchers\' own "observer expectancy bias."',
+      correct:'True', correctSpec:{life:3},
+      commentary:'Subjects don\'t know → eliminates placebo effect. Researchers don\'t know → eliminates observer expectancy bias (unconscious scoring bias). Both "blinds" are indispensable. Historically, many drugs performed well in single-blind trials, then the effect vanished entirely under double-blind conditions.',
+    },
+    {
+      type:'tf', dim:'Statistical Intuition · Correlation vs. Causation',
+      text:'As long as the sample size is large enough, correlation equals causation.',
+      correct:'False', correctSpec:{life:2,science:1},
+      commentary:'Sample size addresses statistical power, not confounding variables. Ice cream sales and drowning incidents are highly correlated — both are children of summer. Correlation ≠ causation is the entry ticket to every empirical discipline.',
+    },
+    {
+      type:'choice', dim:'Translational Medicine · Evidence Hierarchy',
+      text:'A new antibiotic shows powerful bactericidal activity against a drug-resistant strain in in vitro cell experiments. The most reasonable next conclusion is—',
+      options:[
+        {text:'The antibiotic has proven effective — proceed directly to clinical application.', edu:1, spec:{}},
+        {text:'In vitro efficacy is necessary but not sufficient; animal studies are needed to verify in vivo safety and efficacy.', edu:3, spec:{life:3}},
+        {text:'This proves the bacterium\'s resistance mechanism has been overcome.', edu:2, spec:{life:1}},
+        {text:'In vitro results are solid enough — time to advance commercial partnership discussions.', edu:1, spec:{}},
+      ],
+    },
+  ],
+
+  economics: [
+    {
+      type:'tf', dim:'Macroeconomics · The Phillips Curve',
+      text:'The Phillips curve describes a short-term trade-off: the higher the inflation rate, the lower the unemployment rate tends to be.',
+      correct:'True', correctSpec:{economics:3},
+      commentary:'This is the core paradox of Keynesian macroeconomic policy: trading inflation for employment. Phillips discovered the pattern from a century of UK data in 1958. Then the 1970s "stagflation" slapped both sides simultaneously — declaring the failure of the simple Phillips curve. Inflation and unemployment can spike together after all.',
+    },
+    {
+      type:'tf', dim:'Social Choice Theory · Arrow\'s Impossibility Theorem',
+      text:'According to Arrow\'s Impossibility Theorem, with three or more options, no voting rule can simultaneously satisfy "non-dictatorship," "Pareto efficiency," and "independence of irrelevant alternatives."',
+      correct:'True', correctSpec:{economics:3},
+      commentary:'Kenneth Arrow\'s 1951 theorem shows that a "perfect democratic voting mechanism" is logically impossible — you must sacrifice at least one seemingly reasonable condition. The theorem won Arrow the Nobel Prize in Economics and has given political scientists headaches ever since.',
+    },
+    {
+      type:'tf', dim:'Innovation Economics · The Schumpeterian Paradigm',
+      text:'Any innovation is, at its core, a recombination of existing factors.',
+      correct:'True', correctSpec:{economics:2},
+      commentary:'This is Schumpeter\'s core definition from "The Theory of Economic Development": innovation = new combinations of productive factors. Steam engines, iPhones, and ChatGPT are all recombinations, not creations ex nihilo. Understanding this means understanding why "innovation" is fundamentally a combinatorial optimization problem.',
+    },
+  ],
+
+  law: [
+    {
+      type:'choice', dim:'Legal Philosophy · Ethics & Procedural Justice',
+      text:'The trolley problem: you must choose one. The answer most consistent with the spirit of modern rule of law would be—',
+      options:[
+        {text:'5 > 1. Simple arithmetic — save five. No contest.', edu:2, spec:{economics:1}},
+        {text:'Unless the law explicitly authorizes it, I have no right to take an innocent life — even to save more people.', edu:4, spec:{law:2}},
+        {text:'I would jump onto the tracks and block the trolley with my own body.', edu:1, spec:{}},
+        {text:'This is a false dilemma. In reality there\'s always a third option. The question has no practical value.', edu:2, spec:{}},
+      ],
+    },
+    {
+      type:'tf', dim:'Legal Theory · Legal Positivism',
+      text:'The validity of law derives from the internal logical coherence of its norms, not from external coercive force.',
+      correct:'True', correctSpec:{law:2},
+      commentary:'This is the core thesis of Kelsen\'s "Pure Theory of Law": legal validity is normative, not coercive. Accepting this premise signals you\'ve engaged with legal philosophy, not just memorized statutes.',
+    },
+    {
+      type:'tf', dim:'Contract Law · The Limits of Freedom of Contract',
+      text:'Under the "freedom of contract" principle, any contract voluntarily signed by two legally competent adults is necessarily legally valid.',
+      correct:'False', correctSpec:{law:3},
+      commentary:'Freedom of contract has limits: agreements cannot violate mandatory legal provisions or public policy and morality — otherwise they are void. "Voluntary" is necessary but far from sufficient. A voluntary drug trafficking deal or an agreement restricting someone\'s personal freedom is obviously unenforceable. The law does not protect all "voluntary" acts.',
+    },
+  ],
+
+  humanities: [
+    {
+      type:'tf', dim:'Philosophical Precision · Textual Interpretation',
+      text:'"Everything real is rational" — philosophically, this statement describes the necessity of causal logic, not a value judgment about whether existing things are justified.',
+      correct:'True', correctSpec:{humanities:2},
+      commentary:'Hegel\'s original German — "was vernünftig ist, das ist wirklich" — describes the dialectical relationship between reason and reality, not an endorsement of the existing order. Reading it as "whatever exists is justifiable (and therefore good)" reflects both a translation failure and an absence of philosophical training.',
+    },
+    {
+      type:'tf', dim:'Intellectual History · The Renaissance',
+      text:'The core significance of the Renaissance was: drawing on ancient Greek and Roman humanist spirit to establish a discourse system centered on "humans," thereby challenging the medieval theological order centered on "God."',
+      correct:'True', correctSpec:{humanities:2},
+      commentary:'The Renaissance (Renaissance = rebirth) is fundamentally about Humanism. By rediscovering classical texts preserved through the Arab world, thinkers built a discourse system that competed with the medieval theological paradigm. It was not merely an artistic movement — it was a paradigm shift in epistemology.',
+    },
+    {
+      type:'tf', dim:'Historical Methodology · Narrative & Power',
+      text:'"History is written by the victors" — from a historiographical perspective, this means all historical documents are fabricated, and historical research can therefore reach no credible conclusions.',
+      correct:'False', correctSpec:{humanities:2},
+      commentary:'This is an over-reading of the claim that "historical narrative has a power position." The correct understanding: narratives have stances, but that doesn\'t mean they\'re all lies. The historian\'s task is precisely to approach a fuller picture through intertextual analysis, cross-verification, and recovering suppressed voices. Acknowledging limitations is a sign of methodological maturity — not a reason to abandon inquiry.',
+    },
+  ],
+};
+
+// ─────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────
+const CORE_COUNT = CORE_QUESTIONS.length; // 8
+let currentQ = 0;
+let allQuestions = [];
+let top2Specs = [];
+let eduScore = 0;
+const specScores = { science:0, engineering:0, life:0, economics:0, law:0, humanities:0 };
+const tfResults = [];
+const history = [];
+const eduPts = { 1:0, 2:1, 3:2, 4:3 };
+
+// ─────────────────────────────────────────
+//  HELPERS
+// ─────────────────────────────────────────
+function addSpec(obj) {
+  if (!obj) return;
+  Object.entries(obj).forEach(([k,v]) => { specScores[k] = (specScores[k]||0)+v; });
+}
+function subSpec(obj) {
+  if (!obj) return;
+  Object.entries(obj).forEach(([k,v]) => { specScores[k] = (specScores[k]||0)-v; });
+}
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active','fade-in');
+}
+function updateProgress() {
+  const total = allQuestions.length;
+  const pct = total > 0 ? (currentQ / total) * 100 : 0;
+  document.getElementById('progress-bar-fill').style.width = pct + '%';
+  document.getElementById('q-counter').textContent = `${currentQ + 1} / ${total}`;
+  document.getElementById('btn-back').classList.toggle('visible', currentQ > 0);
+  const tag = document.getElementById('q-phase-tag');
+  tag.style.display = currentQ >= CORE_COUNT ? 'inline-block' : 'none';
+}
+function shuffleArr(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+function computeNormed(questionList) {
+  const max = { science:0, engineering:0, life:0, economics:0, law:0, humanities:0 };
+  questionList.forEach(q => {
+    if (q.type === 'choice') {
+      Object.keys(max).forEach(spec => {
+        const best = Math.max(...q.options.map(o => (o.spec&&o.spec[spec])||0));
+        max[spec] += best;
+      });
+    } else if (q.correctSpec) {
+      Object.entries(q.correctSpec).forEach(([k,v]) => { max[k] += v; });
+    }
+  });
+  const normed = {};
+  Object.keys(specScores).forEach(k => {
+    normed[k] = max[k] > 0 ? Math.min(specScores[k]/max[k], 1) : 0;
+  });
+  return normed;
+}
+
+// ─────────────────────────────────────────
+//  QUIZ FLOW
+// ─────────────────────────────────────────
+function startQuiz() {
+  currentQ = 0; eduScore = 0;
+  tfResults.length = 0; history.length = 0; top2Specs.length = 0;
+  Object.keys(specScores).forEach(k => specScores[k]=0);
+  allQuestions = [...CORE_QUESTIONS];
+  document.getElementById('progress-bar-wrap').style.display = 'block';
+  document.getElementById('q-counter').style.display = 'block';
+  renderQuestion();
+  showScreen('screen-question');
+}
+
+function renderQuestion() {
+  const q = allQuestions[currentQ];
+  updateProgress();
+  const badge = document.getElementById('q-type-badge');
+  if (q.type==='choice') { badge.textContent='Multiple Choice'; badge.className='q-type-badge badge-choice'; }
+  else                   { badge.textContent='True / False';    badge.className='q-type-badge badge-tf'; }
+  document.getElementById('q-dim-label').textContent = q.dim;
+  document.getElementById('q-text').textContent = q.text;
+
+  const body = document.getElementById('q-body');
+  body.innerHTML = '';
+
+  if (q.type === 'choice') {
+    const list = document.createElement('div');
+    list.className = 'options-list';
+    shuffleArr(q.options.map(o=>({...o}))).forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerHTML = `<span class="option-text">${opt.text}</span>`;
+      btn.addEventListener('click', () => {
+        btn.classList.add('selected');
+        list.querySelectorAll('.option-btn').forEach(b => b.style.pointerEvents='none');
+        const ed = eduPts[opt.edu]||0;
+        eduScore += ed; addSpec(opt.spec);
+        history.push({ eduDelta:ed, specDelta:opt.spec||{}, isTF:false });
+        setTimeout(advance, 360);
+      });
+      list.appendChild(btn);
+    });
+    body.appendChild(list);
+  } else {
+    const wrap = document.createElement('div');
+    wrap.className = 'tf-container';
+    ['True','False'].forEach(ans => {
+      const isTrue = ans==='True';
+      const btn = document.createElement('button');
+      btn.className = `tf-btn ${isTrue?'tf-btn-true':'tf-btn-false'}`;
+      btn.innerHTML = `<span class="tf-icon">${isTrue?'○':'✕'}</span>
+        <span style="font-size:17px;font-weight:700">${ans}</span>
+        <span class="tf-label">${isTrue?'This statement is correct':'This statement is incorrect'}</span>`;
+      btn.addEventListener('click', () => {
+        btn.classList.add(isTrue?'selected-true':'selected-false');
+        wrap.querySelectorAll('.tf-btn').forEach(b=>b.style.pointerEvents='none');
+        const isCorrect = ans===q.correct;
+        const ed = isCorrect ? 2 : 0;
+        const sd = isCorrect ? (q.correctSpec||{}) : {};
+        eduScore += ed; if(isCorrect) addSpec(q.correctSpec);
+        tfResults.push({ correct:isCorrect, text:q.text, commentary:q.commentary, userAnswer:ans, correctAnswer:q.correct });
+        history.push({ eduDelta:ed, specDelta:sd, isTF:true });
+        setTimeout(advance, 360);
+      });
+      wrap.appendChild(btn);
+    });
+    // "I Don't Know" option — full width, no score
+    const unknownBtn = document.createElement('button');
+    unknownBtn.className = 'tf-btn tf-btn-unknown';
+    unknownBtn.style.gridColumn = '1 / -1';
+    unknownBtn.style.padding = '14px 16px';
+    unknownBtn.innerHTML = `<span style="font-size:15px;font-weight:700">I Don't Know</span>
+      <span class="tf-label">Skip — no points, but the explanation still appears</span>`;
+    unknownBtn.addEventListener('click', () => {
+      unknownBtn.classList.add('selected-unknown');
+      wrap.querySelectorAll('.tf-btn').forEach(b=>b.style.pointerEvents='none');
+      tfResults.push({ correct:false, skipped:true, text:q.text, commentary:q.commentary, userAnswer:"I don't know", correctAnswer:q.correct });
+      history.push({ eduDelta:0, specDelta:{}, isTF:true });
+      setTimeout(advance, 360);
+    });
+    wrap.appendChild(unknownBtn);
+    body.appendChild(wrap);
+  }
+  const qs = document.getElementById('screen-question');
+  qs.classList.remove('fade-in'); void qs.offsetWidth; qs.classList.add('fade-in');
+}
+
+function advance() {
+  currentQ++;
+  if (currentQ === CORE_COUNT) {
+    selectAdaptive();
+    showTransition();
+  } else if (currentQ < allQuestions.length) {
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function selectAdaptive() {
+  const normed = computeNormed(CORE_QUESTIONS);
+  const sorted = Object.entries(normed).sort((a,b)=>b[1]-a[1]);
+  top2Specs = [sorted[0][0], sorted[1][0]];
+  const adaptive = [];
+  top2Specs.forEach(spec => {
+    shuffleArr(ADAPTIVE_POOL[spec]).slice(0,3).forEach(q => adaptive.push(q));
+  });
+  allQuestions = [...CORE_QUESTIONS, ...adaptive];
+}
+
+function showTransition() {
+  const cards = document.getElementById('trans-cards');
+  cards.innerHTML = '';
+  top2Specs.forEach((spec, i) => {
+    const sp = SPECIALTIES[spec];
+    const card = document.createElement('div');
+    card.className = 'trans-card';
+    card.style.borderColor = sp.color;
+    card.style.color = sp.color;
+    card.innerHTML = `
+      <div class="trans-card-label">${i===0?'Primary tendency':'Secondary tendency'}</div>
+      <div class="trans-card-name">${sp.name}</div>
+    `;
+    cards.appendChild(card);
+  });
+  document.getElementById('progress-bar-fill').style.width = `${(CORE_COUNT/allQuestions.length)*100}%`;
+  showScreen('screen-transition');
+}
+
+function goBack() {
+  if (currentQ === 0) return;
+  const last = history.pop();
+  eduScore -= last.eduDelta;
+  subSpec(last.specDelta);
+  if (last.isTF) tfResults.pop();
+  currentQ--;
+  showScreen('screen-question');
+  renderQuestion();
+}
+
+// ─────────────────────────────────────────
+//  RESULTS
+// ─────────────────────────────────────────
+function showResults() {
+  document.getElementById('progress-bar-fill').style.width = '100%';
+  document.getElementById('q-counter').style.display = 'none';
+
+  const edu = EDU_LEVELS.find(e => eduScore>=e.range[0] && eduScore<=e.range[1])
+    || EDU_LEVELS[EDU_LEVELS.length-1];
+  const eduCard = document.getElementById('edu-card');
+  eduCard.style.borderColor = edu.color;
+  eduCard.innerHTML = `<div class="rc-label">Estimated Education Level</div>
+    <span class="score-pill" style="background:${edu.color}">${edu.scorePill}</span>
+    <div class="rc-value" style="color:${edu.color}">${edu.name}</div>
+    <div class="rc-en">${edu.en}</div>
+    <div class="rc-desc">${edu.desc}</div>`;
+
+  const normed = computeNormed(allQuestions);
+  const topSpec = Object.entries(normed).sort((a,b)=>b[1]-a[1])[0][0];
+  const sp = SPECIALTIES[topSpec];
+  const specCard = document.getElementById('spec-card');
+  specCard.style.borderColor = sp.color;
+  specCard.innerHTML = `<div class="rc-label">Estimated Academic Background</div>
+    <span class="score-pill" style="background:${sp.color}">${sp.en}</span>
+    <div class="rc-value" style="color:${sp.color}">${sp.name}</div>
+    <div class="rc-en">${sp.en}</div>
+    <div class="rc-desc">${sp.desc}</div>`;
+
+  const specRow = document.getElementById('spec-row');
+  specRow.innerHTML = '';
+  Object.entries(normed).sort((a,b)=>b[1]-a[1]).forEach(([key,val]) => {
+    const pct = Math.round(val*100);
+    const item = document.createElement('div');
+    item.className = 'spec-item';
+    item.innerHTML = `<div class="spec-header">
+        <span class="spec-name">${SPECIALTIES[key].name}</span>
+        <span class="spec-pct">${pct}%</span>
+      </div>
+      <div class="spec-bar-bg">
+        <div class="spec-bar-fill" style="background:${SPECIALTIES[key].color}" data-pct="${pct}"></div>
+      </div>`;
+    specRow.appendChild(item);
+  });
+
+  const tfList = document.getElementById('tf-list');
+  tfList.innerHTML = '';
+  if (tfResults.length === 0) {
+    tfList.innerHTML = '<div style="font-size:13px;color:var(--text-muted)">No true/false questions in this session.</div>';
+  } else {
+    tfResults.forEach(r => {
+      const row = document.createElement('div');
+      row.className = 'tf-result-row';
+      const markClass = r.skipped ? 'tf-unknown' : (r.correct ? 'tf-correct' : 'tf-incorrect');
+      const markIcon  = r.skipped ? '−' : (r.correct ? '✓' : '✕');
+      const statusText = r.skipped
+        ? `Chose "I don't know" (correct answer: ${r.correctAnswer})`
+        : (r.correct ? 'Correct' : `Incorrect (correct answer: ${r.correctAnswer})`);
+      row.innerHTML = `<span class="tf-mark ${markClass}">${markIcon}</span>
+        <div>
+          <div style="font-weight:500;margin-bottom:3px;font-size:12px;color:var(--text-primary)">${statusText}</div>
+          <div>${r.commentary}</div>
+        </div>`;
+      tfList.appendChild(row);
+    });
+  }
+
+  document.getElementById('result-quote').textContent = edu.quote;
+  showScreen('screen-result');
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    document.querySelectorAll('.spec-bar-fill').forEach(b => b.style.width = b.dataset.pct+'%');
+  }));
+}
+
+// ─────────────────────────────────────────
+//  EVENTS
+// ─────────────────────────────────────────
+document.getElementById('btn-start').addEventListener('click', startQuiz);
+document.getElementById('btn-back').addEventListener('click', goBack);
+document.getElementById('btn-continue').addEventListener('click', () => {
+  showScreen('screen-question');
+  renderQuestion();
+});
+document.getElementById('btn-retry').addEventListener('click', () => {
+  document.getElementById('progress-bar-wrap').style.display = 'none';
+  showScreen('screen-landing');
+});
+</script>
+</body>
+</html>
