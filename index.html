@@ -247,37 +247,26 @@
 
   <!-- LANDING -->
   <section class="screen active" id="screen-landing">
-    <div class="landing-badge">自适应认知范式识别系统</div>
-    <h1 class="landing-title">你的思维，<br/>出卖了你的学历与专业</h1>
+    <div class="landing-badge">四维认知偏好识别系统</div>
+    <h1 class="landing-title">你的思维，<br/>会暴露你更像哪个学科</h1>
     <p class="landing-sub">
-      前 10 题广撒网，系统初步判断你最可能的专业方向，<br/>
-      再用 10 道定向题精准收网——<br/>
-      你越诚实，结果越准确。
+      这不是知识竞赛，也不是标准答案测试。<br/>
+      20 道题只看一件事：面对复杂问题时，<br/>
+      你更自然调用哪套认知工具。
     </p>
-    <p class="landing-note">你的「误选」往往比「对选」更能暴露你的专业灵魂。</p>
+    <p class="landing-note">没有正确答案，只有更稳定的偏好。</p>
     <div class="landing-stats">
       <div class="stat-item"><span class="stat-num">20</span><span class="stat-label">道题目</span></div>
-      <div class="stat-item"><span class="stat-num">自适应</span><span class="stat-label">动态题库</span></div>
-      <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">学历层次</span></div>
-      <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">思维指纹</span></div>
+      <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">认知维度</span></div>
+      <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">专业原型</span></div>
     </div>
     <button class="btn-start" id="btn-start">开始诊断</button>
     <div class="landing-chips">
-      <span class="dim-chip">热力学直觉</span><span class="dim-chip">供需边界</span>
-      <span class="dim-chip">模型哲学</span><span class="dim-chip">证伪主义</span>
-      <span class="dim-chip">实验设计</span><span class="dim-chip">史料解读</span>
-      <span class="dim-chip">法哲学</span><span class="dim-chip">系统思维</span>
+      <span class="dim-chip">机制导向</span><span class="dim-chip">叙事导向</span>
+      <span class="dim-chip">系统优化</span><span class="dim-chip">规则裁决</span>
+      <span class="dim-chip">激励分析</span><span class="dim-chip">价值判断</span>
+      <span class="dim-chip">证伪建模</span><span class="dim-chip">情境诠释</span>
     </div>
-  </section>
-
-  <!-- TRANSITION -->
-  <section class="screen" id="screen-transition">
-    <div class="trans-eyebrow">阶段一完成 · 初步画像</div>
-    <h2 class="trans-title">系统已识别出你的<br/>思维倾向</h2>
-    <p class="trans-sub">根据前 10 道题，你最可能属于以下两个专业方向之一</p>
-    <div class="trans-cards" id="trans-cards"></div>
-    <p class="trans-note">接下来 10 道题将从这两个方向的专业题库中抽取，<br/>帮助系统进一步区分，给出更精准的结论。</p>
-    <button class="btn-continue" id="btn-continue">继续第二阶段 →</button>
   </section>
 
   <!-- QUESTION -->
@@ -285,9 +274,7 @@
     <div class="q-meta">
       <button class="btn-back" id="btn-back">← 上一题</button>
       <div style="display:flex;align-items:center;gap:8px">
-        <span class="q-phase-tag" id="q-phase-tag" style="display:none">定向题</span>
         <span class="q-type-badge" id="q-type-badge"></span>
-        <span class="q-dim-label" id="q-dim-label"></span>
       </div>
     </div>
     <div class="q-text" id="q-text"></div>
@@ -304,12 +291,12 @@
       <div class="result-card" id="spec-card"></div>
     </div>
     <div class="spec-chart">
-      <div class="spec-title">思维指纹分布</div>
+      <div class="spec-title">专业原型分布</div>
       <div class="spec-row" id="spec-row"></div>
     </div>
     <div class="tf-summary">
-      <div class="tf-summary-title">判断题解析</div>
-      <div class="tf-result-list" id="tf-list"></div>
+      <div class="tf-summary-title">维度解读</div>
+      <div class="tf-result-list" id="dimension-list"></div>
     </div>
     <p class="result-quote" id="result-quote"></p>
     <button class="btn-retry" id="btn-retry">再测一次</button>
@@ -317,419 +304,389 @@
 
 </main>
 <script>
-// ─────────────────────────────────────────
-//  STATIC DATA
-// ─────────────────────────────────────────
-const EDU_LEVELS = [
-  { key:'hs',  name:'经验主义者', en:'高中 / 大专水平', color:'#6b7280', scorePill:'基础认知层',
-    desc:'你的认知世界轮廓清晰：好人与坏人，对与错，原因与结果。这种直觉式判断力是人类智慧的本能，也是所有复杂思维的起点。当世界的「标准答案」消失时，会感到不适。',
-    quote:'「这不科学！课本上说了的。」', range:[0,10] },
-  { key:'bs',  name:'工具主义者', en:'本科水平', color:'#5b8cdb', scorePill:'学科工具层',
-    desc:'你手里有了锤子。能够用专业术语和学科框架分析问题，比感性认知进步了一大步。但当心——专业工具有时会让人产生「万物皆可锤」的幻觉，容易过度迷信本专业的方法论。',
-    quote:'「从我们专业的角度看，这其实是个很简单的问题。」', range:[11,22] },
-  { key:'ms',  name:'实证主义者', en:'硕士水平', color:'#8b5cf6', scorePill:'边界感知层',
-    desc:'你开始对「边界」产生强烈的感知。你知道数据会说谎，模型会失效，变量之间存在看不见的因果混淆。你能够在多变量环境中稳定思考，并理解工具在什么条件下会失效。',
-    quote:'「这个结论的适用边界在哪里？有没有对照组？」', range:[23,32] },
-  { key:'phd', name:'范式批判者', en:'博士水平', color:'#d97706', scorePill:'元认知层',
-    desc:'你已爬上「元认知」的高台。你不再寻找答案，而是审视问题本身的预设。能识别不同学科范式的底层逻辑，并在它们之间自由切换。你的代价：有时会觉得别人的讨论流于肤浅。',
-    quote:'「有意思的问题，比正确的答案更珍贵。」', range:[33,50] },
-];
-
-const SPECIALTIES = {
-  science:     { name:'理科思维',   en:'Natural Science',          color:'#3b82f6', desc:'你是第一性原理的信徒，相信宇宙在底层是用数学公式写成的。关键词：守恒、概率、可证伪、误差。你最不舒服的时刻：被要求「不管机制，直接给结论」。' },
-  engineering: { name:'工科思维',   en:'Engineering',              color:'#e8623a', desc:'你是现实系统的设计师与调试员。本能是把任何问题拆解成「输入-处理-输出」模块，找到卡壳的接口。你最不舒服的时刻：被告知「这不是工程问题，是价值观问题」。' },
-  economics:   { name:'经管思维',   en:'Economics / Management',   color:'#059669', desc:'你透过激励机制看世界。在你眼里，人是理性经济体，社会是一个复杂的激励系统。你能快速识别「谁在这个系统里获益」。你最不舒服的时刻：被质疑「经济学把人性简化了」。' },
-  law:         { name:'法学思维',   en:'Law / Political Science',  color:'#7c3aed', desc:'你是规则与程序的守护者。思维会自动把世界切割成权利与义务的版图：谁有权做什么、谁应该承担后果、程序是否合法。这让你在混沌中保持清醒。' },
-  humanities:  { name:'文史哲思维', en:'Humanities',               color:'#db2777', desc:'你是历史迷雾和权力叙事的解码者。你的问题永远是：谁在讲这个故事？什么被刻意遗漏了？这个「理所当然」是如何被建构出来的？' },
+const DIMENSIONS = {
+  mn: {
+    label:'机制导向 vs 叙事导向',
+    left:'机制导向',
+    right:'叙事导向',
+    shortLeft:'机',
+    shortRight:'叙',
+    color:'#3b82f6',
+    descLeft:'你更习惯追问变量、结构和因果链条，默认世界背后有可拆解的运作机制。',
+    descRight:'你更习惯先看是谁在讲故事、谁被遮蔽、叙述如何塑造了问题本身。'
+  },
+  sr: {
+    label:'系统优化 vs 规则裁决',
+    left:'系统优化',
+    right:'规则裁决',
+    shortLeft:'系',
+    shortRight:'规',
+    color:'#e8623a',
+    descLeft:'你更关注流程、接口、反馈和整体效率，倾向把问题当成系统调优。',
+    descRight:'你更关注边界、责任、程序与适用条件，倾向先把规则说清楚再谈结果。'
+  },
+  iv: {
+    label:'激励分析 vs 价值判断',
+    left:'激励分析',
+    right:'价值判断',
+    shortLeft:'激',
+    shortRight:'义',
+    color:'#059669',
+    descLeft:'你会先看人为什么这样做，谁因此获益，制度如何塑造行为。',
+    descRight:'你会先看这件事是否正当、是否体面、是否符合你认可的价值排序。'
+  },
+  fc: {
+    label:'证伪建模 vs 情境诠释',
+    left:'证伪建模',
+    right:'情境诠释',
+    shortLeft:'证',
+    shortRight:'境',
+    color:'#7c3aed',
+    descLeft:'你偏好抽象模型、可检验命题和边界清晰的证据。',
+    descRight:'你偏好保留语境、经验质地和复杂性，不轻易把现实压缩成单一模型。'
+  }
 };
 
-// ─────────────────────────────────────────
-//  CORE QUESTIONS  (阶段一，所有人都答)
-// ─────────────────────────────────────────
-const CORE_QUESTIONS = [
-  {
-    type:'choice', dim:'热力学 · 系统与能效',
-    text:'在封闭的实验室里，杂乱的培养皿竟然自发整齐地排列出了几何图形。你的第一反应是——',
-    options:[
-      {text:'万物有灵，生命总会找到自己的出路。', edu:1, spec:{}},
-      {text:'别装了，谁偷偷给这玩意儿通电或者加热了？', edu:3, spec:{engineering:2}},
-      {text:'猴子敲出莎士比亚——概率之神今天翻了我的牌子。', edu:3, spec:{science:2}},
-      {text:'这不科学！课本上说熵增是不可逆的，我要去告诉老师。', edu:1, spec:{}},
-    ],
+const PROFILE_ARCHETYPES = {
+  science: {
+    name:'理科原型',
+    en:'Natural Science',
+    color:'#3b82f6',
+    desc:'你更像把世界当作可被建模和检验的对象。机制、变量、误差和证据边界，会比立场和姿态更先进入你的视野。'
   },
-  {
-    type:'choice', dim:'经济学 · 价格信号与资源配置',
-    text:'某市严禁房东涨租金来「保护租客」，结果大家反而租不到房了。你怎么看？',
-    options:[
-      {text:'房东们在集体抵制，建议加强道德审查和行政打击。', edu:1, spec:{}},
-      {text:'说明租赁合同的法律框架存在漏洞，需要立法修复。', edu:2, spec:{law:1}},
-      {text:'正常，价格被按住了，供需这条「隐形的手」就开始扇人耳光了。', edu:3, spec:{economics:2}},
-      {text:'这是资本对底层生存空间的进一步挤压与剥夺。', edu:3, spec:{humanities:1}},
-    ],
+  engineering: {
+    name:'工科原型',
+    en:'Engineering',
+    color:'#e8623a',
+    desc:'你天然会把现实问题拆成系统、模块和约束条件。你关心的是哪里卡住了、怎么修、怎么让整体跑得更稳。'
   },
-  {
-    type:'stance', dim:'科学哲学 · 模型与现实',
-    text:'「所有科学模型在某种意义上都是错的——但有些是有用的。」',
-    stances:{
-      oppose:  { edu:1, spec:{} },
-      neutral: { edu:3, spec:{engineering:1, humanities:1} },
-      support: { edu:4, spec:{science:2, engineering:1} },
-    },
+  economics: {
+    name:'经管原型',
+    en:'Economics / Management',
+    color:'#059669',
+    desc:'你会从激励、博弈和资源配置理解世界。相比讨论善恶，你更容易先看结构如何诱导人做出那些选择。'
   },
-  {
-    type:'choice', dim:'社会结构 · 纠纷处理路径',
-    text:'面对医患纠纷，你的第一个「抓手」是——',
-    options:[
-      {text:'先看谁是弱势群体，谁更惨，谁就更有道理。', edu:1, spec:{}},
-      {text:'翻《侵权责任法》和手术知情同意书，找程序漏洞。', edu:2, spec:{law:2}},
-      {text:'研究分级诊疗制度和医疗保险的资源错配，找到制度根源。', edu:4, spec:{engineering:1,science:1}},
-      {text:'要一分为二地看，医生和患者都有责任，没有绝对对错。', edu:1, spec:{}},
-    ],
+  law: {
+    name:'法学原型',
+    en:'Law / Political Science',
+    color:'#7c3aed',
+    desc:'你会本能地追问边界、责任、程序和正当性。对你来说，很多争议不是效率问题，而是谁有权决定、规则如何适用。'
   },
-  {
-    type:'stance', dim:'艺术哲学 · 精英审美与大众文化',
-    text:'「抽象艺术本质上是文化精英对普通人审美品味的一种傲慢凌驾。」',
-    stances:{
-      support: { edu:1, spec:{} },
-      neutral: { edu:2, spec:{humanities:1, economics:1} },
-      oppose:  { edu:3, spec:{humanities:2} },
-    },
-  },
-  {
-    type:'choice', dim:'实验设计 · 方法论直觉',
-    text:'你做的实验结果非常完美，完全符合预期。你会——',
-    options:[
-      {text:'我真是个天才！准备写论文，走向人生巅峰。', edu:1, spec:{}},
-      {text:'坏了，是不是哪里的噪声被我当成信号了？赶紧检查仪器。', edu:4, spec:{science:2}},
-      {text:'正常，我就是按这个预设去调整实验参数的。（脸不红心不跳）', edu:1, spec:{}},
-      {text:'大概率是我的实习生把数据填错了，这也太巧了。', edu:3, spec:{science:1}},
-    ],
-  },
-  {
-    type:'choice', dim:'系统规划 · 线性 vs 复杂思维',
-    text:'你是城市规划师，要解决早高峰拥堵问题，你的第一直觉是——',
-    options:[
-      {text:'路不够宽，立交桥不够多，再修两条环线。', edu:1, spec:{engineering:1}},
-      {text:'早高峰过路费翻倍，用钱包帮大家克服「起床气」。', edu:3, spec:{economics:2}},
-      {text:'拥堵是下游反馈，关键在上游：为什么大家非得在同一时间去同一个地方？', edu:4, spec:{engineering:1,economics:1}},
-      {text:'回归小街区、高密度，让步行取代通勤。', edu:2, spec:{humanities:1}},
-    ],
-  },
-  {
-    type:'choice', dim:'史料学 · 互文性与叙事',
-    text:'处理历史档案时，发现两份记录对同一事件的描述截然相反。你会——',
-    options:[
-      {text:'寻找第三份档案，少数服从多数，投票表决。', edu:1, spec:{}},
-      {text:'对比记录者的物理距离和时间点，剔除「噪声」文献。', edu:2, spec:{science:1}},
-      {text:'太棒了！这正说明了当时社会权力结构的分层——不同阶层在讲不同的故事。', edu:4, spec:{humanities:2}},
-      {text:'其中一定有一个在撒谎，必有隐情，深挖！', edu:1, spec:{}},
-    ],
-  },
-  {
-    type:'stance', dim:'社会哲学 · 个体责任与结构不平等',
-    text:'「一个人的人生成就主要靠个人努力——出身家庭和社会阶层的影响，被严重夸大了。」',
-    stances:{
-      support: { edu:1, spec:{} },
-      neutral: { edu:2, spec:{economics:1} },
-      oppose:  { edu:4, spec:{humanities:2, economics:1} },
-    },
-  },
-  {
-    type:'choice', dim:'媒体素养 · 科学新闻解读',
-    text:'新闻标题：「研究发现：每天喝咖啡的人心脏病发生率比不喝的人低40%」。你的第一反应是——',
-    options:[
-      {text:'有科学依据就放心喝，本来就爱喝。', edu:1, spec:{}},
-      {text:'先查清楚谁资助了这个研究——食品行业的结论要打折扣。', edu:3, spec:{humanities:1, economics:1}},
-      {text:'这是观察性研究还是随机对照实验？前者只能说相关性，不能说因果。', edu:4, spec:{science:2}},
-      {text:'「低40%」是相对风险——如果基础发病率只有0.5%，绝对意义其实微不足道。', edu:4, spec:{science:1}},
-    ],
-  },
-];
-
-// ─────────────────────────────────────────
-//  ADAPTIVE POOL  (阶段二，按专业定向抽取)
-// ─────────────────────────────────────────
-const ADAPTIVE_POOL = {
-  science: [
-    {
-      type:'choice', dim:'科学边界 · 跨尺度识别',
-      text:'你看到声称「量子神药包治百病」的广告，识别骗局的底层逻辑是——',
-      options:[
-        {text:'卖得太贵了，价格这么高一定是在骗钱。', edu:1, spec:{}},
-        {text:'量子力学是微观物理，药物是宏观生化作用，中间缺乏跨尺度耦合机制。', edu:4, spec:{science:2}},
-        {text:'不管原理，直接看它有没有做过大规模随机双盲对照实验。', edu:3, spec:{science:2}},
-        {text:'上网搜一下，看有没有人举报过，看评论。', edu:1, spec:{}},
-      ],
-    },
-    {
-      type:'tf', dim:'量子力学 · 不确定性原理',
-      text:'「海森堡不确定性原理」的本质是测量仪器精度不足——理论上，足够精密的仪器可以同时精确测定粒子的位置和动量。',
-      correct:'错', correctSpec:{science:3},
-      commentary:'不确定性原理是量子系统的内在属性，与仪器无关。位置和动量是一对「共轭变量」，其不确定度之积存在理论下限（ΔxΔp ≥ ħ/2）——这是波函数的数学结构决定的，不是工程问题。爱因斯坦用一生反对这个结论，但实验一再证明：上帝确实掷骰子。',
-    },
-    {
-      type:'tf', dim:'科学方法论 · 奥卡姆剃刀',
-      text:'「奥卡姆剃刀」原则认为：在解释同一现象时，引入假设越少的理论在认识论上越应该被优先考虑。',
-      correct:'对', correctSpec:{science:2},
-      commentary:'「如无必要，勿增实体」是科学方法论的基础原则。它不是说简单理论一定正确，而是说：在预测能力相同时，假设更少的理论可证伪性更强，更容易被检验和推翻。这是科学与神学在方法论上的核心分野。',
-    },
-    {
-      type:'tf', dim:'科学史 · 范式修正与有效性',
-      text:'爱因斯坦相对论的出现证明了牛顿力学是错误的，因此牛顿定律在现代科学与工程中已不再适用。',
-      correct:'错', correctSpec:{science:2},
-      commentary:'相对论在低速宏观条件下退化为牛顿力学——发射卫星、建造桥梁、设计汽车，用的依然是牛顿方程。科学进步更多是「划定适用边界」而非「全盘推翻」：旧理论在其适用条件内依然完全正确。库恩的范式革命也不意味着旧范式失去价值。',
-    },
-    {
-      type:'choice', dim:'概率直觉 · 基率谬误',
-      text:'某病发病率为1%，检测准确率99%（误报率1%）。随机检测结果为阳性，患病概率约为——',
-      options:[
-        {text:'99%。检测准确率那么高，阳性就意味着患病。', edu:1, spec:{}},
-        {text:'超过50%，建议立即复查确认。', edu:2, spec:{}},
-        {text:'约50%——发病率太低，假阳性数量几乎和真阳性一样多，需贝叶斯推断。', edu:4, spec:{science:3}},
-        {text:'不能只看「准确率」，需要知道检测的敏感性和特异性才能判断。', edu:3, spec:{science:1}},
-      ],
-    },
-  ],
-
-  engineering: [
-    {
-      type:'tf', dim:'工程直觉 · 冗余与成本',
-      text:'在工程实践中，为了绝对安全，我们必须不计成本地将系统故障率降低至零。',
-      correct:'错', correctSpec:{engineering:2},
-      commentary:'故障率趋零的边际成本趋于无穷大，工程的核心是在成本约束下找到「足够安全」的平衡点。零故障率既不可能，也不是最优解——这是区分工程决策与理想主义的关键一步。',
-    },
-    {
-      type:'tf', dim:'计算理论 · 图灵完备性',
-      text:'一个系统具备「图灵完备性」，意味着它在理论上可以执行任何可计算的算法，并能模拟任何其他图灵完备系统。',
-      correct:'对', correctSpec:{engineering:2},
-      commentary:'所有图灵完备系统的计算能力在理论上等价，可以互相模拟。这意味着：Scratch、Excel 公式系统、甚至《我的世界》里用红石电路搭建的计算机，理论上和超级计算机「一样强大」——只是慢到宇宙热寂也算不完。',
-    },
-    {
-      type:'tf', dim:'软件工程 · 过早优化',
-      text:'「过早优化是万恶之源」——这句话的意思是：在性能瓶颈被实际测量出来之前，不应为假设中的性能问题修改结构清晰的代码。',
-      correct:'对', correctSpec:{engineering:2},
-      commentary:'高德纳（Donald Knuth）的名言。工程中正确的路径是：先让它正确运行，再通过实际测量找到真正的瓶颈，最后精准优化。提前优化的代码往往更难维护，而且问题往往不在你以为的地方。',
-    },
-    {
-      type:'choice', dim:'工程实践 · 生产事故处置',
-      text:'你负责的线上服务突然崩溃，用户无法访问。你的第一步是——',
-      options:[
-        {text:'马上把所有最近的代码变更全部回滚，先恢复再说。', edu:2, spec:{engineering:1}},
-        {text:'先查日志和监控指标，定位是哪个模块从什么时间点开始出问题的。', edu:4, spec:{engineering:2}},
-        {text:'重启服务器——很多线上问题重启能临时恢复。', edu:1, spec:{}},
-        {text:'联系用户致歉，通知相关团队开会讨论方案。', edu:1, spec:{}},
-      ],
-    },
-    {
-      type:'stance', dim:'工程伦理 · 技术中立性',
-      text:'「技术本身是中立的——监控系统、算法推荐、武器的善恶完全由使用者决定，工程师对后果不承担道德责任。」',
-      stances:{
-        support: { edu:2, spec:{engineering:1} },
-        neutral: { edu:3, spec:{engineering:1, law:1} },
-        oppose:  { edu:4, spec:{humanities:2, law:1} },
-      },
-    },
-  ],
-
-  economics: [
-    {
-      type:'tf', dim:'宏观经济学 · 菲利普斯曲线',
-      text:'菲利普斯曲线描述的是：通货膨胀率越高，失业率往往越低——二者在短期内存在此消彼长的权衡关系。',
-      correct:'对', correctSpec:{economics:3},
-      commentary:'这是凯恩斯主义宏观政策的核心悖论：用通胀换就业。菲利普斯1958年通过英国百年数据发现这一规律。但1970年代的「滞胀」同时打脸了两边，宣告简单菲利普斯曲线的失效——通胀和失业可以同时飙升。',
-    },
-    {
-      type:'tf', dim:'社会选择理论 · 阿罗不可能定理',
-      text:'根据「阿罗不可能定理」，在三个及以上候选方案中，不存在任何投票规则能同时满足「非独裁性」「帕累托效率」和「无关选项独立性」三个条件。',
-      correct:'对', correctSpec:{economics:3},
-      commentary:'肯尼斯·阿罗1951年的定理。它说明「完美的民主投票机制」在逻辑上不可能存在——你必须放弃其中一个看似合理的条件。这个定理让阿罗拿了诺贝尔经济学奖，也让无数政治学家头痛至今。',
-    },
-    {
-      type:'stance', dim:'市场经济 · 政府干预边界',
-      text:'「市场这只"看不见的手"，终究比政府的"看得见的手"更聪明、更有效率。」',
-      stances:{
-        support: { edu:2, spec:{economics:2} },
-        neutral: { edu:4, spec:{economics:1, law:1} },
-        oppose:  { edu:3, spec:{humanities:2, law:1} },
-      },
-    },
-    {
-      type:'tf', dim:'行为经济学 · 损失厌恶',
-      text:'根据卡尼曼的前景理论，失去100元带来的心理痛苦，在强度上大于获得100元带来的喜悦。',
-      correct:'对', correctSpec:{economics:2},
-      commentary:'前景理论的核心发现：损失的心理权重约是同等收益的2倍。这解释了为什么投资者宁可持有亏损股票也不愿割肉止损——「认亏」的痛苦超出了理性计算的代价。卡尼曼因此获得2002年诺贝尔经济学奖，彻底撼动了传统经济学的「理性人」假设。',
-    },
-    {
-      type:'choice', dim:'博弈论 · 集体行动困境',
-      text:'囚徒困境中，两个理性个体都选择「背叛」，结果反而比双方「合作」更差。这最准确地说明了——',
-      options:[
-        {text:'自私是人性底色，理性逻辑的终点就是相互伤害。', edu:1, spec:{}},
-        {text:'个体理性在特定结构下会导致集体非理性——「市场失灵」的经典形式之一。', edu:3, spec:{economics:2}},
-        {text:'应通过制度设计强制合作，从根本上消除背叛的可能性。', edu:2, spec:{law:1}},
-        {text:'在重复博弈中，「以牙还牙」等策略可以产生稳定合作均衡——单次博弈则不行。', edu:4, spec:{economics:2}},
-      ],
-    },
-  ],
-
-  law: [
-    {
-      type:'choice', dim:'法哲学 · 伦理学与程序正义',
-      text:'电车难题：必须二选一。若给出符合现代法治精神的回答，你会选——',
-      options:[
-        {text:'5 > 1，简单的数学题，救五个，没有悬念。', edu:2, spec:{economics:1}},
-        {text:'除非法律有明确授权，我无权剥夺任何无辜者的生命，哪怕是为了救更多人。', edu:4, spec:{law:2}},
-        {text:'我会跳下轨道，用自己去挡住电车。', edu:1, spec:{}},
-        {text:'这是伪命题，现实中总有第三种选择，这题没有意义。', edu:2, spec:{}},
-      ],
-    },
-    {
-      type:'tf', dim:'法律理论 · 法律实证主义',
-      text:'法律的效力来源于其内部逻辑的自洽性，而非外在的暴力强制。',
-      correct:'对', correctSpec:{law:2},
-      commentary:'这是凯尔森「纯粹法学」的核心命题：法律效力是规范性的（Normative），而非强制性的（Coercive）。承认这一点，说明你读过法哲学，而不只是在背法条。',
-    },
-    {
-      type:'tf', dim:'合同法 · 契约自由的边界',
-      text:'根据「契约自由原则」，两个完全民事行为能力的成年人只要自愿签订合同，该合同在法律上必然有效。',
-      correct:'错', correctSpec:{law:3},
-      commentary:'契约自由有边界：合同内容不得违反法律强制性规定，不得违背公序良俗，否则无效。「自愿」是必要条件，但远非充分条件。双方自愿签订的毒品交易合同、限制人身自由的协议，显然无效——法律不保护一切「自愿」。',
-    },
-    {
-      type:'tf', dim:'宪政理论 · 多数决的边界',
-      text:'在民主制度中，只要超过半数人投票通过，任何决定在法律上都应当被视为正当合法的。',
-      correct:'错', correctSpec:{law:2},
-      commentary:'「多数人的暴政」是宪政主义要解决的核心问题。现代民主的精髓不只是多数决，更包括对少数群体基本权利的保护——这正是宪法、违宪审查和基本权利条款存在的原因。多数票可以决定政策走向，但无法以此剥夺任何人的基本权利。',
-    },
-    {
-      type:'choice', dim:'法律解释 · 文义与立法目的',
-      text:'图书馆规定「馆内禁止携带食物」。某人携带密封医用营养液入馆被拒。你认为——',
-      options:[
-        {text:'规定就是规定，营养液属于食物，不让带就不让带。', edu:2, spec:{law:1}},
-        {text:'立法目的是防止饮食造成干扰和污染，密封医用营养液不在此列，应放行。', edu:3, spec:{law:2}},
-        {text:'这种边缘情况应由管理员自行判断，规则不可能写得那么细。', edu:1, spec:{}},
-        {text:'需结合立法背景和类似案例，确定「食物」在该规定语境下的适用范围。', edu:4, spec:{law:2}},
-      ],
-    },
-  ],
-
-  humanities: [
-    {
-      type:'tf', dim:'哲学精度 · 文本解读',
-      text:'「凡是存在的就是合理的」——从哲学本意看，这句话描述的是因果逻辑的必然性，而非价值判断上的正当性。',
-      correct:'对', correctSpec:{humanities:2},
-      commentary:'黑格尔原文「was vernünftig ist, das ist wirklich」，描述理性与现实的辩证关系，而非为现实秩序背书。误读为「存在即合理（因此是好的）」是翻译与哲学训练的双重缺席。',
-    },
-    {
-      type:'tf', dim:'思想史 · 文艺复兴',
-      text:'「文艺复兴」的核心意义在于：以古希腊罗马的人文精神为资源，建立了以「人」为中心的话语体系，从而挑战了中世纪以「神」为中心的神学秩序。',
-      correct:'对', correctSpec:{humanities:2},
-      commentary:'文艺复兴（Renaissance = 再生）的核心是人文主义（Humanism）。通过重新发现经由阿拉伯世界保存的古典文献，思想家建立了与中世纪神学范式竞争的话语体系。它不只是艺术运动，更是一次认识论上的范式转移。',
-    },
-    {
-      type:'tf', dim:'史学方法论 · 叙事与权力',
-      text:'「历史是胜利者书写的」——从史学方法论角度，这意味着所有历史文献都是虚构的，历史研究因此无法得出任何可信结论。',
-      correct:'错', correctSpec:{humanities:2},
-      commentary:'这是对「历史叙事具有权力立场」命题的过度解读。正确理解是：叙事有立场，但不等于都是谎言。史学家的任务恰恰是通过互文性分析、交叉验证、发掘被压制的声音，来逼近更完整的历史图景。承认局限性，是史学成熟的标志，而非放弃研究的理由。',
-    },
-    {
-      type:'choice', dim:'媒介理论 · 形式与认知重塑',
-      text:'麦克卢汉说「媒介即信息」。这句话最准确的含义是——',
-      options:[
-        {text:'内容才是核心，媒介只是传输渠道，不影响信息本身的意义。', edu:1, spec:{}},
-        {text:'不同媒介触达不同受众，传播策略要因媒制宜。', edu:2, spec:{economics:1}},
-        {text:'媒介的物理形式（文字/电视/短视频）本身就在重塑人的感知结构，与内容无关。', edu:4, spec:{humanities:2}},
-        {text:'媒介决定什么信息能被传播，构成一种隐性的权力筛选机制。', edu:3, spec:{humanities:2}},
-      ],
-    },
-    {
-      type:'tf', dim:'哲学史 · 后现代主义的边界',
-      text:'后现代主义的核心主张是：客观真理根本不存在，所有「真理」都只是特定权力关系建构的产物。',
-      correct:'错', correctSpec:{humanities:2},
-      commentary:'这是对后现代主义常见的过度简化。其更精确的立场是：对「客观性」和「普遍真理」的宣称应被批判地审视，因为它们往往遮蔽了权力关系——而非断言「真理不存在」。利奥塔说的是对「宏大叙事」的不信任，德里达的解构是在拆解前提，两者都不是虚无主义。',
-    },
-  ],
+  humanities: {
+    name:'文史哲原型',
+    en:'Humanities',
+    color:'#db2777',
+    desc:'你会优先看到叙事、语境、历史层次与价值张力。你不急着把世界压平，而更关心那些被机制叙述遗漏的部分。'
+  }
 };
 
-// ─────────────────────────────────────────
-//  STATE
-// ─────────────────────────────────────────
-const CORE_COUNT = CORE_QUESTIONS.length; // 8
+const QUESTIONS = [
+  {
+    type:'choice',
+    dim:'机制导向 vs 叙事导向',
+    text:'一家公司很多人突然离职，你第一反应更像——',
+    options:[
+      { text:'先查制度和流程哪里出了问题。', dimDelta:{ mn:2 }, spec:{ engineering:1, economics:1 } },
+      { text:'先看离职集中在哪些时间点和部门。', dimDelta:{ mn:1 }, spec:{ science:1, economics:1 } },
+      { text:'先听员工私下到底在抱怨什么。', dimDelta:{ mn:-1 }, spec:{ humanities:1 } },
+      { text:'先想是谁在定义这是不是“离职潮”。', dimDelta:{ mn:-2 }, spec:{ humanities:2 } }
+    ]
+  },
+  {
+    type:'choice',
+    dim:'机制导向 vs 叙事导向',
+    text:'看到一场网上争议越吵越大，你更想先搞清楚——',
+    options:[
+      { text:'平台和传播机制是怎么把它推高的。', dimDelta:{ mn:2 }, spec:{ engineering:1, economics:1 } },
+      { text:'信息是从哪个节点开始走样的。', dimDelta:{ mn:1 }, spec:{ science:1, engineering:1 } },
+      { text:'不同人在用什么方式讲同一件事。', dimDelta:{ mn:-1 }, spec:{ humanities:1, law:1 } },
+      { text:'谁更有能力把自己的版本说成“常识”。', dimDelta:{ mn:-2 }, spec:{ humanities:2 } }
+    ]
+  },
+  {
+    type:'stance',
+    dim:'机制导向 vs 叙事导向',
+    text:'遇到一个长期解决不掉的问题时，我更喜欢先拆它是怎么运作的，而不是先看大家各自怎么讲它。',
+    stances:{
+      support:{ dimDelta:{ mn:2 }, spec:{ science:1, engineering:1 } },
+      neutral:{ dimDelta:{ mn:0 }, spec:{} },
+      oppose:{ dimDelta:{ mn:-2 }, spec:{ humanities:1 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'机制导向 vs 叙事导向',
+    text:'看见争议事件时，我通常更在意不同的人是怎么讲述这件事的，而不是先追机制链条。',
+    stances:{
+      support:{ dimDelta:{ mn:-2 }, spec:{ humanities:2, law:1 } },
+      neutral:{ dimDelta:{ mn:0 }, spec:{} },
+      oppose:{ dimDelta:{ mn:2 }, spec:{ science:1, engineering:1 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'机制导向 vs 叙事导向',
+    text:'我更相信“找到关键环节”，而不是先讨论谁的说法更占上风。',
+    stances:{
+      support:{ dimDelta:{ mn:2 }, spec:{ engineering:1, economics:1 } },
+      neutral:{ dimDelta:{ mn:0 }, spec:{} },
+      oppose:{ dimDelta:{ mn:-2 }, spec:{ humanities:2 } }
+    }
+  },
+  {
+    type:'choice',
+    dim:'系统优化 vs 规则裁决',
+    text:'一个 App 新功能上线后，用户明显变少了，你会先——',
+    options:[
+      { text:'找出用户到底是在哪一步流失的。', dimDelta:{ sr:2 }, spec:{ engineering:2 } },
+      { text:'先把路径改顺，把麻烦的地方减掉。', dimDelta:{ sr:1 }, spec:{ engineering:1, economics:1 } },
+      { text:'检查它在授权、提示和默认设置上是不是边界不清。', dimDelta:{ sr:-1 }, spec:{ law:1 } },
+      { text:'先判断这类功能在边界和责任上是否需要先说清楚。', dimDelta:{ sr:-2 }, spec:{ law:2, humanities:1 } }
+    ]
+  },
+  {
+    type:'stance',
+    dim:'系统优化 vs 规则裁决',
+    text:'系统出问题时，我更想先优化流程，而不是先补规则。',
+    stances:{
+      support:{ dimDelta:{ sr:2 }, spec:{ engineering:2 } },
+      neutral:{ dimDelta:{ sr:0 }, spec:{} },
+      oppose:{ dimDelta:{ sr:-2 }, spec:{ law:2 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'系统优化 vs 规则裁决',
+    text:'再复杂的事情，我也更想先把边界和责任说清楚，而不是先讨论怎么提效。',
+    stances:{
+      support:{ dimDelta:{ sr:-2 }, spec:{ law:2 } },
+      neutral:{ dimDelta:{ sr:0 }, spec:{} },
+      oppose:{ dimDelta:{ sr:2 }, spec:{ engineering:1 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'系统优化 vs 规则裁决',
+    text:'与其堵漏洞，我更倾向于改系统，让人自然不去钻漏洞，而不是一条条加限制。',
+    stances:{
+      support:{ dimDelta:{ sr:2 }, spec:{ engineering:2, economics:1 } },
+      neutral:{ dimDelta:{ sr:0 }, spec:{} },
+      oppose:{ dimDelta:{ sr:-2 }, spec:{ law:1 } }
+    }
+  },
+  {
+    type:'choice',
+    dim:'系统优化 vs 规则裁决',
+    text:'共享单车到处乱停，你更赞成先——',
+    options:[
+      { text:'把停车点、调度和反馈机制设计得更合理。', dimDelta:{ sr:2 }, spec:{ engineering:2 } },
+      { text:'用价格和信用分把用户往正确地方引导。', dimDelta:{ sr:1 }, spec:{ economics:1, engineering:1 } },
+      { text:'先把哪里能停、谁负责说清楚。', dimDelta:{ sr:-1 }, spec:{ law:2 } },
+      { text:'先有稳定规则，再谈别的优化。', dimDelta:{ sr:-2 }, spec:{ law:2 } }
+    ]
+  },
+  {
+    type:'stance',
+    dim:'激励分析 vs 价值判断',
+    text:'理解一件事时，我常常先看它在鼓励谁、惩罚谁，而不是先判断它在道德上好不好。',
+    stances:{
+      support:{ dimDelta:{ iv:2 }, spec:{ economics:2 } },
+      neutral:{ dimDelta:{ iv:0 }, spec:{} },
+      oppose:{ dimDelta:{ iv:-2 }, spec:{ humanities:1 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'激励分析 vs 价值判断',
+    text:'有些事情即使有效，我也更在意它对不对，而不是它有没有用。',
+    stances:{
+      support:{ dimDelta:{ iv:-2 }, spec:{ humanities:2, law:1 } },
+      neutral:{ dimDelta:{ iv:0 }, spec:{} },
+      oppose:{ dimDelta:{ iv:2 }, spec:{ economics:1 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'激励分析 vs 价值判断',
+    text:'制度设计最重要的，在我看来是看它最终会把人推向什么行为，而不是它口号上看起来多正确。',
+    stances:{
+      support:{ dimDelta:{ iv:2 }, spec:{ economics:2, engineering:1 } },
+      neutral:{ dimDelta:{ iv:0 }, spec:{} },
+      oppose:{ dimDelta:{ iv:-2 }, spec:{ humanities:1 } }
+    }
+  },
+  {
+    type:'choice',
+    dim:'激励分析 vs 价值判断',
+    text:'学校用高奖金刺激学生拿竞赛奖，你更偏向——',
+    options:[
+      { text:'先看奖金会把学生的时间和精力引向哪里。', dimDelta:{ iv:2 }, spec:{ economics:2 } },
+      { text:'先看这套激励会不会让真正重要的能力被忽略。', dimDelta:{ iv:1 }, spec:{ economics:1, engineering:1 } },
+      { text:'先看这种做法是否符合你心里对教育的理解。', dimDelta:{ iv:-1 }, spec:{ humanities:1 } },
+      { text:'先想教育更应该靠什么来驱动，而不只是看奖励效果。', dimDelta:{ iv:-2 }, spec:{ humanities:2 } }
+    ]
+  },
+  {
+    type:'choice',
+    dim:'激励分析 vs 价值判断',
+    text:'门诊经常有人预约了又不来，你更支持先——',
+    options:[
+      { text:'收点违约金，先把行为改过来。', dimDelta:{ iv:2 }, spec:{ economics:2 } },
+      { text:'不同情况分开处理，再设计更细的提醒办法。', dimDelta:{ iv:1 }, spec:{ economics:1, law:1 } },
+      { text:'先确认规则对不同处境的患者是否足够公平。', dimDelta:{ iv:-1 }, spec:{ law:1, humanities:1 } },
+      { text:'先想医疗场景里除了效率，还应优先保留什么。', dimDelta:{ iv:-2 }, spec:{ humanities:2 } }
+    ]
+  },
+  {
+    type:'stance',
+    dim:'证伪建模 vs 情境诠释',
+    text:'看到一个结论时，我会先想它能不能被验证或推翻，而不是先看它是否贴近具体经验。',
+    stances:{
+      support:{ dimDelta:{ fc:2 }, spec:{ science:2 } },
+      neutral:{ dimDelta:{ fc:0 }, spec:{} },
+      oppose:{ dimDelta:{ fc:-2 }, spec:{ humanities:1 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'证伪建模 vs 情境诠释',
+    text:'很多事情一旦被量化，反而会失去重要信息，这对我来说比“先量化再讨论”更接近真实。',
+    stances:{
+      support:{ dimDelta:{ fc:-2 }, spec:{ humanities:2 } },
+      neutral:{ dimDelta:{ fc:0 }, spec:{} },
+      oppose:{ dimDelta:{ fc:2 }, spec:{ science:1, engineering:1 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'证伪建模 vs 情境诠释',
+    text:'相比个别人的故事，我更相信能重复出现的数据模式，而不是更相信具体情境里的感受。',
+    stances:{
+      support:{ dimDelta:{ fc:2 }, spec:{ science:2, engineering:1 } },
+      neutral:{ dimDelta:{ fc:0 }, spec:{} },
+      oppose:{ dimDelta:{ fc:-2 }, spec:{ humanities:1 } }
+    }
+  },
+  {
+    type:'choice',
+    dim:'证伪建模 vs 情境诠释',
+    text:'新闻说“每天喝咖啡的人更长寿”，你第一反应更像——',
+    options:[
+      { text:'先看研究怎么做的，再说信不信。', dimDelta:{ fc:2 }, spec:{ science:2 } },
+      { text:'是不是漏掉了别的关键因素。', dimDelta:{ fc:1 }, spec:{ science:1, economics:1 } },
+      { text:'每个人生活都不一样，这种结论太容易一刀切。', dimDelta:{ fc:-1 }, spec:{ humanities:1 } },
+      { text:'“更长寿”放在不同语境里意思都不一样。', dimDelta:{ fc:-2 }, spec:{ humanities:2 } }
+    ]
+  },
+  {
+    type:'choice',
+    dim:'证伪建模 vs 情境诠释',
+    text:'复盘一个失败项目时，你最相信哪类材料——',
+    options:[
+      { text:'时间线、数据和关键决策点。', dimDelta:{ fc:2 }, spec:{ engineering:1, science:1 } },
+      { text:'当时哪些判断后来被事实打脸了。', dimDelta:{ fc:1 }, spec:{ science:1, engineering:1 } },
+      { text:'参与的人当时在什么处境里做决定。', dimDelta:{ fc:-1 }, spec:{ humanities:1 } },
+      { text:'很多失败就是情境造成的，未必能总结成固定模型。', dimDelta:{ fc:-2 }, spec:{ humanities:2 } }
+    ]
+  }
+];
+
 let currentQ = 0;
-let allQuestions = [];      // core + selected adaptive
-let top2Specs = [];         // top 2 specialties after phase 1
-let eduScore = 0;
+let allQuestions = [...QUESTIONS];
 const specScores = { science:0, engineering:0, economics:0, law:0, humanities:0 };
-const tfResults = [];
-const history = []; // { eduDelta, specDelta, isTF }
-const eduPts = { 1:0, 2:1, 3:2, 4:3 };
+const dimScores = { mn:0, sr:0, iv:0, fc:0 };
+const history = [];
 
-// ─────────────────────────────────────────
-//  HELPERS
-// ─────────────────────────────────────────
-function addSpec(obj) {
-  if (!obj) return;
-  Object.entries(obj).forEach(([k,v]) => { specScores[k] = (specScores[k]||0)+v; });
+function addScore(target, delta) {
+  if (!delta) return;
+  Object.entries(delta).forEach(([key, value]) => {
+    target[key] = (target[key] || 0) + value;
+  });
 }
-function subSpec(obj) {
-  if (!obj) return;
-  Object.entries(obj).forEach(([k,v]) => { specScores[k] = (specScores[k]||0)-v; });
+
+function subScore(target, delta) {
+  if (!delta) return;
+  Object.entries(delta).forEach(([key, value]) => {
+    target[key] = (target[key] || 0) - value;
+  });
 }
+
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active','fade-in');
+  document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+  document.getElementById(id).classList.add('active', 'fade-in');
 }
+
 function updateProgress() {
   const total = allQuestions.length;
   const pct = total > 0 ? (currentQ / total) * 100 : 0;
   document.getElementById('progress-bar-fill').style.width = pct + '%';
   document.getElementById('q-counter').textContent = `${currentQ + 1} / ${total}`;
   document.getElementById('btn-back').classList.toggle('visible', currentQ > 0);
-  // Phase tag
-  const tag = document.getElementById('q-phase-tag');
-  tag.style.display = currentQ >= CORE_COUNT ? 'inline-block' : 'none';
-}
-function shuffleArr(arr) {
-  const a = [...arr];
-  for (let i = a.length-1; i>0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
-  }
-  return a;
 }
 
-// Compute normalized spec scores based on questions actually seen
-function computeNormed(questionList) {
+function shuffleArr(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function computeNormedSpec(questionList) {
   const max = { science:0, engineering:0, economics:0, law:0, humanities:0 };
-  questionList.forEach(q => {
-    if (q.type === 'choice') {
+  questionList.forEach(question => {
+    if (question.type === 'stance') {
       Object.keys(max).forEach(spec => {
-        const best = Math.max(...q.options.map(o => (o.spec&&o.spec[spec])||0));
+        const best = Math.max(...Object.values(question.stances).map(stance => (stance.spec && stance.spec[spec]) || 0));
         max[spec] += best;
       });
-    } else if (q.type === 'stance') {
+    } else {
       Object.keys(max).forEach(spec => {
-        const best = Math.max(...Object.values(q.stances).map(s => (s.spec&&s.spec[spec])||0));
+        const best = Math.max(...question.options.map(option => (option.spec && option.spec[spec]) || 0));
         max[spec] += best;
       });
-    } else if (q.correctSpec) {
-      Object.entries(q.correctSpec).forEach(([k,v]) => { max[k] += v; });
     }
   });
   const normed = {};
-  Object.keys(specScores).forEach(k => {
-    normed[k] = max[k] > 0 ? Math.min(specScores[k]/max[k], 1) : 0;
+  Object.keys(specScores).forEach(key => {
+    normed[key] = max[key] > 0 ? Math.min(specScores[key] / max[key], 1) : 0;
   });
   return normed;
 }
 
-// ─────────────────────────────────────────
-//  QUIZ FLOW
-// ─────────────────────────────────────────
+function getDimensionSummary(key) {
+  const meta = DIMENSIONS[key];
+  const score = dimScores[key];
+  const total = QUESTIONS
+    .filter(question => {
+      if (question.type === 'stance') {
+        return Object.values(question.stances).some(stance => Object.prototype.hasOwnProperty.call(stance.dimDelta, key));
+      }
+      return question.options.some(option => Object.prototype.hasOwnProperty.call(option.dimDelta, key));
+    })
+    .reduce((sum, question) => {
+      if (question.type === 'stance') {
+        return sum + Math.max(...Object.values(question.stances).map(stance => Math.abs((stance.dimDelta && stance.dimDelta[key]) || 0)));
+      }
+      return sum + Math.max(...question.options.map(option => Math.abs((option.dimDelta && option.dimDelta[key]) || 0)));
+    }, 0);
+  const leaning = score >= 0 ? meta.left : meta.right;
+  const strength = total > 0 ? Math.round(Math.abs(score) / total * 100) : 0;
+  return { meta, score, leaning, strength };
+}
+
 function startQuiz() {
-  currentQ = 0; eduScore = 0;
-  tfResults.length = 0; history.length = 0; top2Specs.length = 0;
-  Object.keys(specScores).forEach(k => specScores[k]=0);
-  allQuestions = [...CORE_QUESTIONS];
+  currentQ = 0;
+  allQuestions = shuffleArr(QUESTIONS).map(question => {
+    if (question.type === 'choice') {
+      return { ...question, options: shuffleArr(question.options) };
+    }
+    return question;
+  });
+  history.length = 0;
+  Object.keys(specScores).forEach(key => { specScores[key] = 0; });
+  Object.keys(dimScores).forEach(key => { dimScores[key] = 0; });
   document.getElementById('progress-bar-wrap').style.display = 'block';
   document.getElementById('q-counter').style.display = 'block';
   renderQuestion();
@@ -737,45 +694,47 @@ function startQuiz() {
 }
 
 function renderQuestion() {
-  const q = allQuestions[currentQ];
+  const question = allQuestions[currentQ];
   updateProgress();
   const badge = document.getElementById('q-type-badge');
-  if (q.type==='choice')  { badge.textContent='单项选择'; badge.className='q-type-badge badge-choice'; }
-  else if (q.type==='stance') { badge.textContent='立场题'; badge.className='q-type-badge badge-stance'; }
-  else                    { badge.textContent='判断题';   badge.className='q-type-badge badge-tf'; }
-  document.getElementById('q-dim-label').textContent = q.dim;
-  document.getElementById('q-text').textContent = q.text;
+  if (question.type === 'choice') {
+    badge.textContent = '情境题';
+    badge.className = 'q-type-badge badge-choice';
+  } else {
+    badge.textContent = '立场题';
+    badge.className = 'q-type-badge badge-stance';
+  }
+  document.getElementById('q-text').textContent = question.text;
 
   const body = document.getElementById('q-body');
   body.innerHTML = '';
-
-  if (q.type === 'choice') {
+  if (question.type === 'choice') {
     const list = document.createElement('div');
     list.className = 'options-list';
-    shuffleArr(q.options.map(o=>({...o}))).forEach(opt => {
+    question.options.forEach(option => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      btn.innerHTML = `<span class="option-text">${opt.text}</span>`;
+      btn.innerHTML = `<span class="option-text">${option.text}</span>`;
       btn.addEventListener('click', () => {
         btn.classList.add('selected');
-        list.querySelectorAll('.option-btn').forEach(b => b.style.pointerEvents='none');
-        const ed = eduPts[opt.edu]||0;
-        eduScore += ed; addSpec(opt.spec);
-        history.push({ eduDelta:ed, specDelta:opt.spec||{}, isTF:false });
-        setTimeout(advance, 360);
+        list.querySelectorAll('.option-btn').forEach(node => { node.style.pointerEvents = 'none'; });
+        addScore(specScores, option.spec);
+        addScore(dimScores, option.dimDelta);
+        history.push({ specDelta: option.spec || {}, dimDelta: option.dimDelta || {} });
+        setTimeout(advance, 320);
       });
       list.appendChild(btn);
     });
     body.appendChild(list);
-  } else if (q.type === 'stance') {
+  } else {
     const wrap = document.createElement('div');
     wrap.className = 'stance-container';
     [
-      { key:'oppose',  label:'反对', icon:'✕', cls:'stance-oppose',  sel:'sel-oppose',  sub:'这个观点站不住脚' },
-      { key:'neutral', label:'中立', icon:'−', cls:'stance-neutral', sel:'sel-neutral', sub:'说不准，两边都有道理' },
-      { key:'support', label:'支持', icon:'✓', cls:'stance-support', sel:'sel-support', sub:'这个观点有道理' },
+      { key:'oppose', label:'反对', icon:'✕', cls:'stance-oppose', sel:'sel-oppose', sub:'这句话不太像我' },
+      { key:'neutral', label:'中立', icon:'−', cls:'stance-neutral', sel:'sel-neutral', sub:'说不上，更看情况' },
+      { key:'support', label:'支持', icon:'✓', cls:'stance-support', sel:'sel-support', sub:'这句话比较像我' }
     ].forEach(({ key, label, icon, cls, sel, sub }) => {
-      const s = q.stances[key];
+      const stance = question.stances[key];
       const btn = document.createElement('button');
       btn.className = `stance-btn ${cls}`;
       btn.innerHTML = `<span class="stance-icon">${icon}</span>
@@ -783,195 +742,108 @@ function renderQuestion() {
         <span class="stance-sub">${sub}</span>`;
       btn.addEventListener('click', () => {
         btn.classList.add(sel);
-        wrap.querySelectorAll('.stance-btn').forEach(b=>b.style.pointerEvents='none');
-        const ed = eduPts[s.edu]||0;
-        eduScore += ed; addSpec(s.spec);
-        history.push({ eduDelta:ed, specDelta:s.spec||{}, isTF:false });
-        setTimeout(advance, 360);
+        wrap.querySelectorAll('.stance-btn').forEach(node => { node.style.pointerEvents = 'none'; });
+        addScore(specScores, stance.spec);
+        addScore(dimScores, stance.dimDelta);
+        history.push({ specDelta: stance.spec || {}, dimDelta: stance.dimDelta || {} });
+        setTimeout(advance, 320);
       });
       wrap.appendChild(btn);
     });
-    body.appendChild(wrap);
-  } else {
-    const wrap = document.createElement('div');
-    wrap.className = 'tf-container';
-    ['对','错'].forEach(ans => {
-      const isTrue = ans==='对';
-      const btn = document.createElement('button');
-      btn.className = `tf-btn ${isTrue?'tf-btn-true':'tf-btn-false'}`;
-      btn.innerHTML = `<span class="tf-icon">${isTrue?'○':'✕'}</span>
-        <span style="font-size:17px;font-weight:700">${ans}</span>
-        <span class="tf-label">${isTrue?'这个说法是正确的':'这个说法是错误的'}</span>`;
-      btn.addEventListener('click', () => {
-        btn.classList.add(isTrue?'selected-true':'selected-false');
-        wrap.querySelectorAll('.tf-btn').forEach(b=>b.style.pointerEvents='none');
-        const isCorrect = ans===q.correct;
-        const ed = isCorrect ? 2 : 0;
-        const sd = isCorrect ? (q.correctSpec||{}) : {};
-        eduScore += ed; if(isCorrect) addSpec(q.correctSpec);
-        tfResults.push({ correct:isCorrect, text:q.text, commentary:q.commentary, userAnswer:ans, correctAnswer:q.correct });
-        history.push({ eduDelta:ed, specDelta:sd, isTF:true });
-        setTimeout(advance, 360);
-      });
-      wrap.appendChild(btn);
-    });
-    const unknownBtn = document.createElement('button');
-    unknownBtn.className = 'tf-btn tf-btn-unknown';
-    unknownBtn.style.gridColumn = '1 / -1';
-    unknownBtn.style.padding = '14px 16px';
-    unknownBtn.innerHTML = `<span style="font-size:15px;font-weight:700">我不知道</span>
-      <span class="tf-label">跳过，不计分，但仍显示解析</span>`;
-    unknownBtn.addEventListener('click', () => {
-      unknownBtn.classList.add('selected-unknown');
-      wrap.querySelectorAll('.tf-btn').forEach(b=>b.style.pointerEvents='none');
-      tfResults.push({ correct:false, skipped:true, text:q.text, commentary:q.commentary, userAnswer:'不知道', correctAnswer:q.correct });
-      history.push({ eduDelta:0, specDelta:{}, isTF:true });
-      setTimeout(advance, 360);
-    });
-    wrap.appendChild(unknownBtn);
     body.appendChild(wrap);
   }
-  const qs = document.getElementById('screen-question');
-  qs.classList.remove('fade-in'); void qs.offsetWidth; qs.classList.add('fade-in');
+  const questionScreen = document.getElementById('screen-question');
+  questionScreen.classList.remove('fade-in');
+  void questionScreen.offsetWidth;
+  questionScreen.classList.add('fade-in');
 }
 
 function advance() {
   currentQ++;
-  if (currentQ === CORE_COUNT) {
-    // Phase 1 done → select adaptive questions and show transition
-    selectAdaptive();
-    showTransition();
-  } else if (currentQ < allQuestions.length) {
+  if (currentQ < allQuestions.length) {
     renderQuestion();
   } else {
     showResults();
   }
 }
 
-function selectAdaptive() {
-  const normed = computeNormed(CORE_QUESTIONS);
-  const sorted = Object.entries(normed).sort((a,b)=>b[1]-a[1]);
-  top2Specs = [sorted[0][0], sorted[1][0]];
-  // Append 3 questions from each top specialty
-  const adaptive = [];
-  top2Specs.forEach(spec => {
-    shuffleArr(ADAPTIVE_POOL[spec]).slice(0,5).forEach(q => adaptive.push(q));
-  });
-  allQuestions = [...CORE_QUESTIONS, ...adaptive];
-}
-
-function showTransition() {
-  const cards = document.getElementById('trans-cards');
-  cards.innerHTML = '';
-  top2Specs.forEach((spec, i) => {
-    const sp = SPECIALTIES[spec];
-    const card = document.createElement('div');
-    card.className = 'trans-card';
-    card.style.borderColor = sp.color;
-    card.style.color = sp.color;
-    card.innerHTML = `
-      <div class="trans-card-label">${i===0?'主要倾向':'次要倾向'}</div>
-      <div class="trans-card-name">${sp.name}</div>
-    `;
-    cards.appendChild(card);
-  });
-  document.getElementById('progress-bar-fill').style.width = `${(CORE_COUNT/allQuestions.length)*100}%`;
-  showScreen('screen-transition');
-}
-
 function goBack() {
   if (currentQ === 0) return;
   const last = history.pop();
-  eduScore -= last.eduDelta;
-  subSpec(last.specDelta);
-  if (last.isTF) tfResults.pop();
+  subScore(specScores, last.specDelta);
+  subScore(dimScores, last.dimDelta);
   currentQ--;
   showScreen('screen-question');
   renderQuestion();
 }
 
-// ─────────────────────────────────────────
-//  RESULTS
-// ─────────────────────────────────────────
 function showResults() {
   document.getElementById('progress-bar-fill').style.width = '100%';
   document.getElementById('q-counter').style.display = 'none';
 
-  const edu = EDU_LEVELS.find(e => eduScore>=e.range[0] && eduScore<=e.range[1])
-    || EDU_LEVELS[EDU_LEVELS.length-1];
-  const eduCard = document.getElementById('edu-card');
-  eduCard.style.borderColor = edu.color;
-  eduCard.innerHTML = `<div class="rc-label">推断学历层次</div>
-    <span class="score-pill" style="background:${edu.color}">${edu.scorePill}</span>
-    <div class="rc-value" style="color:${edu.color}">${edu.name}</div>
-    <div class="rc-en">${edu.en}</div>
-    <div class="rc-desc">${edu.desc}</div>`;
+  const summaries = Object.keys(DIMENSIONS).map(getDimensionSummary);
+  const profileCode = summaries.map(item => item.score >= 0 ? item.meta.shortLeft : item.meta.shortRight).join('');
+  const profileLine = summaries.map(item => `${item.score >= 0 ? item.meta.shortLeft : item.meta.shortRight} = ${item.leaning}`).join(' / ');
 
-  const normed = computeNormed(allQuestions);
-  const topSpec = Object.entries(normed).sort((a,b)=>b[1]-a[1])[0][0];
-  const sp = SPECIALTIES[topSpec];
+  const profileCard = document.getElementById('edu-card');
+  profileCard.style.borderColor = '#111827';
+  profileCard.innerHTML = `<div class="rc-label">认知编码</div>
+    <span class="score-pill" style="background:#111827">4D Profile</span>
+    <div class="rc-value" style="color:#111827">${profileCode}型</div>
+    <div class="rc-en">${profileLine}</div>
+    <div class="rc-desc">你在四个维度上的主导偏向分别是：${summaries.map(item => item.leaning).join('、')}。这里测的不是知识对错，而是你更习惯用哪套方法理解复杂问题。</div>`;
+
+  const normed = computeNormedSpec(allQuestions);
+  const topSpec = Object.entries(normed).sort((a, b) => b[1] - a[1])[0][0];
+  const archetype = PROFILE_ARCHETYPES[topSpec];
   const specCard = document.getElementById('spec-card');
-  specCard.style.borderColor = sp.color;
-  specCard.innerHTML = `<div class="rc-label">推断专业思维</div>
-    <span class="score-pill" style="background:${sp.color}">${sp.en}</span>
-    <div class="rc-value" style="color:${sp.color}">${sp.name}</div>
-    <div class="rc-en">${sp.en}</div>
-    <div class="rc-desc">${sp.desc}</div>`;
+  specCard.style.borderColor = archetype.color;
+  specCard.innerHTML = `<div class="rc-label">推断专业原型</div>
+    <span class="score-pill" style="background:${archetype.color}">${archetype.en}</span>
+    <div class="rc-value" style="color:${archetype.color}">${archetype.name}</div>
+    <div class="rc-en">${archetype.en}</div>
+    <div class="rc-desc">${archetype.desc}</div>`;
 
   const specRow = document.getElementById('spec-row');
   specRow.innerHTML = '';
-  Object.entries(normed).sort((a,b)=>b[1]-a[1]).forEach(([key,val]) => {
-    const pct = Math.round(val*100);
+  Object.entries(normed).sort((a, b) => b[1] - a[1]).forEach(([key, value]) => {
+    const pct = Math.round(value * 100);
     const item = document.createElement('div');
     item.className = 'spec-item';
     item.innerHTML = `<div class="spec-header">
-        <span class="spec-name">${SPECIALTIES[key].name}</span>
+        <span class="spec-name">${PROFILE_ARCHETYPES[key].name}</span>
         <span class="spec-pct">${pct}%</span>
       </div>
       <div class="spec-bar-bg">
-        <div class="spec-bar-fill" style="background:${SPECIALTIES[key].color}" data-pct="${pct}"></div>
+        <div class="spec-bar-fill" style="background:${PROFILE_ARCHETYPES[key].color}" data-pct="${pct}"></div>
       </div>`;
     specRow.appendChild(item);
   });
 
-  const tfList = document.getElementById('tf-list');
-  tfList.innerHTML = '';
-  if (tfResults.length === 0) {
-    tfList.innerHTML = '<div style="font-size:13px;color:var(--text-muted)">本次未包含判断题。</div>';
-  } else {
-    tfResults.forEach(r => {
-      const row = document.createElement('div');
-      row.className = 'tf-result-row';
-      const markClass = r.skipped ? 'tf-unknown' : (r.correct ? 'tf-correct' : 'tf-incorrect');
-      const markIcon  = r.skipped ? '−' : (r.correct ? '✓' : '✕');
-      const statusText = r.skipped
-        ? `选择了「不知道」（正确答案：${r.correctAnswer}）`
-        : (r.correct ? '答对了' : `答错了（正确答案：${r.correctAnswer}）`);
-      row.innerHTML = `<span class="tf-mark ${markClass}">${markIcon}</span>
-        <div>
-          <div style="font-weight:500;margin-bottom:3px;font-size:12px;color:var(--text-primary)">${statusText}</div>
-          <div>${r.commentary}</div>
-        </div>`;
-      tfList.appendChild(row);
-    });
-  }
+  const dimensionList = document.getElementById('dimension-list');
+  dimensionList.innerHTML = '';
+  summaries.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'tf-result-row';
+    row.innerHTML = `<span class="tf-mark" style="background:${item.meta.color}">${item.score >= 0 ? item.meta.shortLeft : item.meta.shortRight}</span>
+      <div>
+        <div style="font-weight:500;margin-bottom:3px;font-size:12px;color:var(--text-primary)">${item.meta.label} · ${item.leaning} · 倾向度 ${item.strength}%</div>
+        <div>${item.score >= 0 ? item.meta.descLeft : item.meta.descRight}</div>
+      </div>`;
+    dimensionList.appendChild(row);
+  });
 
-  document.getElementById('result-quote').textContent = edu.quote;
+  document.getElementById('result-quote').textContent = `“${profileCode}型”不是标准答案，只是你看世界时最顺手的那把刀。`;
   showScreen('screen-result');
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    document.querySelectorAll('.spec-bar-fill').forEach(b => b.style.width = b.dataset.pct+'%');
+    document.querySelectorAll('.spec-bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.pct + '%';
+    });
   }));
 }
 
-// ─────────────────────────────────────────
-//  EVENTS
-// ─────────────────────────────────────────
 document.getElementById('btn-start').addEventListener('click', startQuiz);
 document.getElementById('btn-back').addEventListener('click', goBack);
-document.getElementById('btn-continue').addEventListener('click', () => {
-  showScreen('screen-question');
-  renderQuestion();
-});
 document.getElementById('btn-retry').addEventListener('click', () => {
   document.getElementById('progress-bar-wrap').style.display = 'none';
   showScreen('screen-landing');
