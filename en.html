@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cognitive Fingerprint System · Major-TI</title>
+  <title>Cognitive Paradigm Identification System · Major-TI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <style>
@@ -40,7 +40,6 @@
     .fade-in { animation:fadeIn .3s forwards; }
     @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
 
-    /* ── Landing ── */
     #screen-landing { padding-top:72px; text-align:center; }
     .landing-badge {
       display:inline-block; font-size:11px; font-weight:500; letter-spacing:.15em;
@@ -74,37 +73,6 @@
       border:1px solid var(--border); border-radius:100px; color:var(--text-muted);
     }
 
-    /* ── Transition ── */
-    #screen-transition { padding-top:80px; text-align:center; }
-    .trans-eyebrow {
-      font-size:11px; font-weight:600; letter-spacing:.15em; text-transform:uppercase;
-      color:var(--text-muted); margin-bottom:20px;
-    }
-    .trans-title {
-      font-family:'Playfair Display',serif;
-      font-size:clamp(22px,4vw,32px); font-weight:700; line-height:1.4; margin-bottom:12px;
-    }
-    .trans-sub { font-size:14px; color:var(--text-secondary); margin-bottom:44px; line-height:1.8; }
-    .trans-cards { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-bottom:44px; }
-    .trans-card {
-      padding:20px 28px; border-radius:var(--radius);
-      border:2px solid; min-width:140px;
-      display:flex; flex-direction:column; align-items:center; gap:6px;
-    }
-    .trans-card-label { font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase; opacity:.6; }
-    .trans-card-name { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; }
-    .trans-note {
-      font-size:13px; color:var(--text-muted); margin-bottom:40px;
-      max-width:420px; margin-left:auto; margin-right:auto; line-height:1.8;
-    }
-    .btn-continue {
-      background:var(--accent); color:#fff; font-size:15px; font-weight:500;
-      padding:13px 40px; border-radius:100px; border:none; cursor:pointer;
-      font-family:inherit; transition:opacity .2s,transform .15s;
-    }
-    .btn-continue:hover { opacity:.82; transform:translateY(-1px); }
-
-    /* ── Question ── */
     #screen-question { padding-top:48px; }
     .q-meta {
       display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
@@ -121,16 +89,7 @@
       text-transform:uppercase; padding:3px 9px; border-radius:100px; border:1px solid;
     }
     .badge-choice { color:#e8623a; border-color:#e8623a; }
-    .badge-tf { color:#7c3aed; border-color:#7c3aed; }
     .badge-stance { color:#0891b2; border-color:#0891b2; }
-    .q-dim-label {
-      font-size:11px; color:var(--text-muted); font-weight:500;
-      letter-spacing:.1em; text-transform:uppercase;
-    }
-    .q-phase-tag {
-      font-size:10px; padding:2px 8px; border-radius:100px;
-      background:#fef3c7; color:#92400e; font-weight:600; letter-spacing:.06em;
-    }
     .q-text {
       font-family:'Playfair Display',serif;
       font-size:clamp(17px,3vw,22px); font-weight:600; line-height:1.7;
@@ -146,22 +105,6 @@
     .option-btn:hover { border-color:var(--accent); background:var(--hover-bg); transform:translateX(3px); }
     .option-btn.selected { border-color:var(--accent); background:var(--hover-bg); }
     .option-text { font-size:14px; line-height:1.75; color:var(--text-primary); font-weight:400; }
-    .tf-container { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:8px; }
-    .tf-btn {
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      gap:8px; padding:28px 16px; border:1.5px solid var(--border); border-radius:var(--radius);
-      cursor:pointer; background:var(--surface); font-family:inherit;
-      font-size:18px; font-weight:600; transition:border-color .15s,background .15s,transform .1s;
-    }
-    .tf-btn:hover { transform:translateY(-2px); }
-    .tf-btn-true:hover  { border-color:#16a34a; background:#f0fdf4; color:#16a34a; }
-    .tf-btn-false:hover { border-color:#dc2626; background:#fef2f2; color:#dc2626; }
-    .tf-btn.selected-true  { border-color:#16a34a; background:#f0fdf4; color:#16a34a; }
-    .tf-btn.selected-false { border-color:#dc2626; background:#fef2f2; color:#dc2626; }
-    .tf-btn-unknown:hover  { border-color:#6b7280; background:#f9fafb; color:#6b7280; }
-    .tf-btn.selected-unknown { border-color:#6b7280; background:#f9fafb; color:#6b7280; }
-    .tf-icon { font-size:28px; }
-    .tf-label { font-size:13px; font-weight:400; color:var(--text-muted); }
     .stance-container { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:8px; }
     @media(max-width:480px){ .stance-container{grid-template-columns:1fr} }
     .stance-btn {
@@ -181,7 +124,6 @@
     .stance-word { font-size:16px; font-weight:700; }
     .stance-sub  { font-size:11px; color:var(--text-muted); text-align:center; line-height:1.4; }
 
-    /* ── Result ── */
     #screen-result { padding-top:48px; }
     .result-header-grid {
       display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px;
@@ -224,9 +166,6 @@
     .tf-result-list { display:flex; flex-direction:column; gap:8px; }
     .tf-result-row { display:flex; gap:10px; align-items:flex-start; font-size:13px; line-height:1.6; color:var(--text-secondary); }
     .tf-mark { flex-shrink:0; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; margin-top:1px; }
-    .tf-correct { background:#16a34a; }
-    .tf-incorrect { background:#dc2626; }
-    .tf-unknown { background:#6b7280; }
     .result-quote { font-family:'Playfair Display',serif; font-size:14px; color:var(--text-muted); text-align:center; margin:0 0 36px; padding:0 12px; line-height:1.8; font-style:italic; }
     .btn-retry {
       background:transparent; color:var(--text-primary); font-size:14px; font-weight:500;
@@ -245,60 +184,40 @@
 </header>
 <main class="container">
 
-  <!-- LANDING -->
   <section class="screen active" id="screen-landing">
-    <div class="landing-badge">Adaptive Cognitive Fingerprint System</div>
-    <h1 class="landing-title">Your thinking<br/>betrays your degree.</h1>
+    <div class="landing-badge">Four-Dimensional Cognitive Preference Identification System</div>
+    <h1 class="landing-title">The way you think<br/>reveals which discipline you resemble.</h1>
     <p class="landing-sub">
-      The first 10 questions cast a wide net — the system profiles your academic orientation.<br/>
-      Then 10 targeted questions close in for a precise verdict.<br/>
-      The more honest you are, the more accurate the result.
+      This is not a knowledge quiz, and it is not a test of standard answers.<br/>
+      Across 20 questions, it asks only one thing:<br/>
+      when facing complexity, which cognitive tools do you reach for first?
     </p>
-    <p class="landing-note">Your "wrong" answers often reveal more than your "right" ones.</p>
+    <p class="landing-note">There are no correct answers, only more stable preferences.</p>
     <div class="landing-stats">
       <div class="stat-item"><span class="stat-num">20</span><span class="stat-label">questions</span></div>
-      <div class="stat-item"><span class="stat-num">Adaptive</span><span class="stat-label">question bank</span></div>
-      <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">edu levels</span></div>
-      <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">cognitive fingerprints</span></div>
+      <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">cognitive dimensions</span></div>
+      <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">disciplinary archetypes</span></div>
     </div>
-    <button class="btn-start" id="btn-start">Begin Interrogation</button>
+    <button class="btn-start" id="btn-start">Start Diagnosis</button>
     <div class="landing-chips">
-      <span class="dim-chip">Thermodynamic Intuition</span>
-      <span class="dim-chip">Supply &amp; Demand</span>
-      <span class="dim-chip">Model Philosophy</span>
-      <span class="dim-chip">Falsificationism</span>
-      <span class="dim-chip">Experimental Design</span>
-      <span class="dim-chip">Archival Interpretation</span>
-      <span class="dim-chip">Legal Philosophy</span>
-      <span class="dim-chip">Systems Thinking</span>
+      <span class="dim-chip">Mechanism Orientation</span><span class="dim-chip">Narrative Orientation</span>
+      <span class="dim-chip">System Optimization</span><span class="dim-chip">Rule Adjudication</span>
+      <span class="dim-chip">Incentive Analysis</span><span class="dim-chip">Value Judgment</span>
+      <span class="dim-chip">Falsification Modeling</span><span class="dim-chip">Contextual Interpretation</span>
     </div>
   </section>
 
-  <!-- TRANSITION -->
-  <section class="screen" id="screen-transition">
-    <div class="trans-eyebrow">Phase 1 Complete · Preliminary Profile</div>
-    <h2 class="trans-title">The system has identified<br/>your cognitive tendencies</h2>
-    <p class="trans-sub">Based on your first 10 answers, you most likely fall into one of these two areas</p>
-    <div class="trans-cards" id="trans-cards"></div>
-    <p class="trans-note">The next 10 questions will be drawn from the specialist question banks for these two areas,<br/>helping the system distinguish further and deliver a sharper verdict.</p>
-    <button class="btn-continue" id="btn-continue">Continue to Phase 2 →</button>
-  </section>
-
-  <!-- QUESTION -->
   <section class="screen" id="screen-question">
     <div class="q-meta">
       <button class="btn-back" id="btn-back">← Previous</button>
       <div style="display:flex;align-items:center;gap:8px">
-        <span class="q-phase-tag" id="q-phase-tag" style="display:none">Targeted</span>
         <span class="q-type-badge" id="q-type-badge"></span>
-        <span class="q-dim-label" id="q-dim-label"></span>
       </div>
     </div>
     <div class="q-text" id="q-text"></div>
     <div id="q-body"></div>
   </section>
 
-  <!-- RESULT -->
   <section class="screen" id="screen-result">
     <div style="margin-bottom:8px">
       <span style="font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted)">Your Cognitive Profile</span>
@@ -308,430 +227,402 @@
       <div class="result-card" id="spec-card"></div>
     </div>
     <div class="spec-chart">
-      <div class="spec-title">Cognitive Fingerprint Distribution</div>
+      <div class="spec-title">Disciplinary Archetype Distribution</div>
       <div class="spec-row" id="spec-row"></div>
     </div>
     <div class="tf-summary">
-      <div class="tf-summary-title">True / False Breakdown</div>
-      <div class="tf-result-list" id="tf-list"></div>
+      <div class="tf-summary-title">Dimension Interpretation</div>
+      <div class="tf-result-list" id="dimension-list"></div>
     </div>
     <p class="result-quote" id="result-quote"></p>
-    <button class="btn-retry" id="btn-retry">Retake the Test</button>
+    <button class="btn-retry" id="btn-retry">Retake</button>
   </section>
 
 </main>
 <script>
-// ─────────────────────────────────────────
-//  STATIC DATA
-// ─────────────────────────────────────────
-const EDU_LEVELS = [
-  { key:'hs',  name:'Empiricist', en:'High School / Vocational Level', color:'#6b7280', scorePill:'Intuitive Layer',
-    desc:'Your cognitive world has clean outlines: good and evil, right and wrong, cause and effect. This instinctive judgment is the baseline of human intelligence — and the starting point for all complex thought. When the "standard answer" disappears, discomfort follows.',
-    quote:'"This isn\'t scientific! The textbook says so."', range:[0,10] },
-  { key:'bs',  name:'Pragmatist', en:'Undergraduate Level', color:'#5b8cdb', scorePill:'Disciplinary Tool Layer',
-    desc:'You have a hammer now. You can analyze problems using professional vocabulary and disciplinary frameworks — a genuine step beyond intuition. But beware: specialist tools can create the illusion that every problem is a nail. Overconfidence in your own methodology is the undergraduate\'s signature vulnerability.',
-    quote:'"From our field\'s perspective, this is actually a pretty straightforward problem."', range:[11,22] },
-  { key:'ms',  name:'Evidentialist', en:'Graduate / Master\'s Level', color:'#8b5cf6', scorePill:'Boundary Awareness Layer',
-    desc:'You\'ve developed a sharp sensitivity to limits. You know data lies, models fail, and invisible confounds lurk between variables. You can reason steadily under multi-variable conditions and you understand when and why your tools break down.',
-    quote:'"What are the boundary conditions for this conclusion? Where\'s the control group?"', range:[23,32] },
-  { key:'phd', name:'Paradigm Critic', en:'Doctoral Level', color:'#d97706', scorePill:'Meta-cognitive Layer',
-    desc:'You\'ve climbed to the platform of meta-cognition. You no longer seek answers — you interrogate the assumptions behind the questions. You can recognize the underlying logic of different disciplinary paradigms and switch between them. The price: other people\'s discussions often feel shallow.',
-    quote:'"An interesting question is worth more than a correct answer."', range:[33,50] },
-];
-
-const SPECIALTIES = {
-  science:     { name:'Scientific Thinking',  en:'Natural Science',          color:'#3b82f6', desc:'You are a disciple of first principles, convinced that the universe is written in mathematics at its core. Keywords: conservation, probability, falsifiability, error margins. Your most uncomfortable moment: being asked to skip the mechanism and just hand over the conclusion.' },
-  engineering: { name:'Engineering Thinking', en:'Engineering',              color:'#e8623a', desc:'You are a designer and debugger of real-world systems. Your instinct is to decompose any problem into input–process–output modules and locate the stuck interface. Your most uncomfortable moment: being told "this isn\'t an engineering problem — it\'s a values question."' },
-  economics:   { name:'Econ / Mgmt Thinking', en:'Economics / Management',   color:'#059669', desc:'You see the world through incentive structures. In your eyes, people are rational agents and society is a complex incentive system. You rapidly identify who benefits in any given arrangement. Your most uncomfortable moment: being challenged that economics oversimplifies human nature.' },
-  law:         { name:'Legal Thinking',        en:'Law / Political Science',  color:'#7c3aed', desc:'You are a guardian of rules and procedure. Your mind automatically maps the world into rights and obligations: who is entitled to do what, who bears the consequences, whether the process was lawful. This keeps you clear-headed when everyone else is confused.' },
-  humanities:  { name:'Humanities Thinking',   en:'Humanities',               color:'#db2777', desc:'You are a decoder of historical fog and power narratives. Your question is always: who is telling this story? What was deliberately left out? How was this "self-evident truth" constructed in the first place?' },
+const DIMENSIONS = {
+  mn: {
+    label:'Mechanism Orientation vs Narrative Orientation',
+    left:'Mechanism Orientation',
+    right:'Narrative Orientation',
+    shortLeft:'M',
+    shortRight:'N',
+    color:'#3b82f6',
+    descLeft:'You tend to ask first about variables, structure, and causal chains. You assume the world has underlying mechanisms that can be broken down and examined.',
+    descRight:'You tend to look first at who is telling the story, who is being obscured, and how narration itself shapes the problem.'
+  },
+  sr: {
+    label:'System Optimization vs Rule Adjudication',
+    left:'System Optimization',
+    right:'Rule Adjudication',
+    shortLeft:'S',
+    shortRight:'R',
+    color:'#e8623a',
+    descLeft:'You focus more on process, interfaces, feedback, and overall efficiency, treating problems as system-tuning tasks.',
+    descRight:'You focus more on boundaries, responsibility, procedure, and conditions of application, preferring to clarify rules before discussing outcomes.'
+  },
+  iv: {
+    label:'Incentive Analysis vs Value Judgment',
+    left:'Incentive Analysis',
+    right:'Value Judgment',
+    shortLeft:'I',
+    shortRight:'V',
+    color:'#059669',
+    descLeft:'You first ask why people behave this way, who benefits, and how institutions shape actions.',
+    descRight:'You first ask whether something is proper, dignified, or aligned with the value hierarchy you endorse.'
+  },
+  fc: {
+    label:'Falsification Modeling vs Contextual Interpretation',
+    left:'Falsification Modeling',
+    right:'Contextual Interpretation',
+    shortLeft:'F',
+    shortRight:'C',
+    color:'#7c3aed',
+    descLeft:'You prefer abstract models, testable propositions, and evidence with clear boundaries.',
+    descRight:'You prefer to preserve context, texture, and complexity, and you resist flattening reality into a single model too quickly.'
+  }
 };
 
-// ─────────────────────────────────────────
-//  CORE QUESTIONS  (Phase 1 — everyone answers)
-// ─────────────────────────────────────────
-const CORE_QUESTIONS = [
-  {
-    type:'choice', dim:'Thermodynamics · Systems & Entropy',
-    text:'In a sealed laboratory, a chaotic petri dish spontaneously arranges itself into a perfect geometric pattern. Your first reaction is—',
-    options:[
-      {text:'All things have spirit. Life always finds its own path.', edu:1, spec:{}},
-      {text:'Give me a break — who secretly plugged this in or heated it up?', edu:3, spec:{engineering:2}},
-      {text:'A monkey typed Shakespeare. Probability\'s god just dealt me the hand.', edu:3, spec:{science:2}},
-      {text:'This isn\'t science! Textbooks say entropy increase is irreversible — I\'m filing a complaint.', edu:1, spec:{}},
-    ],
+const PROFILE_ARCHETYPES = {
+  science: {
+    name:'Science Archetype',
+    en:'Natural Science',
+    color:'#3b82f6',
+    desc:'You are inclined to treat the world as something that can be modeled and tested. Mechanisms, variables, error margins, and evidential boundaries enter your view before posture or rhetoric.'
   },
-  {
-    type:'choice', dim:'Economics · Price Signals & Resource Allocation',
-    text:'A city bans landlords from raising rent to "protect tenants" — and suddenly no one can find housing. Your take?',
-    options:[
-      {text:'Landlords are staging a collective boycott. Time for moral audits and administrative crackdowns.', edu:1, spec:{}},
-      {text:'The legal framework for rental contracts has loopholes that need legislative repair.', edu:2, spec:{law:1}},
-      {text:'Of course — pin down the price, and the invisible hand starts slapping people around.', edu:3, spec:{economics:2}},
-      {text:'This is capital further squeezing the working class\'s access to basic housing.', edu:3, spec:{humanities:1}},
-    ],
+  engineering: {
+    name:'Engineering Archetype',
+    en:'Engineering',
+    color:'#e8623a',
+    desc:'You naturally break real-world problems into systems, modules, and constraints. You care about where things are stuck, how to fix them, and how to make the whole run more reliably.'
   },
-  {
-    type:'stance', dim:'Philosophy of Science · Models vs. Reality',
-    text:'"All scientific models are, in some sense, wrong — but some are useful."',
-    stances:{
-      oppose:  { edu:1, spec:{} },
-      neutral: { edu:3, spec:{engineering:1, humanities:1} },
-      support: { edu:4, spec:{science:2, engineering:1} },
-    },
+  economics: {
+    name:'Economics / Management Archetype',
+    en:'Economics / Management',
+    color:'#059669',
+    desc:'You understand the world through incentives, games, and resource allocation. Rather than starting with moral judgments, you are quicker to ask how the structure induced those choices.'
   },
-  {
-    type:'choice', dim:'Social Structures · Dispute Resolution',
-    text:'Facing a medical malpractice dispute, your first instinct is to—',
-    options:[
-      {text:'See who\'s more vulnerable — whoever is worse off is more in the right.', edu:1, spec:{}},
-      {text:'Pull up the tort liability law and the surgical consent form and look for procedural gaps.', edu:2, spec:{law:2}},
-      {text:'Study the tiered-care system and insurance resource misallocation to find the structural root cause.', edu:4, spec:{engineering:1,science:1}},
-      {text:'Look at both sides — doctors and patients both share responsibility. Nothing is absolutely right or wrong.', edu:1, spec:{}},
-    ],
+  law: {
+    name:'Legal Archetype',
+    en:'Law / Political Science',
+    color:'#7c3aed',
+    desc:'You instinctively ask about boundaries, responsibility, procedure, and legitimacy. For you, many disputes are not mainly about efficiency, but about who has authority and how rules apply.'
   },
-  {
-    type:'stance', dim:'Art Philosophy · Elitism & Popular Aesthetics',
-    text:'"Abstract art is fundamentally an act of cultural elitism — a condescending dismissal of ordinary people\'s aesthetic sensibility."',
-    stances:{
-      support: { edu:1, spec:{} },
-      neutral: { edu:2, spec:{humanities:1, economics:1} },
-      oppose:  { edu:3, spec:{humanities:2} },
-    },
-  },
-  {
-    type:'choice', dim:'Experimental Design · Methodological Intuition',
-    text:'Your experiment produces results that are perfectly, exactly what you predicted. You would—',
-    options:[
-      {text:'I\'m a genius! Start writing the paper. Time to reach the top.', edu:1, spec:{}},
-      {text:'Something\'s wrong — did I mistake noise for signal somewhere? Better check the instruments.', edu:4, spec:{science:2}},
-      {text:'Normal. I tuned the experimental parameters to match this preset. (Straight-faced.)', edu:1, spec:{}},
-      {text:'Probably my intern entered the data wrong — this is way too clean to be real.', edu:3, spec:{science:1}},
-    ],
-  },
-  {
-    type:'choice', dim:'Urban Planning · Linear vs. Complex Systems',
-    text:'You\'re a city planner tasked with solving peak-hour traffic. Your first instinct is—',
-    options:[
-      {text:'The roads aren\'t wide enough and there aren\'t enough overpasses. Build two more ring roads.', edu:1, spec:{engineering:1}},
-      {text:'Double the tolls during peak hours — let wallets help people conquer their morning inertia.', edu:3, spec:{economics:2}},
-      {text:'Congestion is a downstream symptom. The real question is upstream: why does everyone need to be at the same place at the same time?', edu:4, spec:{engineering:1,economics:1}},
-      {text:'Return to small blocks, high density — let walking replace commuting.', edu:2, spec:{humanities:1}},
-    ],
-  },
-  {
-    type:'choice', dim:'Historiography · Intertextuality & Narrative',
-    text:'While processing historical archives, you discover two records that describe the same event in completely contradictory ways. You would—',
-    options:[
-      {text:'Find a third record, apply majority rule, and vote on which one is true.', edu:1, spec:{}},
-      {text:'Compare the recorders\' physical proximity and timestamps and filter out the "noise" document.', edu:2, spec:{science:1}},
-      {text:'Fascinating! This is evidence of social power stratification at the time — different classes were telling different stories.', edu:4, spec:{humanities:2}},
-      {text:'One of them is definitely lying. There\'s something hidden here. Dig deeper.', edu:1, spec:{}},
-    ],
-  },
-  {
-    type:'stance', dim:'Social Philosophy · Individual Effort vs. Structural Inequality',
-    text:'"A person\'s achievements in life are mainly determined by individual effort — the impact of birth family and social class has been greatly exaggerated."',
-    stances:{
-      support: { edu:1, spec:{} },
-      neutral: { edu:2, spec:{economics:1} },
-      oppose:  { edu:4, spec:{humanities:2, economics:1} },
-    },
-  },
-  {
-    type:'choice', dim:'Media Literacy · Reading Scientific News',
-    text:'Headline: "Study finds people who drink coffee daily have 40% lower heart disease rates than non-drinkers." Your first reaction is—',
-    options:[
-      {text:'Great — I already drink coffee, and now science backs it up.', edu:1, spec:{}},
-      {text:'First, who funded this study? Food industry research deserves a discount.', edu:3, spec:{humanities:1, economics:1}},
-      {text:'Is this observational or a randomized controlled trial? The former only shows correlation, not causation.', edu:4, spec:{science:2}},
-      {text:'"40% lower" is relative risk — if base rates are only 0.5%, the absolute benefit may be negligible.', edu:4, spec:{science:1}},
-    ],
-  },
-];
-
-// ─────────────────────────────────────────
-//  ADAPTIVE POOL  (Phase 2 — targeted by specialty)
-// ─────────────────────────────────────────
-const ADAPTIVE_POOL = {
-  science: [
-    {
-      type:'choice', dim:'Scale Boundaries · Cross-domain Detection',
-      text:'You see an ad claiming "quantum healing crystals cure all diseases." The underlying logic you use to detect the fraud is—',
-      options:[
-        {text:'Way overpriced — that price point alone is a red flag.', edu:1, spec:{}},
-        {text:'Quantum mechanics operates at the microscopic scale; drug action is macroscopic biochemistry — there\'s no established cross-scale coupling mechanism.', edu:4, spec:{science:2}},
-        {text:'Forget the mechanism — just check whether it has gone through a large-scale randomized double-blind controlled trial.', edu:3, spec:{science:2}},
-        {text:'Google it and see if anyone has filed complaints. Check the reviews.', edu:1, spec:{}},
-      ],
-    },
-    {
-      type:'tf', dim:'Quantum Mechanics · The Uncertainty Principle',
-      text:'The essence of the Heisenberg Uncertainty Principle is insufficient instrument precision. In theory, a sufficiently precise instrument could simultaneously measure a particle\'s position and momentum with perfect accuracy.',
-      correct:'False', correctSpec:{science:3},
-      commentary:'The Uncertainty Principle is an intrinsic property of quantum systems — it has nothing to do with instruments. Position and momentum are "conjugate variables" whose uncertainties multiply to a theoretical minimum (ΔxΔp ≥ ħ/2), determined by the mathematical structure of the wave function, not engineering limitations. Einstein spent his life opposing this conclusion. Experiments have repeatedly confirmed it: God does indeed play dice.',
-    },
-    {
-      type:'tf', dim:'Scientific Method · Occam\'s Razor',
-      text:'The principle of "Occam\'s Razor" holds that when explaining the same phenomenon, theories that introduce fewer assumptions should be epistemologically preferred.',
-      correct:'True', correctSpec:{science:2},
-      commentary:'"Entities should not be multiplied beyond necessity" is a foundational principle of scientific methodology. It doesn\'t mean simpler theories are always correct — it means that with equal predictive power, a theory with fewer assumptions is more falsifiable and easier to test and refute. This is the core methodological divide between science and theology.',
-    },
-    {
-      type:'tf', dim:'History of Science · Paradigm Revision',
-      text:'Einstein\'s theory of relativity proved that Newtonian mechanics is wrong — therefore Newton\'s laws are no longer applicable in modern science and engineering.',
-      correct:'False', correctSpec:{science:2},
-      commentary:'Relativity reduces to Newtonian mechanics at low speeds and human scales — satellites, bridges, and cars are still designed using Newton\'s equations. Scientific progress is more often about "defining the boundaries of applicability" than "overturning." Old theories remain fully correct within their domain of validity. Kuhn\'s paradigm shifts don\'t render old paradigms worthless.',
-    },
-    {
-      type:'choice', dim:'Probabilistic Thinking · Base Rate Neglect',
-      text:'A disease has a 1% prevalence rate. A test has 99% accuracy (1% false positive rate). You test positive at random. Your probability of actually having the disease is approximately—',
-      options:[
-        {text:'99%. The test accuracy is that high — a positive is a positive.', edu:1, spec:{}},
-        {text:'Over 50%, but I\'d recommend a follow-up test to confirm.', edu:2, spec:{}},
-        {text:'About 50% — low prevalence means false positives are nearly as common as true positives. Bayes\' theorem applies.', edu:4, spec:{science:3}},
-        {text:'You can\'t tell from "accuracy" alone — you need sensitivity and specificity separately.', edu:3, spec:{science:1}},
-      ],
-    },
-  ],
-
-  engineering: [
-    {
-      type:'tf', dim:'Engineering Intuition · Redundancy & Cost',
-      text:'In engineering practice, for the sake of absolute safety, we must reduce system failure rate to zero regardless of cost.',
-      correct:'False', correctSpec:{engineering:2},
-      commentary:'The marginal cost of driving failure rate toward zero approaches infinity. Engineering\'s core discipline is finding the "safe enough" equilibrium within cost constraints. Zero failure rate is neither achievable nor optimal — this is the key distinction between engineering decisions and idealism.',
-    },
-    {
-      type:'tf', dim:'Computation Theory · Turing Completeness',
-      text:'A system that is "Turing complete" can theoretically execute any computable algorithm and simulate any other Turing-complete system.',
-      correct:'True', correctSpec:{engineering:2},
-      commentary:'All Turing-complete systems are theoretically equivalent in computational power and can mutually simulate one another. This means: Scratch, Excel formula systems, and even a computer built from Minecraft redstone circuits are theoretically "as powerful" as a supercomputer — just so slow that the universe would end before they finished computing.',
-    },
-    {
-      type:'tf', dim:'Software Engineering · Premature Optimization',
-      text:'"Premature optimization is the root of all evil" means: before a performance bottleneck is actually measured, you should not modify structurally clear code for hypothetical performance issues.',
-      correct:'True', correctSpec:{engineering:2},
-      commentary:'Donald Knuth\'s famous dictum. The correct engineering path: first make it work correctly, then use actual measurement to identify the real bottleneck, then optimize precisely. Prematurely optimized code is harder to maintain — and the problem is almost never where you assumed it would be.',
-    },
-    {
-      type:'choice', dim:'Engineering Practice · Production Incident Response',
-      text:'The online service you manage has crashed — users can\'t access it. Your first step is—',
-      options:[
-        {text:'Immediately roll back all recent code changes and restore service first.', edu:2, spec:{engineering:1}},
-        {text:'Check logs and monitoring metrics to locate which component failed and when.', edu:4, spec:{engineering:2}},
-        {text:'Restart the server — most online incidents can be temporarily resolved with a reboot.', edu:1, spec:{}},
-        {text:'Notify the team and assemble relevant people for an emergency meeting.', edu:1, spec:{}},
-      ],
-    },
-    {
-      type:'stance', dim:'Engineering Ethics · The Neutrality of Technology',
-      text:'"Technology itself is neutral — surveillance systems, recommendation algorithms, and weapons are only good or bad based on how they\'re used. Engineers bear no moral responsibility for the consequences."',
-      stances:{
-        support: { edu:2, spec:{engineering:1} },
-        neutral: { edu:3, spec:{engineering:1, law:1} },
-        oppose:  { edu:4, spec:{humanities:2, law:1} },
-      },
-    },
-  ],
-
-  economics: [
-    {
-      type:'tf', dim:'Macroeconomics · The Phillips Curve',
-      text:'The Phillips curve describes a short-term trade-off: the higher the inflation rate, the lower the unemployment rate tends to be.',
-      correct:'True', correctSpec:{economics:3},
-      commentary:'This is the core paradox of Keynesian macroeconomic policy: trading inflation for employment. Phillips discovered the pattern from a century of UK data in 1958. Then the 1970s "stagflation" slapped both sides simultaneously — declaring the failure of the simple Phillips curve. Inflation and unemployment can spike together after all.',
-    },
-    {
-      type:'tf', dim:'Social Choice Theory · Arrow\'s Impossibility Theorem',
-      text:'According to Arrow\'s Impossibility Theorem, with three or more options, no voting rule can simultaneously satisfy "non-dictatorship," "Pareto efficiency," and "independence of irrelevant alternatives."',
-      correct:'True', correctSpec:{economics:3},
-      commentary:'Kenneth Arrow\'s 1951 theorem shows that a "perfect democratic voting mechanism" is logically impossible — you must sacrifice at least one seemingly reasonable condition. The theorem won Arrow the Nobel Prize in Economics and has given political scientists headaches ever since.',
-    },
-    {
-      type:'stance', dim:'Market Economics · The Limits of the Invisible Hand',
-      text:'"The market\'s invisible hand is ultimately smarter and more efficient than any government\'s visible hand."',
-      stances:{
-        support: { edu:2, spec:{economics:2} },
-        neutral: { edu:4, spec:{economics:1, law:1} },
-        oppose:  { edu:3, spec:{humanities:2, law:1} },
-      },
-    },
-    {
-      type:'tf', dim:'Behavioral Economics · Loss Aversion',
-      text:'According to Kahneman\'s Prospect Theory, the psychological pain of losing $100 is greater in intensity than the pleasure of gaining $100.',
-      correct:'True', correctSpec:{economics:2},
-      commentary:'A core finding of Prospect Theory: losses carry roughly twice the psychological weight of equivalent gains. This explains why investors hold onto losing stocks rather than cutting their losses — the pain of "realizing a loss" exceeds the rational calculation. Kahneman won the 2002 Nobel Prize in Economics for this work, fundamentally shaking the "rational agent" assumption of classical economics.',
-    },
-    {
-      type:'choice', dim:'Game Theory · Collective Action Dilemmas',
-      text:'In the Prisoner\'s Dilemma, two rational individuals both choose to "defect," ending up worse off than if they had cooperated. This most accurately demonstrates—',
-      options:[
-        {text:'Selfishness is human nature — the logical endpoint of rationality is mutual harm.', edu:1, spec:{}},
-        {text:'Individual rationality can lead to collective irrationality under certain structures — a classic form of "market failure."', edu:3, spec:{economics:2}},
-        {text:'Cooperation should be enforced through institutional design to eliminate the option of defection.', edu:2, spec:{law:1}},
-        {text:'In repeated games, "tit-for-tat" strategies can produce stable cooperative equilibria — but not in one-shot games.', edu:4, spec:{economics:2}},
-      ],
-    },
-  ],
-
-  law: [
-    {
-      type:'choice', dim:'Legal Philosophy · Ethics & Procedural Justice',
-      text:'The trolley problem: you must choose one. The answer most consistent with the spirit of modern rule of law would be—',
-      options:[
-        {text:'5 > 1. Simple arithmetic — save five. No contest.', edu:2, spec:{economics:1}},
-        {text:'Unless the law explicitly authorizes it, I have no right to take an innocent life — even to save more people.', edu:4, spec:{law:2}},
-        {text:'I would jump onto the tracks and block the trolley with my own body.', edu:1, spec:{}},
-        {text:'This is a false dilemma. In reality there\'s always a third option. The question has no practical value.', edu:2, spec:{}},
-      ],
-    },
-    {
-      type:'tf', dim:'Legal Theory · Legal Positivism',
-      text:'The validity of law derives from the internal logical coherence of its norms, not from external coercive force.',
-      correct:'True', correctSpec:{law:2},
-      commentary:'This is the core thesis of Kelsen\'s "Pure Theory of Law": legal validity is normative, not coercive. Accepting this premise signals you\'ve engaged with legal philosophy, not just memorized statutes.',
-    },
-    {
-      type:'tf', dim:'Contract Law · The Limits of Freedom of Contract',
-      text:'Under the "freedom of contract" principle, any contract voluntarily signed by two legally competent adults is necessarily legally valid.',
-      correct:'False', correctSpec:{law:3},
-      commentary:'Freedom of contract has limits: agreements cannot violate mandatory legal provisions or public policy and morality — otherwise they are void. "Voluntary" is necessary but far from sufficient. A voluntary drug trafficking deal or an agreement restricting someone\'s personal freedom is obviously unenforceable. The law does not protect all "voluntary" acts.',
-    },
-    {
-      type:'tf', dim:'Constitutional Theory · The Limits of Majority Rule',
-      text:'In a democracy, any decision passed by more than half the voters should be considered legally legitimate.',
-      correct:'False', correctSpec:{law:2},
-      commentary:'"The tyranny of the majority" is the central problem constitutionalism was designed to solve. Modern democracy is not just majority rule — it also requires protection of minority rights. This is precisely why constitutions, judicial review, and fundamental rights clauses exist. A majority vote can determine policy direction, but it cannot strip anyone of their basic rights.',
-    },
-    {
-      type:'choice', dim:'Legal Interpretation · Textual vs. Purposive',
-      text:'A library rule states "no food permitted inside." Someone carrying a sealed medical nutrition supplement is denied entry. You think—',
-      options:[
-        {text:'Rules are rules. A nutrition supplement is food. No exceptions.', edu:2, spec:{law:1}},
-        {text:'The rule\'s purpose is to prevent mess and disruption — a sealed medical supplement doesn\'t apply. Let them in.', edu:3, spec:{law:2}},
-        {text:'Edge cases like this should be left to the staff\'s discretion — rules can\'t cover everything.', edu:1, spec:{}},
-        {text:'Consult the rule\'s context and analogous cases to determine whether "food" covers medical nutrition products.', edu:4, spec:{law:2}},
-      ],
-    },
-  ],
-
-  humanities: [
-    {
-      type:'tf', dim:'Philosophical Precision · Textual Interpretation',
-      text:'"Everything real is rational" — philosophically, this statement describes the necessity of causal logic, not a value judgment about whether existing things are justified.',
-      correct:'True', correctSpec:{humanities:2},
-      commentary:'Hegel\'s original German — "was vernünftig ist, das ist wirklich" — describes the dialectical relationship between reason and reality, not an endorsement of the existing order. Reading it as "whatever exists is justifiable (and therefore good)" reflects both a translation failure and an absence of philosophical training.',
-    },
-    {
-      type:'tf', dim:'Intellectual History · The Renaissance',
-      text:'The core significance of the Renaissance was: drawing on ancient Greek and Roman humanist spirit to establish a discourse system centered on "humans," thereby challenging the medieval theological order centered on "God."',
-      correct:'True', correctSpec:{humanities:2},
-      commentary:'The Renaissance (Renaissance = rebirth) is fundamentally about Humanism. By rediscovering classical texts preserved through the Arab world, thinkers built a discourse system that competed with the medieval theological paradigm. It was not merely an artistic movement — it was a paradigm shift in epistemology.',
-    },
-    {
-      type:'tf', dim:'Historical Methodology · Narrative & Power',
-      text:'"History is written by the victors" — from a historiographical perspective, this means all historical documents are fabricated, and historical research can therefore reach no credible conclusions.',
-      correct:'False', correctSpec:{humanities:2},
-      commentary:'This is an over-reading of the claim that "historical narrative has a power position." The correct understanding: narratives have stances, but that doesn\'t mean they\'re all lies. The historian\'s task is precisely to approach a fuller picture through intertextual analysis, cross-verification, and recovering suppressed voices. Acknowledging limitations is a sign of methodological maturity — not a reason to abandon inquiry.',
-    },
-    {
-      type:'choice', dim:'Media Theory · Form and Cognitive Restructuring',
-      text:'McLuhan said "the medium is the message." The most accurate interpretation of this claim is—',
-      options:[
-        {text:'Content is what matters — the medium is just a delivery channel and doesn\'t affect meaning.', edu:1, spec:{}},
-        {text:'Different media reach different audiences — distribution strategy should adapt to the medium.', edu:2, spec:{economics:1}},
-        {text:'The physical form of a medium (text, TV, short video) reshapes human perception itself, independent of content.', edu:4, spec:{humanities:2}},
-        {text:'Media control what information gets transmitted, forming a hidden power filter on public discourse.', edu:3, spec:{humanities:2}},
-      ],
-    },
-    {
-      type:'tf', dim:'History of Philosophy · The Limits of Postmodernism',
-      text:'The core claim of postmodernism is that objective truth simply does not exist — all "truths" are merely constructs of specific power relations.',
-      correct:'False', correctSpec:{humanities:2},
-      commentary:'This is a common oversimplification. Postmodernism\'s more precise position is that claims to "objectivity" and "universal truth" should be critically interrogated, since they often conceal power relations — not that truth doesn\'t exist. Lyotard\'s critique was directed at "grand narratives." Derrida\'s deconstruction dismantles premises. Neither is nihilism.',
-    },
-  ],
+  humanities: {
+    name:'Humanities Archetype',
+    en:'Humanities',
+    color:'#db2777',
+    desc:'You notice narrative, context, historical layers, and value tensions first. You do not rush to flatten the world, and you care about what mechanism-centered descriptions leave out.'
+  }
 };
 
-// ─────────────────────────────────────────
-//  STATE
-// ─────────────────────────────────────────
-const CORE_COUNT = CORE_QUESTIONS.length; // 8
+const QUESTIONS = [
+  {
+    type:'choice',
+    dim:'Mechanism Orientation vs Narrative Orientation',
+    text:'When many people suddenly resign from a company, your first reaction is more like—',
+    options:[
+      { text:'First investigate what went wrong in the institution and workflow.', dimDelta:{ mn:2 }, spec:{ engineering:1, economics:1 } },
+      { text:'First check which time periods and departments saw clustered resignations.', dimDelta:{ mn:1 }, spec:{ science:1, economics:1 } },
+      { text:'First listen to what employees are actually complaining about in private.', dimDelta:{ mn:-1 }, spec:{ humanities:1 } },
+      { text:'First ask who gets to define whether this even counts as a "wave of resignations."', dimDelta:{ mn:-2 }, spec:{ humanities:2 } }
+    ]
+  },
+  {
+    type:'choice',
+    dim:'Mechanism Orientation vs Narrative Orientation',
+    text:'When you see an online controversy escalating, what do you want to clarify first—',
+    options:[
+      { text:'How the platform and transmission mechanisms amplified it.', dimDelta:{ mn:2 }, spec:{ engineering:1, economics:1 } },
+      { text:'At which node the information first became distorted.', dimDelta:{ mn:1 }, spec:{ science:1, engineering:1 } },
+      { text:'How different people are telling the same event in different ways.', dimDelta:{ mn:-1 }, spec:{ humanities:1, law:1 } },
+      { text:'Who has the strongest ability to turn their version into "common sense."', dimDelta:{ mn:-2 }, spec:{ humanities:2 } }
+    ]
+  },
+  {
+    type:'stance',
+    dim:'Mechanism Orientation vs Narrative Orientation',
+    text:'When facing a long-unsolved problem, I prefer first to break down how it operates, rather than first looking at how different people describe it.',
+    stances:{
+      support:{ dimDelta:{ mn:2 }, spec:{ science:1, engineering:1 } },
+      neutral:{ dimDelta:{ mn:0 }, spec:{} },
+      oppose:{ dimDelta:{ mn:-2 }, spec:{ humanities:1 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'Mechanism Orientation vs Narrative Orientation',
+    text:'When I see a controversial event, I usually care more about how different people narrate it than about tracing the mechanism chain first.',
+    stances:{
+      support:{ dimDelta:{ mn:-2 }, spec:{ humanities:2, law:1 } },
+      neutral:{ dimDelta:{ mn:0 }, spec:{} },
+      oppose:{ dimDelta:{ mn:2 }, spec:{ science:1, engineering:1 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'Mechanism Orientation vs Narrative Orientation',
+    text:'I trust "finding the key link" more than first debating whose account is more dominant.',
+    stances:{
+      support:{ dimDelta:{ mn:2 }, spec:{ engineering:1, economics:1 } },
+      neutral:{ dimDelta:{ mn:0 }, spec:{} },
+      oppose:{ dimDelta:{ mn:-2 }, spec:{ humanities:2 } }
+    }
+  },
+  {
+    type:'choice',
+    dim:'System Optimization vs Rule Adjudication',
+    text:'After a new app feature launches, user numbers clearly drop. You would first—',
+    options:[
+      { text:'Find out exactly at which step users are dropping off.', dimDelta:{ sr:2 }, spec:{ engineering:2 } },
+      { text:'Smooth the path first and remove the annoying parts.', dimDelta:{ sr:1 }, spec:{ engineering:1, economics:1 } },
+      { text:'Check whether boundaries are unclear in permissions, prompts, or default settings.', dimDelta:{ sr:-1 }, spec:{ law:1 } },
+      { text:'Judge first whether this type of feature requires clearer boundaries and responsibilities.', dimDelta:{ sr:-2 }, spec:{ law:2, humanities:1 } }
+    ]
+  },
+  {
+    type:'stance',
+    dim:'System Optimization vs Rule Adjudication',
+    text:'When a system has problems, I would rather optimize the process first than patch the rules first.',
+    stances:{
+      support:{ dimDelta:{ sr:2 }, spec:{ engineering:2 } },
+      neutral:{ dimDelta:{ sr:0 }, spec:{} },
+      oppose:{ dimDelta:{ sr:-2 }, spec:{ law:2 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'System Optimization vs Rule Adjudication',
+    text:'No matter how complex something is, I still prefer first to clarify boundaries and responsibility, rather than first discussing efficiency improvements.',
+    stances:{
+      support:{ dimDelta:{ sr:-2 }, spec:{ law:2 } },
+      neutral:{ dimDelta:{ sr:0 }, spec:{} },
+      oppose:{ dimDelta:{ sr:2 }, spec:{ engineering:1 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'System Optimization vs Rule Adjudication',
+    text:'Rather than blocking loopholes one by one, I prefer changing the system so people naturally stop exploiting them.',
+    stances:{
+      support:{ dimDelta:{ sr:2 }, spec:{ engineering:2, economics:1 } },
+      neutral:{ dimDelta:{ sr:0 }, spec:{} },
+      oppose:{ dimDelta:{ sr:-2 }, spec:{ law:1 } }
+    }
+  },
+  {
+    type:'choice',
+    dim:'System Optimization vs Rule Adjudication',
+    text:'Shared bikes are being parked chaotically everywhere. You would rather first—',
+    options:[
+      { text:'Design parking spots, dispatching, and feedback mechanisms more rationally.', dimDelta:{ sr:2 }, spec:{ engineering:2 } },
+      { text:'Use pricing and credit scores to steer users toward the right places.', dimDelta:{ sr:1 }, spec:{ economics:1, engineering:1 } },
+      { text:'Clarify first where parking is allowed and who is responsible.', dimDelta:{ sr:-1 }, spec:{ law:2 } },
+      { text:'Establish stable rules first, then talk about other optimizations.', dimDelta:{ sr:-2 }, spec:{ law:2 } }
+    ]
+  },
+  {
+    type:'stance',
+    dim:'Incentive Analysis vs Value Judgment',
+    text:'When understanding something, I often first look at who it rewards and who it punishes, rather than first judging whether it is morally good.',
+    stances:{
+      support:{ dimDelta:{ iv:2 }, spec:{ economics:2 } },
+      neutral:{ dimDelta:{ iv:0 }, spec:{} },
+      oppose:{ dimDelta:{ iv:-2 }, spec:{ humanities:1 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'Incentive Analysis vs Value Judgment',
+    text:'Even if something is effective, I still care more about whether it is right than whether it is useful.',
+    stances:{
+      support:{ dimDelta:{ iv:-2 }, spec:{ humanities:2, law:1 } },
+      neutral:{ dimDelta:{ iv:0 }, spec:{} },
+      oppose:{ dimDelta:{ iv:2 }, spec:{ economics:1 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'Incentive Analysis vs Value Judgment',
+    text:'In my view, the most important thing in institutional design is what behavior it ultimately pushes people toward, not how correct its slogan sounds.',
+    stances:{
+      support:{ dimDelta:{ iv:2 }, spec:{ economics:2, engineering:1 } },
+      neutral:{ dimDelta:{ iv:0 }, spec:{} },
+      oppose:{ dimDelta:{ iv:-2 }, spec:{ humanities:1 } }
+    }
+  },
+  {
+    type:'choice',
+    dim:'Incentive Analysis vs Value Judgment',
+    text:'A school uses large cash rewards to push students to win competitions. You are more inclined to—',
+    options:[
+      { text:'First see where the rewards will direct students\' time and energy.', dimDelta:{ iv:2 }, spec:{ economics:2 } },
+      { text:'First see whether this incentive setup makes truly important abilities get neglected.', dimDelta:{ iv:1 }, spec:{ economics:1, engineering:1 } },
+      { text:'First see whether this fits your own understanding of what education should be.', dimDelta:{ iv:-1 }, spec:{ humanities:1 } },
+      { text:'First ask what education ought to be driven by, rather than just looking at the reward effect.', dimDelta:{ iv:-2 }, spec:{ humanities:2 } }
+    ]
+  },
+  {
+    type:'choice',
+    dim:'Incentive Analysis vs Value Judgment',
+    text:'In an outpatient clinic, people often make appointments and then fail to show up. You would support first—',
+    options:[
+      { text:'Charging a small no-show fee to correct the behavior first.', dimDelta:{ iv:2 }, spec:{ economics:2 } },
+      { text:'Separating different cases and then designing more detailed reminder methods.', dimDelta:{ iv:1 }, spec:{ economics:1, law:1 } },
+      { text:'First confirming whether the rule is fair enough to patients in different circumstances.', dimDelta:{ iv:-1 }, spec:{ law:1, humanities:1 } },
+      { text:'First asking what should be preserved in medical settings besides efficiency.', dimDelta:{ iv:-2 }, spec:{ humanities:2 } }
+    ]
+  },
+  {
+    type:'stance',
+    dim:'Falsification Modeling vs Contextual Interpretation',
+    text:'When I see a conclusion, I first ask whether it can be verified or overturned, rather than first asking whether it fits concrete experience.',
+    stances:{
+      support:{ dimDelta:{ fc:2 }, spec:{ science:2 } },
+      neutral:{ dimDelta:{ fc:0 }, spec:{} },
+      oppose:{ dimDelta:{ fc:-2 }, spec:{ humanities:1 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'Falsification Modeling vs Contextual Interpretation',
+    text:'Once many things are quantified, important information is often lost. To me that feels closer to reality than "quantify first, discuss later."',
+    stances:{
+      support:{ dimDelta:{ fc:-2 }, spec:{ humanities:2 } },
+      neutral:{ dimDelta:{ fc:0 }, spec:{} },
+      oppose:{ dimDelta:{ fc:2 }, spec:{ science:1, engineering:1 } }
+    }
+  },
+  {
+    type:'stance',
+    dim:'Falsification Modeling vs Contextual Interpretation',
+    text:'Compared with individual stories, I trust recurring data patterns more than I trust feelings inside specific contexts.',
+    stances:{
+      support:{ dimDelta:{ fc:2 }, spec:{ science:2, engineering:1 } },
+      neutral:{ dimDelta:{ fc:0 }, spec:{} },
+      oppose:{ dimDelta:{ fc:-2 }, spec:{ humanities:1 } }
+    }
+  },
+  {
+    type:'choice',
+    dim:'Falsification Modeling vs Contextual Interpretation',
+    text:'A news story says, "People who drink coffee every day live longer." Your first reaction is more like—',
+    options:[
+      { text:'First look at how the study was done, then decide whether to believe it.', dimDelta:{ fc:2 }, spec:{ science:2 } },
+      { text:'Could some other key factor have been left out?', dimDelta:{ fc:1 }, spec:{ science:1, economics:1 } },
+      { text:'Everyone lives differently. This kind of conclusion cuts across people too crudely.', dimDelta:{ fc:-1 }, spec:{ humanities:1 } },
+      { text:'"Live longer" means different things in different contexts.', dimDelta:{ fc:-2 }, spec:{ humanities:2 } }
+    ]
+  },
+  {
+    type:'choice',
+    dim:'Falsification Modeling vs Contextual Interpretation',
+    text:'When reviewing a failed project, what kind of material do you trust most—',
+    options:[
+      { text:'Timelines, data, and key decision points.', dimDelta:{ fc:2 }, spec:{ engineering:1, science:1 } },
+      { text:'Which judgments were later disproven by reality.', dimDelta:{ fc:1 }, spec:{ science:1, engineering:1 } },
+      { text:'What situation the participants were in when they made those decisions.', dimDelta:{ fc:-1 }, spec:{ humanities:1 } },
+      { text:'Many failures are caused by context and may not summarize into a stable model at all.', dimDelta:{ fc:-2 }, spec:{ humanities:2 } }
+    ]
+  }
+];
+
 let currentQ = 0;
-let allQuestions = [];
-let top2Specs = [];
-let eduScore = 0;
+let allQuestions = [...QUESTIONS];
 const specScores = { science:0, engineering:0, economics:0, law:0, humanities:0 };
-const tfResults = [];
+const dimScores = { mn:0, sr:0, iv:0, fc:0 };
 const history = [];
-const eduPts = { 1:0, 2:1, 3:2, 4:3 };
 
-// ─────────────────────────────────────────
-//  HELPERS
-// ─────────────────────────────────────────
-function addSpec(obj) {
-  if (!obj) return;
-  Object.entries(obj).forEach(([k,v]) => { specScores[k] = (specScores[k]||0)+v; });
+function addScore(target, delta) {
+  if (!delta) return;
+  Object.entries(delta).forEach(([key, value]) => {
+    target[key] = (target[key] || 0) + value;
+  });
 }
-function subSpec(obj) {
-  if (!obj) return;
-  Object.entries(obj).forEach(([k,v]) => { specScores[k] = (specScores[k]||0)-v; });
+
+function subScore(target, delta) {
+  if (!delta) return;
+  Object.entries(delta).forEach(([key, value]) => {
+    target[key] = (target[key] || 0) - value;
+  });
 }
+
 function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active','fade-in');
+  document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+  document.getElementById(id).classList.add('active', 'fade-in');
 }
+
 function updateProgress() {
   const total = allQuestions.length;
   const pct = total > 0 ? (currentQ / total) * 100 : 0;
   document.getElementById('progress-bar-fill').style.width = pct + '%';
   document.getElementById('q-counter').textContent = `${currentQ + 1} / ${total}`;
   document.getElementById('btn-back').classList.toggle('visible', currentQ > 0);
-  const tag = document.getElementById('q-phase-tag');
-  tag.style.display = currentQ >= CORE_COUNT ? 'inline-block' : 'none';
-}
-function shuffleArr(arr) {
-  const a = [...arr];
-  for (let i = a.length-1; i>0; i--) {
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
-  }
-  return a;
 }
 
-function computeNormed(questionList) {
+function shuffleArr(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+function computeNormedSpec(questionList) {
   const max = { science:0, engineering:0, economics:0, law:0, humanities:0 };
-  questionList.forEach(q => {
-    if (q.type === 'choice') {
+  questionList.forEach(question => {
+    if (question.type === 'stance') {
       Object.keys(max).forEach(spec => {
-        const best = Math.max(...q.options.map(o => (o.spec&&o.spec[spec])||0));
+        const best = Math.max(...Object.values(question.stances).map(stance => (stance.spec && stance.spec[spec]) || 0));
         max[spec] += best;
       });
-    } else if (q.type === 'stance') {
+    } else {
       Object.keys(max).forEach(spec => {
-        const best = Math.max(...Object.values(q.stances).map(s => (s.spec&&s.spec[spec])||0));
+        const best = Math.max(...question.options.map(option => (option.spec && option.spec[spec]) || 0));
         max[spec] += best;
       });
-    } else if (q.correctSpec) {
-      Object.entries(q.correctSpec).forEach(([k,v]) => { max[k] += v; });
     }
   });
   const normed = {};
-  Object.keys(specScores).forEach(k => {
-    normed[k] = max[k] > 0 ? Math.min(specScores[k]/max[k], 1) : 0;
+  Object.keys(specScores).forEach(key => {
+    normed[key] = max[key] > 0 ? Math.min(specScores[key] / max[key], 1) : 0;
   });
   return normed;
 }
 
-// ─────────────────────────────────────────
-//  QUIZ FLOW
-// ─────────────────────────────────────────
+function getDimensionSummary(key) {
+  const meta = DIMENSIONS[key];
+  const score = dimScores[key];
+  const total = QUESTIONS
+    .filter(question => {
+      if (question.type === 'stance') {
+        return Object.values(question.stances).some(stance => Object.prototype.hasOwnProperty.call(stance.dimDelta, key));
+      }
+      return question.options.some(option => Object.prototype.hasOwnProperty.call(option.dimDelta, key));
+    })
+    .reduce((sum, question) => {
+      if (question.type === 'stance') {
+        return sum + Math.max(...Object.values(question.stances).map(stance => Math.abs((stance.dimDelta && stance.dimDelta[key]) || 0)));
+      }
+      return sum + Math.max(...question.options.map(option => Math.abs((option.dimDelta && option.dimDelta[key]) || 0)));
+    }, 0);
+  const leaning = score >= 0 ? meta.left : meta.right;
+  const strength = total > 0 ? Math.round(Math.abs(score) / total * 100) : 0;
+  return { meta, score, leaning, strength };
+}
+
 function startQuiz() {
-  currentQ = 0; eduScore = 0;
-  tfResults.length = 0; history.length = 0; top2Specs.length = 0;
-  Object.keys(specScores).forEach(k => specScores[k]=0);
-  allQuestions = [...CORE_QUESTIONS];
+  currentQ = 0;
+  allQuestions = shuffleArr(QUESTIONS).map(question => {
+    if (question.type === 'choice') {
+      return { ...question, options: shuffleArr(question.options) };
+    }
+    return question;
+  });
+  history.length = 0;
+  Object.keys(specScores).forEach(key => { specScores[key] = 0; });
+  Object.keys(dimScores).forEach(key => { dimScores[key] = 0; });
   document.getElementById('progress-bar-wrap').style.display = 'block';
   document.getElementById('q-counter').style.display = 'block';
   renderQuestion();
@@ -739,45 +630,47 @@ function startQuiz() {
 }
 
 function renderQuestion() {
-  const q = allQuestions[currentQ];
+  const question = allQuestions[currentQ];
   updateProgress();
   const badge = document.getElementById('q-type-badge');
-  if (q.type==='choice')      { badge.textContent='Multiple Choice'; badge.className='q-type-badge badge-choice'; }
-  else if (q.type==='stance') { badge.textContent='Take a Stance';  badge.className='q-type-badge badge-stance'; }
-  else                        { badge.textContent='True / False';   badge.className='q-type-badge badge-tf'; }
-  document.getElementById('q-dim-label').textContent = q.dim;
-  document.getElementById('q-text').textContent = q.text;
+  if (question.type === 'choice') {
+    badge.textContent = 'Scenario';
+    badge.className = 'q-type-badge badge-choice';
+  } else {
+    badge.textContent = 'Stance';
+    badge.className = 'q-type-badge badge-stance';
+  }
+  document.getElementById('q-text').textContent = question.text;
 
   const body = document.getElementById('q-body');
   body.innerHTML = '';
-
-  if (q.type === 'choice') {
+  if (question.type === 'choice') {
     const list = document.createElement('div');
     list.className = 'options-list';
-    shuffleArr(q.options.map(o=>({...o}))).forEach(opt => {
+    question.options.forEach(option => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      btn.innerHTML = `<span class="option-text">${opt.text}</span>`;
+      btn.innerHTML = `<span class="option-text">${option.text}</span>`;
       btn.addEventListener('click', () => {
         btn.classList.add('selected');
-        list.querySelectorAll('.option-btn').forEach(b => b.style.pointerEvents='none');
-        const ed = eduPts[opt.edu]||0;
-        eduScore += ed; addSpec(opt.spec);
-        history.push({ eduDelta:ed, specDelta:opt.spec||{}, isTF:false });
-        setTimeout(advance, 360);
+        list.querySelectorAll('.option-btn').forEach(node => { node.style.pointerEvents = 'none'; });
+        addScore(specScores, option.spec);
+        addScore(dimScores, option.dimDelta);
+        history.push({ specDelta: option.spec || {}, dimDelta: option.dimDelta || {} });
+        setTimeout(advance, 320);
       });
       list.appendChild(btn);
     });
     body.appendChild(list);
-  } else if (q.type === 'stance') {
+  } else {
     const wrap = document.createElement('div');
     wrap.className = 'stance-container';
     [
-      { key:'oppose',  label:'Disagree', icon:'✕', cls:'stance-oppose',  sel:'sel-oppose',  sub:'This claim doesn\'t hold up' },
-      { key:'neutral', label:'Neutral',  icon:'−', cls:'stance-neutral', sel:'sel-neutral', sub:'It depends — both sides have merit' },
-      { key:'support', label:'Agree',    icon:'✓', cls:'stance-support', sel:'sel-support', sub:'This claim has merit' },
+      { key:'oppose', label:'Disagree', icon:'✕', cls:'stance-oppose', sel:'sel-oppose', sub:'This does not sound like me' },
+      { key:'neutral', label:'Neutral', icon:'−', cls:'stance-neutral', sel:'sel-neutral', sub:'Hard to say, depends on the case' },
+      { key:'support', label:'Agree', icon:'✓', cls:'stance-support', sel:'sel-support', sub:'This sounds more like me' }
     ].forEach(({ key, label, icon, cls, sel, sub }) => {
-      const s = q.stances[key];
+      const stance = question.stances[key];
       const btn = document.createElement('button');
       btn.className = `stance-btn ${cls}`;
       btn.innerHTML = `<span class="stance-icon">${icon}</span>
@@ -785,193 +678,108 @@ function renderQuestion() {
         <span class="stance-sub">${sub}</span>`;
       btn.addEventListener('click', () => {
         btn.classList.add(sel);
-        wrap.querySelectorAll('.stance-btn').forEach(b=>b.style.pointerEvents='none');
-        const ed = eduPts[s.edu]||0;
-        eduScore += ed; addSpec(s.spec);
-        history.push({ eduDelta:ed, specDelta:s.spec||{}, isTF:false });
-        setTimeout(advance, 360);
+        wrap.querySelectorAll('.stance-btn').forEach(node => { node.style.pointerEvents = 'none'; });
+        addScore(specScores, stance.spec);
+        addScore(dimScores, stance.dimDelta);
+        history.push({ specDelta: stance.spec || {}, dimDelta: stance.dimDelta || {} });
+        setTimeout(advance, 320);
       });
       wrap.appendChild(btn);
     });
-    body.appendChild(wrap);
-  } else {
-    const wrap = document.createElement('div');
-    wrap.className = 'tf-container';
-    ['True','False'].forEach(ans => {
-      const isTrue = ans==='True';
-      const btn = document.createElement('button');
-      btn.className = `tf-btn ${isTrue?'tf-btn-true':'tf-btn-false'}`;
-      btn.innerHTML = `<span class="tf-icon">${isTrue?'○':'✕'}</span>
-        <span style="font-size:17px;font-weight:700">${ans}</span>
-        <span class="tf-label">${isTrue?'This statement is correct':'This statement is incorrect'}</span>`;
-      btn.addEventListener('click', () => {
-        btn.classList.add(isTrue?'selected-true':'selected-false');
-        wrap.querySelectorAll('.tf-btn').forEach(b=>b.style.pointerEvents='none');
-        const isCorrect = ans===q.correct;
-        const ed = isCorrect ? 2 : 0;
-        const sd = isCorrect ? (q.correctSpec||{}) : {};
-        eduScore += ed; if(isCorrect) addSpec(q.correctSpec);
-        tfResults.push({ correct:isCorrect, text:q.text, commentary:q.commentary, userAnswer:ans, correctAnswer:q.correct });
-        history.push({ eduDelta:ed, specDelta:sd, isTF:true });
-        setTimeout(advance, 360);
-      });
-      wrap.appendChild(btn);
-    });
-    const unknownBtn = document.createElement('button');
-    unknownBtn.className = 'tf-btn tf-btn-unknown';
-    unknownBtn.style.gridColumn = '1 / -1';
-    unknownBtn.style.padding = '14px 16px';
-    unknownBtn.innerHTML = `<span style="font-size:15px;font-weight:700">I Don't Know</span>
-      <span class="tf-label">Skip — no points, but the explanation still appears</span>`;
-    unknownBtn.addEventListener('click', () => {
-      unknownBtn.classList.add('selected-unknown');
-      wrap.querySelectorAll('.tf-btn').forEach(b=>b.style.pointerEvents='none');
-      tfResults.push({ correct:false, skipped:true, text:q.text, commentary:q.commentary, userAnswer:"I don't know", correctAnswer:q.correct });
-      history.push({ eduDelta:0, specDelta:{}, isTF:true });
-      setTimeout(advance, 360);
-    });
-    wrap.appendChild(unknownBtn);
     body.appendChild(wrap);
   }
-  const qs = document.getElementById('screen-question');
-  qs.classList.remove('fade-in'); void qs.offsetWidth; qs.classList.add('fade-in');
+  const questionScreen = document.getElementById('screen-question');
+  questionScreen.classList.remove('fade-in');
+  void questionScreen.offsetWidth;
+  questionScreen.classList.add('fade-in');
 }
 
 function advance() {
   currentQ++;
-  if (currentQ === CORE_COUNT) {
-    selectAdaptive();
-    showTransition();
-  } else if (currentQ < allQuestions.length) {
+  if (currentQ < allQuestions.length) {
     renderQuestion();
   } else {
     showResults();
   }
 }
 
-function selectAdaptive() {
-  const normed = computeNormed(CORE_QUESTIONS);
-  const sorted = Object.entries(normed).sort((a,b)=>b[1]-a[1]);
-  top2Specs = [sorted[0][0], sorted[1][0]];
-  const adaptive = [];
-  top2Specs.forEach(spec => {
-    shuffleArr(ADAPTIVE_POOL[spec]).slice(0,5).forEach(q => adaptive.push(q));
-  });
-  allQuestions = [...CORE_QUESTIONS, ...adaptive];
-}
-
-function showTransition() {
-  const cards = document.getElementById('trans-cards');
-  cards.innerHTML = '';
-  top2Specs.forEach((spec, i) => {
-    const sp = SPECIALTIES[spec];
-    const card = document.createElement('div');
-    card.className = 'trans-card';
-    card.style.borderColor = sp.color;
-    card.style.color = sp.color;
-    card.innerHTML = `
-      <div class="trans-card-label">${i===0?'Primary tendency':'Secondary tendency'}</div>
-      <div class="trans-card-name">${sp.name}</div>
-    `;
-    cards.appendChild(card);
-  });
-  document.getElementById('progress-bar-fill').style.width = `${(CORE_COUNT/allQuestions.length)*100}%`;
-  showScreen('screen-transition');
-}
-
 function goBack() {
   if (currentQ === 0) return;
   const last = history.pop();
-  eduScore -= last.eduDelta;
-  subSpec(last.specDelta);
-  if (last.isTF) tfResults.pop();
+  subScore(specScores, last.specDelta);
+  subScore(dimScores, last.dimDelta);
   currentQ--;
   showScreen('screen-question');
   renderQuestion();
 }
 
-// ─────────────────────────────────────────
-//  RESULTS
-// ─────────────────────────────────────────
 function showResults() {
   document.getElementById('progress-bar-fill').style.width = '100%';
   document.getElementById('q-counter').style.display = 'none';
 
-  const edu = EDU_LEVELS.find(e => eduScore>=e.range[0] && eduScore<=e.range[1])
-    || EDU_LEVELS[EDU_LEVELS.length-1];
-  const eduCard = document.getElementById('edu-card');
-  eduCard.style.borderColor = edu.color;
-  eduCard.innerHTML = `<div class="rc-label">Estimated Education Level</div>
-    <span class="score-pill" style="background:${edu.color}">${edu.scorePill}</span>
-    <div class="rc-value" style="color:${edu.color}">${edu.name}</div>
-    <div class="rc-en">${edu.en}</div>
-    <div class="rc-desc">${edu.desc}</div>`;
+  const summaries = Object.keys(DIMENSIONS).map(getDimensionSummary);
+  const profileCode = summaries.map(item => item.score >= 0 ? item.meta.shortLeft : item.meta.shortRight).join('');
+  const profileLine = summaries.map(item => `${item.score >= 0 ? item.meta.shortLeft : item.meta.shortRight} = ${item.leaning}`).join(' / ');
 
-  const normed = computeNormed(allQuestions);
-  const topSpec = Object.entries(normed).sort((a,b)=>b[1]-a[1])[0][0];
-  const sp = SPECIALTIES[topSpec];
+  const profileCard = document.getElementById('edu-card');
+  profileCard.style.borderColor = '#111827';
+  profileCard.innerHTML = `<div class="rc-label">Cognitive Code</div>
+    <span class="score-pill" style="background:#111827">4D Profile</span>
+    <div class="rc-value" style="color:#111827">${profileCode}-type</div>
+    <div class="rc-en">${profileLine}</div>
+    <div class="rc-desc">Your dominant tendencies across the four dimensions are: ${summaries.map(item => item.leaning).join(', ')}. This does not test factual correctness. It tests which method you instinctively use to understand complexity.</div>`;
+
+  const normed = computeNormedSpec(allQuestions);
+  const topSpec = Object.entries(normed).sort((a, b) => b[1] - a[1])[0][0];
+  const archetype = PROFILE_ARCHETYPES[topSpec];
   const specCard = document.getElementById('spec-card');
-  specCard.style.borderColor = sp.color;
-  specCard.innerHTML = `<div class="rc-label">Estimated Academic Background</div>
-    <span class="score-pill" style="background:${sp.color}">${sp.en}</span>
-    <div class="rc-value" style="color:${sp.color}">${sp.name}</div>
-    <div class="rc-en">${sp.en}</div>
-    <div class="rc-desc">${sp.desc}</div>`;
+  specCard.style.borderColor = archetype.color;
+  specCard.innerHTML = `<div class="rc-label">Inferred Disciplinary Archetype</div>
+    <span class="score-pill" style="background:${archetype.color}">${archetype.en}</span>
+    <div class="rc-value" style="color:${archetype.color}">${archetype.name}</div>
+    <div class="rc-en">${archetype.en}</div>
+    <div class="rc-desc">${archetype.desc}</div>`;
 
   const specRow = document.getElementById('spec-row');
   specRow.innerHTML = '';
-  Object.entries(normed).sort((a,b)=>b[1]-a[1]).forEach(([key,val]) => {
-    const pct = Math.round(val*100);
+  Object.entries(normed).sort((a, b) => b[1] - a[1]).forEach(([key, value]) => {
+    const pct = Math.round(value * 100);
     const item = document.createElement('div');
     item.className = 'spec-item';
     item.innerHTML = `<div class="spec-header">
-        <span class="spec-name">${SPECIALTIES[key].name}</span>
+        <span class="spec-name">${PROFILE_ARCHETYPES[key].name}</span>
         <span class="spec-pct">${pct}%</span>
       </div>
       <div class="spec-bar-bg">
-        <div class="spec-bar-fill" style="background:${SPECIALTIES[key].color}" data-pct="${pct}"></div>
+        <div class="spec-bar-fill" style="background:${PROFILE_ARCHETYPES[key].color}" data-pct="${pct}"></div>
       </div>`;
     specRow.appendChild(item);
   });
 
-  const tfList = document.getElementById('tf-list');
-  tfList.innerHTML = '';
-  if (tfResults.length === 0) {
-    tfList.innerHTML = '<div style="font-size:13px;color:var(--text-muted)">No true/false questions in this session.</div>';
-  } else {
-    tfResults.forEach(r => {
-      const row = document.createElement('div');
-      row.className = 'tf-result-row';
-      const markClass = r.skipped ? 'tf-unknown' : (r.correct ? 'tf-correct' : 'tf-incorrect');
-      const markIcon  = r.skipped ? '−' : (r.correct ? '✓' : '✕');
-      const statusText = r.skipped
-        ? `Chose "I don't know" (correct answer: ${r.correctAnswer})`
-        : (r.correct ? 'Correct' : `Incorrect (correct answer: ${r.correctAnswer})`);
-      row.innerHTML = `<span class="tf-mark ${markClass}">${markIcon}</span>
-        <div>
-          <div style="font-weight:500;margin-bottom:3px;font-size:12px;color:var(--text-primary)">${statusText}</div>
-          <div>${r.commentary}</div>
-        </div>`;
-      tfList.appendChild(row);
-    });
-  }
+  const dimensionList = document.getElementById('dimension-list');
+  dimensionList.innerHTML = '';
+  summaries.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'tf-result-row';
+    row.innerHTML = `<span class="tf-mark" style="background:${item.meta.color}">${item.score >= 0 ? item.meta.shortLeft : item.meta.shortRight}</span>
+      <div>
+        <div style="font-weight:500;margin-bottom:3px;font-size:12px;color:var(--text-primary)">${item.meta.label} · ${item.leaning} · Leaning ${item.strength}%</div>
+        <div>${item.score >= 0 ? item.meta.descLeft : item.meta.descRight}</div>
+      </div>`;
+    dimensionList.appendChild(row);
+  });
 
-  document.getElementById('result-quote').textContent = edu.quote;
+  document.getElementById('result-quote').textContent = `"${profileCode}-type" is not a standard answer. It is simply the tool that feels most natural in your hand when looking at the world.`;
   showScreen('screen-result');
   requestAnimationFrame(() => requestAnimationFrame(() => {
-    document.querySelectorAll('.spec-bar-fill').forEach(b => b.style.width = b.dataset.pct+'%');
+    document.querySelectorAll('.spec-bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.pct + '%';
+    });
   }));
 }
 
-// ─────────────────────────────────────────
-//  EVENTS
-// ─────────────────────────────────────────
 document.getElementById('btn-start').addEventListener('click', startQuiz);
 document.getElementById('btn-back').addEventListener('click', goBack);
-document.getElementById('btn-continue').addEventListener('click', () => {
-  showScreen('screen-question');
-  renderQuestion();
-});
 document.getElementById('btn-retry').addEventListener('click', () => {
   document.getElementById('progress-bar-wrap').style.display = 'none';
   showScreen('screen-landing');
