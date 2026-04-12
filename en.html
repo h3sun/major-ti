@@ -122,6 +122,7 @@
     }
     .badge-choice { color:#e8623a; border-color:#e8623a; }
     .badge-tf { color:#7c3aed; border-color:#7c3aed; }
+    .badge-stance { color:#0891b2; border-color:#0891b2; }
     .q-dim-label {
       font-size:11px; color:var(--text-muted); font-weight:500;
       letter-spacing:.1em; text-transform:uppercase;
@@ -161,6 +162,24 @@
     .tf-btn.selected-unknown { border-color:#6b7280; background:#f9fafb; color:#6b7280; }
     .tf-icon { font-size:28px; }
     .tf-label { font-size:13px; font-weight:400; color:var(--text-muted); }
+    .stance-container { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:8px; }
+    @media(max-width:480px){ .stance-container{grid-template-columns:1fr} }
+    .stance-btn {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:6px; padding:22px 12px; border:1.5px solid var(--border); border-radius:var(--radius);
+      cursor:pointer; background:var(--surface); font-family:inherit;
+      transition:border-color .15s,background .15s,transform .1s;
+    }
+    .stance-btn:hover { transform:translateY(-2px); }
+    .stance-oppose:hover    { border-color:#dc2626; background:#fef2f2; color:#dc2626; }
+    .stance-neutral:hover   { border-color:#6b7280; background:#f9fafb; color:#6b7280; }
+    .stance-support:hover   { border-color:#16a34a; background:#f0fdf4; color:#16a34a; }
+    .stance-btn.sel-oppose  { border-color:#dc2626; background:#fef2f2; color:#dc2626; }
+    .stance-btn.sel-neutral { border-color:#6b7280; background:#f9fafb; color:#6b7280; }
+    .stance-btn.sel-support { border-color:#16a34a; background:#f0fdf4; color:#16a34a; }
+    .stance-icon { font-size:22px; }
+    .stance-word { font-size:16px; font-weight:700; }
+    .stance-sub  { font-size:11px; color:var(--text-muted); text-align:center; line-height:1.4; }
 
     /* ── Result ── */
     #screen-result { padding-top:48px; }
@@ -354,14 +373,13 @@ const CORE_QUESTIONS = [
     ],
   },
   {
-    type:'choice', dim:'Philosophy of Science · Models vs. Reality',
-    text:'Someone claims "all scientific models are wrong." Your view?',
-    options:[
-      {text:'So don\'t trust experts either — they\'re all just bluffing.', edu:1, spec:{}},
-      {text:'A map isn\'t the territory, but if it gets you there, it\'s good enough.', edu:3, spec:{science:1,engineering:1}},
-      {text:'The model just isn\'t complex enough yet. Add enough variables and it\'ll match eventually.', edu:2, spec:{engineering:1}},
-      {text:'Models are nothing more than "power discourse" constructed by the scientific community.', edu:4, spec:{humanities:2}},
-    ],
+    type:'stance', dim:'Philosophy of Science · Models vs. Reality',
+    text:'"All scientific models are, in some sense, wrong — but some are useful."',
+    stances:{
+      oppose:  { edu:1, spec:{} },
+      neutral: { edu:3, spec:{engineering:1, humanities:1} },
+      support: { edu:4, spec:{science:2, engineering:1} },
+    },
   },
   {
     type:'choice', dim:'Social Structures · Dispute Resolution',
@@ -374,14 +392,13 @@ const CORE_QUESTIONS = [
     ],
   },
   {
-    type:'choice', dim:'Art History · Aesthetic Methodology',
-    text:'Standing before a priceless abstract painting at a museum, the ticker in your head reads—',
-    options:[
-      {text:'This painting is... quite... calming. (Three-second silence.) Let\'s move on.', edu:1, spec:{}},
-      {text:'This arrangement of color blocks is clearly paying homage to De Stijl from the 1920s.', edu:2, spec:{humanities:1}},
-      {text:'Who commissioned this? What political message was the patron trying to send?', edu:4, spec:{humanities:2}},
-      {text:'My three-year-old draws about the same thing. This passes as art?', edu:1, spec:{}},
-    ],
+    type:'stance', dim:'Art Philosophy · Elitism & Popular Aesthetics',
+    text:'"Abstract art is fundamentally an act of cultural elitism — a condescending dismissal of ordinary people\'s aesthetic sensibility."',
+    stances:{
+      support: { edu:1, spec:{} },
+      neutral: { edu:2, spec:{humanities:1, economics:1} },
+      oppose:  { edu:3, spec:{humanities:2} },
+    },
   },
   {
     type:'choice', dim:'Experimental Design · Methodological Intuition',
@@ -504,10 +521,13 @@ const ADAPTIVE_POOL = {
       commentary:'Kenneth Arrow\'s 1951 theorem shows that a "perfect democratic voting mechanism" is logically impossible — you must sacrifice at least one seemingly reasonable condition. The theorem won Arrow the Nobel Prize in Economics and has given political scientists headaches ever since.',
     },
     {
-      type:'tf', dim:'Innovation Economics · The Schumpeterian Paradigm',
-      text:'Any innovation is, at its core, a recombination of existing factors.',
-      correct:'True', correctSpec:{economics:2},
-      commentary:'This is Schumpeter\'s core definition from "The Theory of Economic Development": innovation = new combinations of productive factors. Steam engines, iPhones, and ChatGPT are all recombinations, not creations ex nihilo. Understanding this means understanding why "innovation" is fundamentally a combinatorial optimization problem.',
+      type:'stance', dim:'Market Economics · The Limits of the Invisible Hand',
+      text:'"The market\'s invisible hand is ultimately smarter and more efficient than any government\'s visible hand."',
+      stances:{
+        support: { edu:2, spec:{economics:2} },
+        neutral: { edu:4, spec:{economics:1, law:1} },
+        oppose:  { edu:3, spec:{humanities:2, law:1} },
+      },
     },
   ],
 
@@ -612,6 +632,11 @@ function computeNormed(questionList) {
         const best = Math.max(...q.options.map(o => (o.spec&&o.spec[spec])||0));
         max[spec] += best;
       });
+    } else if (q.type === 'stance') {
+      Object.keys(max).forEach(spec => {
+        const best = Math.max(...Object.values(q.stances).map(s => (s.spec&&s.spec[spec])||0));
+        max[spec] += best;
+      });
     } else if (q.correctSpec) {
       Object.entries(q.correctSpec).forEach(([k,v]) => { max[k] += v; });
     }
@@ -641,8 +666,9 @@ function renderQuestion() {
   const q = allQuestions[currentQ];
   updateProgress();
   const badge = document.getElementById('q-type-badge');
-  if (q.type==='choice') { badge.textContent='Multiple Choice'; badge.className='q-type-badge badge-choice'; }
-  else                   { badge.textContent='True / False';    badge.className='q-type-badge badge-tf'; }
+  if (q.type==='choice')      { badge.textContent='Multiple Choice'; badge.className='q-type-badge badge-choice'; }
+  else if (q.type==='stance') { badge.textContent='Take a Stance';  badge.className='q-type-badge badge-stance'; }
+  else                        { badge.textContent='True / False';   badge.className='q-type-badge badge-tf'; }
   document.getElementById('q-dim-label').textContent = q.dim;
   document.getElementById('q-text').textContent = q.text;
 
@@ -705,6 +731,31 @@ function renderQuestion() {
       setTimeout(advance, 360);
     });
     wrap.appendChild(unknownBtn);
+    body.appendChild(wrap);
+  } else if (q.type === 'stance') {
+    const wrap = document.createElement('div');
+    wrap.className = 'stance-container';
+    [
+      { key:'oppose',  label:'Disagree', icon:'✕', cls:'stance-oppose',  sel:'sel-oppose',  sub:'This claim doesn\'t hold up' },
+      { key:'neutral', label:'Neutral',  icon:'−', cls:'stance-neutral', sel:'sel-neutral', sub:'It depends — both sides have merit' },
+      { key:'support', label:'Agree',    icon:'✓', cls:'stance-support', sel:'sel-support', sub:'This claim has merit' },
+    ].forEach(({ key, label, icon, cls, sel, sub }) => {
+      const s = q.stances[key];
+      const btn = document.createElement('button');
+      btn.className = `stance-btn ${cls}`;
+      btn.innerHTML = `<span class="stance-icon">${icon}</span>
+        <span class="stance-word">${label}</span>
+        <span class="stance-sub">${sub}</span>`;
+      btn.addEventListener('click', () => {
+        btn.classList.add(sel);
+        wrap.querySelectorAll('.stance-btn').forEach(b=>b.style.pointerEvents='none');
+        const ed = eduPts[s.edu]||0;
+        eduScore += ed; addSpec(s.spec);
+        history.push({ eduDelta:ed, specDelta:s.spec||{}, isTF:false });
+        setTimeout(advance, 360);
+      });
+      wrap.appendChild(btn);
+    });
     body.appendChild(wrap);
   }
   const qs = document.getElementById('screen-question');

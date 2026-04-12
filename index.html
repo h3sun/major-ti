@@ -122,6 +122,7 @@
     }
     .badge-choice { color:#e8623a; border-color:#e8623a; }
     .badge-tf { color:#7c3aed; border-color:#7c3aed; }
+    .badge-stance { color:#0891b2; border-color:#0891b2; }
     .q-dim-label {
       font-size:11px; color:var(--text-muted); font-weight:500;
       letter-spacing:.1em; text-transform:uppercase;
@@ -161,6 +162,24 @@
     .tf-btn.selected-unknown { border-color:#6b7280; background:#f9fafb; color:#6b7280; }
     .tf-icon { font-size:28px; }
     .tf-label { font-size:13px; font-weight:400; color:var(--text-muted); }
+    .stance-container { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:8px; }
+    @media(max-width:480px){ .stance-container{grid-template-columns:1fr} }
+    .stance-btn {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:6px; padding:22px 12px; border:1.5px solid var(--border); border-radius:var(--radius);
+      cursor:pointer; background:var(--surface); font-family:inherit;
+      transition:border-color .15s,background .15s,transform .1s;
+    }
+    .stance-btn:hover { transform:translateY(-2px); }
+    .stance-oppose:hover    { border-color:#dc2626; background:#fef2f2; color:#dc2626; }
+    .stance-neutral:hover   { border-color:#6b7280; background:#f9fafb; color:#6b7280; }
+    .stance-support:hover   { border-color:#16a34a; background:#f0fdf4; color:#16a34a; }
+    .stance-btn.sel-oppose  { border-color:#dc2626; background:#fef2f2; color:#dc2626; }
+    .stance-btn.sel-neutral { border-color:#6b7280; background:#f9fafb; color:#6b7280; }
+    .stance-btn.sel-support { border-color:#16a34a; background:#f0fdf4; color:#16a34a; }
+    .stance-icon { font-size:22px; }
+    .stance-word { font-size:16px; font-weight:700; }
+    .stance-sub  { font-size:11px; color:var(--text-muted); text-align:center; line-height:1.4; }
 
     /* ── Result ── */
     #screen-result { padding-top:48px; }
@@ -350,14 +369,13 @@ const CORE_QUESTIONS = [
     ],
   },
   {
-    type:'choice', dim:'科学哲学 · 模型与现实',
-    text:'有人说「所有科学模型都是错的」，你的看法是——',
-    options:[
-      {text:'所以专家的话也别全信，都是蒙人的。', edu:1, spec:{}},
-      {text:'地图不是真实的土地，但能带你找到目的地就够了。', edu:3, spec:{science:1,engineering:1}},
-      {text:'那是模型还不够复杂，变量加够了，总能对上。', edu:2, spec:{engineering:1}},
-      {text:'模型不过是科学家群体构建出来的「权力话语」。', edu:4, spec:{humanities:2}},
-    ],
+    type:'stance', dim:'科学哲学 · 模型与现实',
+    text:'「所有科学模型在某种意义上都是错的——但有些是有用的。」',
+    stances:{
+      oppose:  { edu:1, spec:{} },
+      neutral: { edu:3, spec:{engineering:1, humanities:1} },
+      support: { edu:4, spec:{science:2, engineering:1} },
+    },
   },
   {
     type:'choice', dim:'社会结构 · 纠纷处理路径',
@@ -370,14 +388,13 @@ const CORE_QUESTIONS = [
     ],
   },
   {
-    type:'choice', dim:'艺术史学 · 审美方法论',
-    text:'在博物馆看一幅价值连城的抽象画，你大脑里的弹幕是——',
-    options:[
-      {text:'这画画得挺……解压的。（沉默三秒）走了。', edu:1, spec:{}},
-      {text:'这个色块的布局，明显是在致敬1920年代的风格派运动。', edu:2, spec:{humanities:1}},
-      {text:'这幅画的赞助人是谁？他想通过它向公众传达什么政治暗示？', edu:4, spec:{humanities:2}},
-      {text:'我三岁的儿子画得也差不多，这也能叫艺术？', edu:1, spec:{}},
-    ],
+    type:'stance', dim:'艺术哲学 · 精英审美与大众文化',
+    text:'「抽象艺术本质上是文化精英对普通人审美品味的一种傲慢凌驾。」',
+    stances:{
+      support: { edu:1, spec:{} },
+      neutral: { edu:2, spec:{humanities:1, economics:1} },
+      oppose:  { edu:3, spec:{humanities:2} },
+    },
   },
   {
     type:'choice', dim:'实验设计 · 方法论直觉',
@@ -500,10 +517,13 @@ const ADAPTIVE_POOL = {
       commentary:'肯尼斯·阿罗1951年的定理。它说明「完美的民主投票机制」在逻辑上不可能存在——你必须放弃其中一个看似合理的条件。这个定理让阿罗拿了诺贝尔经济学奖，也让无数政治学家头痛至今。',
     },
     {
-      type:'tf', dim:'创新经济学 · 熊彼特范式',
-      text:'任何创新，本质上都是对现有要素的重新组合。',
-      correct:'对', correctSpec:{economics:2},
-      commentary:'这是熊彼特在《经济发展理论》中的核心定义：创新 = 生产要素的新组合。蒸汽机、iPhone 和 ChatGPT，都是重组，不是无中生有。理解这一点，就理解了为什么「创新」本质上是一个组合优化问题。',
+      type:'stance', dim:'市场经济 · 政府干预边界',
+      text:'「市场这只"看不见的手"，终究比政府的"看得见的手"更聪明、更有效率。」',
+      stances:{
+        support: { edu:2, spec:{economics:2} },
+        neutral: { edu:4, spec:{economics:1, law:1} },
+        oppose:  { edu:3, spec:{humanities:2, law:1} },
+      },
     },
   ],
 
@@ -610,6 +630,11 @@ function computeNormed(questionList) {
         const best = Math.max(...q.options.map(o => (o.spec&&o.spec[spec])||0));
         max[spec] += best;
       });
+    } else if (q.type === 'stance') {
+      Object.keys(max).forEach(spec => {
+        const best = Math.max(...Object.values(q.stances).map(s => (s.spec&&s.spec[spec])||0));
+        max[spec] += best;
+      });
     } else if (q.correctSpec) {
       Object.entries(q.correctSpec).forEach(([k,v]) => { max[k] += v; });
     }
@@ -639,8 +664,9 @@ function renderQuestion() {
   const q = allQuestions[currentQ];
   updateProgress();
   const badge = document.getElementById('q-type-badge');
-  if (q.type==='choice') { badge.textContent='单项选择'; badge.className='q-type-badge badge-choice'; }
-  else                   { badge.textContent='判断题';   badge.className='q-type-badge badge-tf'; }
+  if (q.type==='choice')  { badge.textContent='单项选择'; badge.className='q-type-badge badge-choice'; }
+  else if (q.type==='stance') { badge.textContent='立场题'; badge.className='q-type-badge badge-stance'; }
+  else                    { badge.textContent='判断题';   badge.className='q-type-badge badge-tf'; }
   document.getElementById('q-dim-label').textContent = q.dim;
   document.getElementById('q-text').textContent = q.text;
 
@@ -690,6 +716,7 @@ function renderQuestion() {
     });
     // "我不知道" option — spans full width, no score
     const unknownBtn = document.createElement('button');
+
     unknownBtn.className = 'tf-btn tf-btn-unknown';
     unknownBtn.style.gridColumn = '1 / -1';
     unknownBtn.style.padding = '14px 16px';
@@ -703,6 +730,31 @@ function renderQuestion() {
       setTimeout(advance, 360);
     });
     wrap.appendChild(unknownBtn);
+    body.appendChild(wrap);
+  } else if (q.type === 'stance') {
+    const wrap = document.createElement('div');
+    wrap.className = 'stance-container';
+    [
+      { key:'oppose',  label:'反对', icon:'✕', cls:'stance-oppose',  sel:'sel-oppose',  sub:'这个观点站不住脚' },
+      { key:'neutral', label:'中立', icon:'−', cls:'stance-neutral', sel:'sel-neutral', sub:'说不准，两边都有道理' },
+      { key:'support', label:'支持', icon:'✓', cls:'stance-support', sel:'sel-support', sub:'这个观点有道理' },
+    ].forEach(({ key, label, icon, cls, sel, sub }) => {
+      const s = q.stances[key];
+      const btn = document.createElement('button');
+      btn.className = `stance-btn ${cls}`;
+      btn.innerHTML = `<span class="stance-icon">${icon}</span>
+        <span class="stance-word">${label}</span>
+        <span class="stance-sub">${sub}</span>`;
+      btn.addEventListener('click', () => {
+        btn.classList.add(sel);
+        wrap.querySelectorAll('.stance-btn').forEach(b=>b.style.pointerEvents='none');
+        const ed = eduPts[s.edu]||0;
+        eduScore += ed; addSpec(s.spec);
+        history.push({ eduDelta:ed, specDelta:s.spec||{}, isTF:false });
+        setTimeout(advance, 360);
+      });
+      wrap.appendChild(btn);
+    });
     body.appendChild(wrap);
   }
   const qs = document.getElementById('screen-question');
