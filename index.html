@@ -259,7 +259,7 @@
       <div class="stat-item"><span class="stat-num">14</span><span class="stat-label">道题目</span></div>
       <div class="stat-item"><span class="stat-num">自适应</span><span class="stat-label">动态题库</span></div>
       <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">学历层次</span></div>
-      <div class="stat-item"><span class="stat-num">6</span><span class="stat-label">思维指纹</span></div>
+      <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">思维指纹</span></div>
     </div>
     <button class="btn-start" id="btn-start">开始审问</button>
     <div class="landing-chips">
@@ -336,12 +336,11 @@ const EDU_LEVELS = [
 ];
 
 const SPECIALTIES = {
-  science:     { name:'理科思维',     en:'Natural Science',      color:'#3b82f6', desc:'你是第一性原理的信徒，相信宇宙在底层是用数学公式写成的。关键词：守恒、概率、可证伪、误差。你最不舒服的时刻：被要求「不管机制，直接给结论」。' },
-  engineering: { name:'工科思维',     en:'Engineering',          color:'#e8623a', desc:'你是现实系统的设计师与调试员。本能是把任何问题拆解成「输入-处理-输出」模块，找到卡壳的接口。你最不舒服的时刻：被告知「这不是工程问题，是价值观问题」。' },
-  life:        { name:'生命科学思维', en:'Life Sciences',        color:'#16a34a', desc:'你对生命系统的复杂性有天然的敬畏。你知道「正常值」是范围而非点，「健康」是动态平衡而非静态状态。你本能地问：「对照组怎么设计？样本基线齐同吗？」' },
-  economics:   { name:'经管思维',     en:'Economics / Management', color:'#059669', desc:'你透过激励机制看世界。在你眼里，人是理性经济体，社会是一个复杂的激励系统。你能快速识别「谁在这个系统里获益」。你最不舒服的时刻：被质疑「经济学把人性简化了」。' },
-  law:         { name:'法学思维',     en:'Law / Political Science', color:'#7c3aed', desc:'你是规则与程序的守护者。思维会自动把世界切割成权利与义务的版图：谁有权做什么、谁应该承担后果、程序是否合法。这让你在混沌中保持清醒。' },
-  humanities:  { name:'文史哲思维',   en:'Humanities',           color:'#db2777', desc:'你是历史迷雾和权力叙事的解码者。你的问题永远是：谁在讲这个故事？什么被刻意遗漏了？这个「理所当然」是如何被建构出来的？' },
+  science:     { name:'理科思维',   en:'Natural Science',          color:'#3b82f6', desc:'你是第一性原理的信徒，相信宇宙在底层是用数学公式写成的。关键词：守恒、概率、可证伪、误差。你最不舒服的时刻：被要求「不管机制，直接给结论」。' },
+  engineering: { name:'工科思维',   en:'Engineering',              color:'#e8623a', desc:'你是现实系统的设计师与调试员。本能是把任何问题拆解成「输入-处理-输出」模块，找到卡壳的接口。你最不舒服的时刻：被告知「这不是工程问题，是价值观问题」。' },
+  economics:   { name:'经管思维',   en:'Economics / Management',   color:'#059669', desc:'你透过激励机制看世界。在你眼里，人是理性经济体，社会是一个复杂的激励系统。你能快速识别「谁在这个系统里获益」。你最不舒服的时刻：被质疑「经济学把人性简化了」。' },
+  law:         { name:'法学思维',   en:'Law / Political Science',  color:'#7c3aed', desc:'你是规则与程序的守护者。思维会自动把世界切割成权利与义务的版图：谁有权做什么、谁应该承担后果、程序是否合法。这让你在混沌中保持清醒。' },
+  humanities:  { name:'文史哲思维', en:'Humanities',               color:'#db2777', desc:'你是历史迷雾和权力叙事的解码者。你的问题永远是：谁在讲这个故事？什么被刻意遗漏了？这个「理所当然」是如何被建构出来的？' },
 };
 
 // ─────────────────────────────────────────
@@ -383,7 +382,7 @@ const CORE_QUESTIONS = [
     options:[
       {text:'先看谁是弱势群体，谁更惨，谁就更有道理。', edu:1, spec:{}},
       {text:'翻《侵权责任法》和手术知情同意书，找程序漏洞。', edu:2, spec:{law:2}},
-      {text:'研究分级诊疗制度和医疗保险的资源错配，找到制度根源。', edu:4, spec:{engineering:1,life:1}},
+      {text:'研究分级诊疗制度和医疗保险的资源错配，找到制度根源。', edu:4, spec:{engineering:1,science:1}},
       {text:'要一分为二地看，医生和患者都有责任，没有绝对对错。', edu:1, spec:{}},
     ],
   },
@@ -401,7 +400,7 @@ const CORE_QUESTIONS = [
     text:'你做的实验结果非常完美，完全符合预期。你会——',
     options:[
       {text:'我真是个天才！准备写论文，走向人生巅峰。', edu:1, spec:{}},
-      {text:'坏了，是不是哪里的噪声被我当成信号了？赶紧检查仪器。', edu:4, spec:{science:1,life:1}},
+      {text:'坏了，是不是哪里的噪声被我当成信号了？赶紧检查仪器。', edu:4, spec:{science:2}},
       {text:'正常，我就是按这个预设去调整实验参数的。（脸不红心不跳）', edu:1, spec:{}},
       {text:'大概率是我的实习生把数据填错了，这也太巧了。', edu:3, spec:{science:1}},
     ],
@@ -439,7 +438,7 @@ const ADAPTIVE_POOL = {
       options:[
         {text:'卖得太贵了，价格这么高一定是在骗钱。', edu:1, spec:{}},
         {text:'量子力学是微观物理，药物是宏观生化作用，中间缺乏跨尺度耦合机制。', edu:4, spec:{science:2}},
-        {text:'不管原理，直接看它有没有做过大规模随机双盲对照实验。', edu:3, spec:{life:2}},
+        {text:'不管原理，直接看它有没有做过大规模随机双盲对照实验。', edu:3, spec:{science:2}},
         {text:'上网搜一下，看有没有人举报过，看评论。', edu:1, spec:{}},
       ],
     },
@@ -475,31 +474,6 @@ const ADAPTIVE_POOL = {
       text:'「过早优化是万恶之源」——这句话的意思是：在性能瓶颈被实际测量出来之前，不应为假设中的性能问题修改结构清晰的代码。',
       correct:'对', correctSpec:{engineering:2},
       commentary:'高德纳（Donald Knuth）的名言。工程中正确的路径是：先让它正确运行，再通过实际测量找到真正的瓶颈，最后精准优化。提前优化的代码往往更难维护，而且问题往往不在你以为的地方。',
-    },
-  ],
-
-  life: [
-    {
-      type:'tf', dim:'循证医学 · 实验设计',
-      text:'随机双盲对照实验中，「双盲」的核心意义是：同时排除受试者的「安慰剂效应」，以及研究者自身的「观察者期望偏差」。',
-      correct:'对', correctSpec:{life:3},
-      commentary:'受试者不知道→排除安慰剂效应；研究者不知道→排除观察者期望偏差（评分时的无意识倾向）。两个「盲」缺一不可——历史上有大量药物在单盲实验中表现良好，双盲后效果烟消云散。',
-    },
-    {
-      type:'tf', dim:'统计直觉 · 因果与相关',
-      text:'只要样本量足够大，相关性就等同于因果关系。',
-      correct:'错', correctSpec:{life:2,science:1},
-      commentary:'样本量解决的是统计检验力问题，而非混淆变量问题。冰淇淋销量与溺水事故高度相关，但都是夏天的孩子。相关性≠因果性，是所有实证学科的入场券。',
-    },
-    {
-      type:'choice', dim:'转化医学 · 实验层级',
-      text:'一种新型抗生素在体外细胞实验中，对某耐药菌株表现出强效杀伤力。下一步最合理的结论是——',
-      options:[
-        {text:'该抗生素已证明有效，可以直接启动临床申请。', edu:1, spec:{}},
-        {text:'体外有效是必要条件，还需动物实验验证体内的安全性与有效性。', edu:3, spec:{life:3}},
-        {text:'这意味着该细菌的耐药机制可以被彻底攻克。', edu:2, spec:{life:1}},
-        {text:'体外结果已足够说明问题，可以推进产业化合作了。', edu:1, spec:{}},
-      ],
     },
   ],
 
@@ -582,7 +556,7 @@ let currentQ = 0;
 let allQuestions = [];      // core + selected adaptive
 let top2Specs = [];         // top 2 specialties after phase 1
 let eduScore = 0;
-const specScores = { science:0, engineering:0, life:0, economics:0, law:0, humanities:0 };
+const specScores = { science:0, engineering:0, economics:0, law:0, humanities:0 };
 const tfResults = [];
 const history = []; // { eduDelta, specDelta, isTF }
 const eduPts = { 1:0, 2:1, 3:2, 4:3 };
@@ -623,7 +597,7 @@ function shuffleArr(arr) {
 
 // Compute normalized spec scores based on questions actually seen
 function computeNormed(questionList) {
-  const max = { science:0, engineering:0, life:0, economics:0, law:0, humanities:0 };
+  const max = { science:0, engineering:0, economics:0, law:0, humanities:0 };
   questionList.forEach(q => {
     if (q.type === 'choice') {
       Object.keys(max).forEach(spec => {

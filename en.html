@@ -259,7 +259,7 @@
       <div class="stat-item"><span class="stat-num">14</span><span class="stat-label">questions</span></div>
       <div class="stat-item"><span class="stat-num">Adaptive</span><span class="stat-label">question bank</span></div>
       <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">edu levels</span></div>
-      <div class="stat-item"><span class="stat-num">6</span><span class="stat-label">cognitive fingerprints</span></div>
+      <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">cognitive fingerprints</span></div>
     </div>
     <button class="btn-start" id="btn-start">Begin Interrogation</button>
     <div class="landing-chips">
@@ -340,12 +340,11 @@ const EDU_LEVELS = [
 ];
 
 const SPECIALTIES = {
-  science:     { name:'Scientific Thinking',   en:'Natural Science',          color:'#3b82f6', desc:'You are a disciple of first principles, convinced that the universe is written in mathematics at its core. Keywords: conservation, probability, falsifiability, error margins. Your most uncomfortable moment: being asked to skip the mechanism and just hand over the conclusion.' },
-  engineering: { name:'Engineering Thinking',  en:'Engineering',              color:'#e8623a', desc:'You are a designer and debugger of real-world systems. Your instinct is to decompose any problem into input–process–output modules and locate the stuck interface. Your most uncomfortable moment: being told "this isn\'t an engineering problem — it\'s a values question."' },
-  life:        { name:'Life Science Thinking', en:'Life Sciences',            color:'#16a34a', desc:'You have a deep, instinctive reverence for the complexity of living systems. You know "normal values" are ranges, not points, and "health" is dynamic equilibrium, not a fixed state. Your default question: "How was the control group designed? Are the baselines comparable?"' },
-  economics:   { name:'Econ / Mgmt Thinking',  en:'Economics / Management',   color:'#059669', desc:'You see the world through incentive structures. In your eyes, people are rational agents and society is a complex incentive system. You rapidly identify who benefits in any given arrangement. Your most uncomfortable moment: being challenged that economics oversimplifies human nature.' },
-  law:         { name:'Legal Thinking',         en:'Law / Political Science',  color:'#7c3aed', desc:'You are a guardian of rules and procedure. Your mind automatically maps the world into rights and obligations: who is entitled to do what, who bears the consequences, whether the process was lawful. This keeps you clear-headed when everyone else is confused.' },
-  humanities:  { name:'Humanities Thinking',    en:'Humanities',               color:'#db2777', desc:'You are a decoder of historical fog and power narratives. Your question is always: who is telling this story? What was deliberately left out? How was this "self-evident truth" constructed in the first place?' },
+  science:     { name:'Scientific Thinking',  en:'Natural Science',          color:'#3b82f6', desc:'You are a disciple of first principles, convinced that the universe is written in mathematics at its core. Keywords: conservation, probability, falsifiability, error margins. Your most uncomfortable moment: being asked to skip the mechanism and just hand over the conclusion.' },
+  engineering: { name:'Engineering Thinking', en:'Engineering',              color:'#e8623a', desc:'You are a designer and debugger of real-world systems. Your instinct is to decompose any problem into input–process–output modules and locate the stuck interface. Your most uncomfortable moment: being told "this isn\'t an engineering problem — it\'s a values question."' },
+  economics:   { name:'Econ / Mgmt Thinking', en:'Economics / Management',   color:'#059669', desc:'You see the world through incentive structures. In your eyes, people are rational agents and society is a complex incentive system. You rapidly identify who benefits in any given arrangement. Your most uncomfortable moment: being challenged that economics oversimplifies human nature.' },
+  law:         { name:'Legal Thinking',        en:'Law / Political Science',  color:'#7c3aed', desc:'You are a guardian of rules and procedure. Your mind automatically maps the world into rights and obligations: who is entitled to do what, who bears the consequences, whether the process was lawful. This keeps you clear-headed when everyone else is confused.' },
+  humanities:  { name:'Humanities Thinking',   en:'Humanities',               color:'#db2777', desc:'You are a decoder of historical fog and power narratives. Your question is always: who is telling this story? What was deliberately left out? How was this "self-evident truth" constructed in the first place?' },
 };
 
 // ─────────────────────────────────────────
@@ -387,7 +386,7 @@ const CORE_QUESTIONS = [
     options:[
       {text:'See who\'s more vulnerable — whoever is worse off is more in the right.', edu:1, spec:{}},
       {text:'Pull up the tort liability law and the surgical consent form and look for procedural gaps.', edu:2, spec:{law:2}},
-      {text:'Study the tiered-care system and insurance resource misallocation to find the structural root cause.', edu:4, spec:{engineering:1,life:1}},
+      {text:'Study the tiered-care system and insurance resource misallocation to find the structural root cause.', edu:4, spec:{engineering:1,science:1}},
       {text:'Look at both sides — doctors and patients both share responsibility. Nothing is absolutely right or wrong.', edu:1, spec:{}},
     ],
   },
@@ -405,7 +404,7 @@ const CORE_QUESTIONS = [
     text:'Your experiment produces results that are perfectly, exactly what you predicted. You would—',
     options:[
       {text:'I\'m a genius! Start writing the paper. Time to reach the top.', edu:1, spec:{}},
-      {text:'Something\'s wrong — did I mistake noise for signal somewhere? Better check the instruments.', edu:4, spec:{science:1,life:1}},
+      {text:'Something\'s wrong — did I mistake noise for signal somewhere? Better check the instruments.', edu:4, spec:{science:2}},
       {text:'Normal. I tuned the experimental parameters to match this preset. (Straight-faced.)', edu:1, spec:{}},
       {text:'Probably my intern entered the data wrong — this is way too clean to be real.', edu:3, spec:{science:1}},
     ],
@@ -443,7 +442,7 @@ const ADAPTIVE_POOL = {
       options:[
         {text:'Way overpriced — that price point alone is a red flag.', edu:1, spec:{}},
         {text:'Quantum mechanics operates at the microscopic scale; drug action is macroscopic biochemistry — there\'s no established cross-scale coupling mechanism.', edu:4, spec:{science:2}},
-        {text:'Forget the mechanism — just check whether it has gone through a large-scale randomized double-blind controlled trial.', edu:3, spec:{life:2}},
+        {text:'Forget the mechanism — just check whether it has gone through a large-scale randomized double-blind controlled trial.', edu:3, spec:{science:2}},
         {text:'Google it and see if anyone has filed complaints. Check the reviews.', edu:1, spec:{}},
       ],
     },
@@ -479,31 +478,6 @@ const ADAPTIVE_POOL = {
       text:'"Premature optimization is the root of all evil" means: before a performance bottleneck is actually measured, you should not modify structurally clear code for hypothetical performance issues.',
       correct:'True', correctSpec:{engineering:2},
       commentary:'Donald Knuth\'s famous dictum. The correct engineering path: first make it work correctly, then use actual measurement to identify the real bottleneck, then optimize precisely. Prematurely optimized code is harder to maintain — and the problem is almost never where you assumed it would be.',
-    },
-  ],
-
-  life: [
-    {
-      type:'tf', dim:'Evidence-Based Medicine · Experimental Design',
-      text:'In a randomized double-blind controlled trial, the core purpose of "double-blind" is to simultaneously eliminate subjects\' "placebo effect" and researchers\' own "observer expectancy bias."',
-      correct:'True', correctSpec:{life:3},
-      commentary:'Subjects don\'t know → eliminates placebo effect. Researchers don\'t know → eliminates observer expectancy bias (unconscious scoring bias). Both "blinds" are indispensable. Historically, many drugs performed well in single-blind trials, then the effect vanished entirely under double-blind conditions.',
-    },
-    {
-      type:'tf', dim:'Statistical Intuition · Correlation vs. Causation',
-      text:'As long as the sample size is large enough, correlation equals causation.',
-      correct:'False', correctSpec:{life:2,science:1},
-      commentary:'Sample size addresses statistical power, not confounding variables. Ice cream sales and drowning incidents are highly correlated — both are children of summer. Correlation ≠ causation is the entry ticket to every empirical discipline.',
-    },
-    {
-      type:'choice', dim:'Translational Medicine · Evidence Hierarchy',
-      text:'A new antibiotic shows powerful bactericidal activity against a drug-resistant strain in in vitro cell experiments. The most reasonable next conclusion is—',
-      options:[
-        {text:'The antibiotic has proven effective — proceed directly to clinical application.', edu:1, spec:{}},
-        {text:'In vitro efficacy is necessary but not sufficient; animal studies are needed to verify in vivo safety and efficacy.', edu:3, spec:{life:3}},
-        {text:'This proves the bacterium\'s resistance mechanism has been overcome.', edu:2, spec:{life:1}},
-        {text:'In vitro results are solid enough — time to advance commercial partnership discussions.', edu:1, spec:{}},
-      ],
     },
   ],
 
@@ -586,7 +560,7 @@ let currentQ = 0;
 let allQuestions = [];
 let top2Specs = [];
 let eduScore = 0;
-const specScores = { science:0, engineering:0, life:0, economics:0, law:0, humanities:0 };
+const specScores = { science:0, engineering:0, economics:0, law:0, humanities:0 };
 const tfResults = [];
 const history = [];
 const eduPts = { 1:0, 2:1, 3:2, 4:3 };
@@ -625,7 +599,7 @@ function shuffleArr(arr) {
 }
 
 function computeNormed(questionList) {
-  const max = { science:0, engineering:0, life:0, economics:0, law:0, humanities:0 };
+  const max = { science:0, engineering:0, economics:0, law:0, humanities:0 };
   questionList.forEach(q => {
     if (q.type === 'choice') {
       Object.keys(max).forEach(spec => {
