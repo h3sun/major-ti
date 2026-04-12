@@ -665,46 +665,6 @@ function renderQuestion() {
       list.appendChild(btn);
     });
     body.appendChild(list);
-  } else {
-    const wrap = document.createElement('div');
-    wrap.className = 'tf-container';
-    ['对','错'].forEach(ans => {
-      const isTrue = ans==='对';
-      const btn = document.createElement('button');
-      btn.className = `tf-btn ${isTrue?'tf-btn-true':'tf-btn-false'}`;
-      btn.innerHTML = `<span class="tf-icon">${isTrue?'○':'✕'}</span>
-        <span style="font-size:17px;font-weight:700">${ans}</span>
-        <span class="tf-label">${isTrue?'这个说法是正确的':'这个说法是错误的'}</span>`;
-      btn.addEventListener('click', () => {
-        btn.classList.add(isTrue?'selected-true':'selected-false');
-        wrap.querySelectorAll('.tf-btn').forEach(b=>b.style.pointerEvents='none');
-        const isCorrect = ans===q.correct;
-        const ed = isCorrect ? 2 : 0;
-        const sd = isCorrect ? (q.correctSpec||{}) : {};
-        eduScore += ed; if(isCorrect) addSpec(q.correctSpec);
-        tfResults.push({ correct:isCorrect, text:q.text, commentary:q.commentary, userAnswer:ans, correctAnswer:q.correct });
-        history.push({ eduDelta:ed, specDelta:sd, isTF:true });
-        setTimeout(advance, 360);
-      });
-      wrap.appendChild(btn);
-    });
-    // "我不知道" option — spans full width, no score
-    const unknownBtn = document.createElement('button');
-
-    unknownBtn.className = 'tf-btn tf-btn-unknown';
-    unknownBtn.style.gridColumn = '1 / -1';
-    unknownBtn.style.padding = '14px 16px';
-    unknownBtn.innerHTML = `<span style="font-size:15px;font-weight:700">我不知道</span>
-      <span class="tf-label">跳过，不计分，但仍显示解析</span>`;
-    unknownBtn.addEventListener('click', () => {
-      unknownBtn.classList.add('selected-unknown');
-      wrap.querySelectorAll('.tf-btn').forEach(b=>b.style.pointerEvents='none');
-      tfResults.push({ correct:false, skipped:true, text:q.text, commentary:q.commentary, userAnswer:'不知道', correctAnswer:q.correct });
-      history.push({ eduDelta:0, specDelta:{}, isTF:true });
-      setTimeout(advance, 360);
-    });
-    wrap.appendChild(unknownBtn);
-    body.appendChild(wrap);
   } else if (q.type === 'stance') {
     const wrap = document.createElement('div');
     wrap.className = 'stance-container';
@@ -729,6 +689,44 @@ function renderQuestion() {
       });
       wrap.appendChild(btn);
     });
+    body.appendChild(wrap);
+  } else {
+    const wrap = document.createElement('div');
+    wrap.className = 'tf-container';
+    ['对','错'].forEach(ans => {
+      const isTrue = ans==='对';
+      const btn = document.createElement('button');
+      btn.className = `tf-btn ${isTrue?'tf-btn-true':'tf-btn-false'}`;
+      btn.innerHTML = `<span class="tf-icon">${isTrue?'○':'✕'}</span>
+        <span style="font-size:17px;font-weight:700">${ans}</span>
+        <span class="tf-label">${isTrue?'这个说法是正确的':'这个说法是错误的'}</span>`;
+      btn.addEventListener('click', () => {
+        btn.classList.add(isTrue?'selected-true':'selected-false');
+        wrap.querySelectorAll('.tf-btn').forEach(b=>b.style.pointerEvents='none');
+        const isCorrect = ans===q.correct;
+        const ed = isCorrect ? 2 : 0;
+        const sd = isCorrect ? (q.correctSpec||{}) : {};
+        eduScore += ed; if(isCorrect) addSpec(q.correctSpec);
+        tfResults.push({ correct:isCorrect, text:q.text, commentary:q.commentary, userAnswer:ans, correctAnswer:q.correct });
+        history.push({ eduDelta:ed, specDelta:sd, isTF:true });
+        setTimeout(advance, 360);
+      });
+      wrap.appendChild(btn);
+    });
+    const unknownBtn = document.createElement('button');
+    unknownBtn.className = 'tf-btn tf-btn-unknown';
+    unknownBtn.style.gridColumn = '1 / -1';
+    unknownBtn.style.padding = '14px 16px';
+    unknownBtn.innerHTML = `<span style="font-size:15px;font-weight:700">我不知道</span>
+      <span class="tf-label">跳过，不计分，但仍显示解析</span>`;
+    unknownBtn.addEventListener('click', () => {
+      unknownBtn.classList.add('selected-unknown');
+      wrap.querySelectorAll('.tf-btn').forEach(b=>b.style.pointerEvents='none');
+      tfResults.push({ correct:false, skipped:true, text:q.text, commentary:q.commentary, userAnswer:'不知道', correctAnswer:q.correct });
+      history.push({ eduDelta:0, specDelta:{}, isTF:true });
+      setTimeout(advance, 360);
+    });
+    wrap.appendChild(unknownBtn);
     body.appendChild(wrap);
   }
   const qs = document.getElementById('screen-question');
