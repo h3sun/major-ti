@@ -250,13 +250,13 @@
     <div class="landing-badge">自适应认知范式识别系统</div>
     <h1 class="landing-title">你的思维，<br/>出卖了你的学历与专业</h1>
     <p class="landing-sub">
-      前 8 题广撒网，系统初步判断你最可能的专业方向，<br/>
-      再用 6 道定向题精准收网——<br/>
+      前 10 题广撒网，系统初步判断你最可能的专业方向，<br/>
+      再用 10 道定向题精准收网——<br/>
       你越诚实，结果越准确。
     </p>
     <p class="landing-note">你的「误选」往往比「对选」更能暴露你的专业灵魂。</p>
     <div class="landing-stats">
-      <div class="stat-item"><span class="stat-num">14</span><span class="stat-label">道题目</span></div>
+      <div class="stat-item"><span class="stat-num">20</span><span class="stat-label">道题目</span></div>
       <div class="stat-item"><span class="stat-num">自适应</span><span class="stat-label">动态题库</span></div>
       <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">学历层次</span></div>
       <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">思维指纹</span></div>
@@ -274,9 +274,9 @@
   <section class="screen" id="screen-transition">
     <div class="trans-eyebrow">阶段一完成 · 初步画像</div>
     <h2 class="trans-title">系统已识别出你的<br/>思维倾向</h2>
-    <p class="trans-sub">根据前 8 道题，你最可能属于以下两个专业方向之一</p>
+    <p class="trans-sub">根据前 10 道题，你最可能属于以下两个专业方向之一</p>
     <div class="trans-cards" id="trans-cards"></div>
-    <p class="trans-note">接下来 6 道题将从这两个方向的专业题库中抽取，<br/>帮助系统进一步区分，给出更精准的结论。</p>
+    <p class="trans-note">接下来 10 道题将从这两个方向的专业题库中抽取，<br/>帮助系统进一步区分，给出更精准的结论。</p>
     <button class="btn-continue" id="btn-continue">继续第二阶段 →</button>
   </section>
 
@@ -425,6 +425,25 @@ const CORE_QUESTIONS = [
       {text:'其中一定有一个在撒谎，必有隐情，深挖！', edu:1, spec:{}},
     ],
   },
+  {
+    type:'stance', dim:'社会哲学 · 个体责任与结构不平等',
+    text:'「一个人的人生成就主要靠个人努力——出身家庭和社会阶层的影响，被严重夸大了。」',
+    stances:{
+      support: { edu:1, spec:{} },
+      neutral: { edu:2, spec:{economics:1} },
+      oppose:  { edu:4, spec:{humanities:2, economics:1} },
+    },
+  },
+  {
+    type:'choice', dim:'媒体素养 · 科学新闻解读',
+    text:'新闻标题：「研究发现：每天喝咖啡的人心脏病发生率比不喝的人低40%」。你的第一反应是——',
+    options:[
+      {text:'有科学依据就放心喝，本来就爱喝。', edu:1, spec:{}},
+      {text:'先查清楚谁资助了这个研究——食品行业的结论要打折扣。', edu:3, spec:{humanities:1, economics:1}},
+      {text:'这是观察性研究还是随机对照实验？前者只能说相关性，不能说因果。', edu:4, spec:{science:2}},
+      {text:'「低40%」是相对风险——如果基础发病率只有0.5%，绝对意义其实微不足道。', edu:4, spec:{science:1}},
+    ],
+  },
 ];
 
 // ─────────────────────────────────────────
@@ -454,6 +473,22 @@ const ADAPTIVE_POOL = {
       correct:'对', correctSpec:{science:2},
       commentary:'「如无必要，勿增实体」是科学方法论的基础原则。它不是说简单理论一定正确，而是说：在预测能力相同时，假设更少的理论可证伪性更强，更容易被检验和推翻。这是科学与神学在方法论上的核心分野。',
     },
+    {
+      type:'tf', dim:'科学史 · 范式修正与有效性',
+      text:'爱因斯坦相对论的出现证明了牛顿力学是错误的，因此牛顿定律在现代科学与工程中已不再适用。',
+      correct:'错', correctSpec:{science:2},
+      commentary:'相对论在低速宏观条件下退化为牛顿力学——发射卫星、建造桥梁、设计汽车，用的依然是牛顿方程。科学进步更多是「划定适用边界」而非「全盘推翻」：旧理论在其适用条件内依然完全正确。库恩的范式革命也不意味着旧范式失去价值。',
+    },
+    {
+      type:'choice', dim:'概率直觉 · 基率谬误',
+      text:'某病发病率为1%，检测准确率99%（误报率1%）。随机检测结果为阳性，患病概率约为——',
+      options:[
+        {text:'99%。检测准确率那么高，阳性就意味着患病。', edu:1, spec:{}},
+        {text:'超过50%，建议立即复查确认。', edu:2, spec:{}},
+        {text:'约50%——发病率太低，假阳性数量几乎和真阳性一样多，需贝叶斯推断。', edu:4, spec:{science:3}},
+        {text:'不能只看「准确率」，需要知道检测的敏感性和特异性才能判断。', edu:3, spec:{science:1}},
+      ],
+    },
   ],
 
   engineering: [
@@ -474,6 +509,25 @@ const ADAPTIVE_POOL = {
       text:'「过早优化是万恶之源」——这句话的意思是：在性能瓶颈被实际测量出来之前，不应为假设中的性能问题修改结构清晰的代码。',
       correct:'对', correctSpec:{engineering:2},
       commentary:'高德纳（Donald Knuth）的名言。工程中正确的路径是：先让它正确运行，再通过实际测量找到真正的瓶颈，最后精准优化。提前优化的代码往往更难维护，而且问题往往不在你以为的地方。',
+    },
+    {
+      type:'choice', dim:'工程实践 · 生产事故处置',
+      text:'你负责的线上服务突然崩溃，用户无法访问。你的第一步是——',
+      options:[
+        {text:'马上把所有最近的代码变更全部回滚，先恢复再说。', edu:2, spec:{engineering:1}},
+        {text:'先查日志和监控指标，定位是哪个模块从什么时间点开始出问题的。', edu:4, spec:{engineering:2}},
+        {text:'重启服务器——很多线上问题重启能临时恢复。', edu:1, spec:{}},
+        {text:'联系用户致歉，通知相关团队开会讨论方案。', edu:1, spec:{}},
+      ],
+    },
+    {
+      type:'stance', dim:'工程伦理 · 技术中立性',
+      text:'「技术本身是中立的——监控系统、算法推荐、武器的善恶完全由使用者决定，工程师对后果不承担道德责任。」',
+      stances:{
+        support: { edu:2, spec:{engineering:1} },
+        neutral: { edu:3, spec:{engineering:1, law:1} },
+        oppose:  { edu:4, spec:{humanities:2, law:1} },
+      },
     },
   ],
 
@@ -498,6 +552,22 @@ const ADAPTIVE_POOL = {
         neutral: { edu:4, spec:{economics:1, law:1} },
         oppose:  { edu:3, spec:{humanities:2, law:1} },
       },
+    },
+    {
+      type:'tf', dim:'行为经济学 · 损失厌恶',
+      text:'根据卡尼曼的前景理论，失去100元带来的心理痛苦，在强度上大于获得100元带来的喜悦。',
+      correct:'对', correctSpec:{economics:2},
+      commentary:'前景理论的核心发现：损失的心理权重约是同等收益的2倍。这解释了为什么投资者宁可持有亏损股票也不愿割肉止损——「认亏」的痛苦超出了理性计算的代价。卡尼曼因此获得2002年诺贝尔经济学奖，彻底撼动了传统经济学的「理性人」假设。',
+    },
+    {
+      type:'choice', dim:'博弈论 · 集体行动困境',
+      text:'囚徒困境中，两个理性个体都选择「背叛」，结果反而比双方「合作」更差。这最准确地说明了——',
+      options:[
+        {text:'自私是人性底色，理性逻辑的终点就是相互伤害。', edu:1, spec:{}},
+        {text:'个体理性在特定结构下会导致集体非理性——「市场失灵」的经典形式之一。', edu:3, spec:{economics:2}},
+        {text:'应通过制度设计强制合作，从根本上消除背叛的可能性。', edu:2, spec:{law:1}},
+        {text:'在重复博弈中，「以牙还牙」等策略可以产生稳定合作均衡——单次博弈则不行。', edu:4, spec:{economics:2}},
+      ],
     },
   ],
 
@@ -524,6 +594,22 @@ const ADAPTIVE_POOL = {
       correct:'错', correctSpec:{law:3},
       commentary:'契约自由有边界：合同内容不得违反法律强制性规定，不得违背公序良俗，否则无效。「自愿」是必要条件，但远非充分条件。双方自愿签订的毒品交易合同、限制人身自由的协议，显然无效——法律不保护一切「自愿」。',
     },
+    {
+      type:'tf', dim:'宪政理论 · 多数决的边界',
+      text:'在民主制度中，只要超过半数人投票通过，任何决定在法律上都应当被视为正当合法的。',
+      correct:'错', correctSpec:{law:2},
+      commentary:'「多数人的暴政」是宪政主义要解决的核心问题。现代民主的精髓不只是多数决，更包括对少数群体基本权利的保护——这正是宪法、违宪审查和基本权利条款存在的原因。多数票可以决定政策走向，但无法以此剥夺任何人的基本权利。',
+    },
+    {
+      type:'choice', dim:'法律解释 · 文义与立法目的',
+      text:'法律规定「公园禁止携带武器」。某人推着退伍军人纪念馆的展览坦克进园被拒。你认为——',
+      options:[
+        {text:'规定就是规定，坦克属于武器，没有例外空间。', edu:2, spec:{law:1}},
+        {text:'立法目的是防止危险，退役展览坦克不具威胁，应当放行。', edu:3, spec:{law:2}},
+        {text:'这种模糊情况应交由管理员自行裁量，规则不可能定得那么细。', edu:1, spec:{}},
+        {text:'需查阅立法史料和类似判例，确定「武器」在该法律语境下的适用边界。', edu:4, spec:{law:2}},
+      ],
+    },
   ],
 
   humanities: [
@@ -544,6 +630,22 @@ const ADAPTIVE_POOL = {
       text:'「历史是胜利者书写的」——从史学方法论角度，这意味着所有历史文献都是虚构的，历史研究因此无法得出任何可信结论。',
       correct:'错', correctSpec:{humanities:2},
       commentary:'这是对「历史叙事具有权力立场」命题的过度解读。正确理解是：叙事有立场，但不等于都是谎言。史学家的任务恰恰是通过互文性分析、交叉验证、发掘被压制的声音，来逼近更完整的历史图景。承认局限性，是史学成熟的标志，而非放弃研究的理由。',
+    },
+    {
+      type:'choice', dim:'媒介理论 · 形式与认知重塑',
+      text:'麦克卢汉说「媒介即信息」。这句话最准确的含义是——',
+      options:[
+        {text:'内容才是核心，媒介只是传输渠道，不影响信息本身的意义。', edu:1, spec:{}},
+        {text:'不同媒介触达不同受众，传播策略要因媒制宜。', edu:2, spec:{economics:1}},
+        {text:'媒介的物理形式（文字/电视/短视频）本身就在重塑人的感知结构，与内容无关。', edu:4, spec:{humanities:2}},
+        {text:'媒介决定什么信息能被传播，构成一种隐性的权力筛选机制。', edu:3, spec:{humanities:2}},
+      ],
+    },
+    {
+      type:'tf', dim:'哲学史 · 后现代主义的边界',
+      text:'后现代主义的核心主张是：客观真理根本不存在，所有「真理」都只是特定权力关系建构的产物。',
+      correct:'错', correctSpec:{humanities:2},
+      commentary:'这是对后现代主义常见的过度简化。其更精确的立场是：对「客观性」和「普遍真理」的宣称应被批判地审视，因为它们往往遮蔽了权力关系——而非断言「真理不存在」。利奥塔说的是对「宏大叙事」的不信任，德里达的解构是在拆解前提，两者都不是虚无主义。',
     },
   ],
 };
@@ -753,7 +855,7 @@ function selectAdaptive() {
   // Append 3 questions from each top specialty
   const adaptive = [];
   top2Specs.forEach(spec => {
-    shuffleArr(ADAPTIVE_POOL[spec]).slice(0,3).forEach(q => adaptive.push(q));
+    shuffleArr(ADAPTIVE_POOL[spec]).slice(0,5).forEach(q => adaptive.push(q));
   });
   allQuestions = [...CORE_QUESTIONS, ...adaptive];
 }
