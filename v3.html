@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>大学专业 / 职业方向倾向测试 v3 · Major-TI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #f6f2ea;
+      --surface: rgba(255, 255, 255, 0.82);
+      --surface-strong: #fffdf8;
+      --text-primary: #1f1a17;
+      --text-secondary: #61554d;
+      --text-muted: #93857b;
+      --border: rgba(93, 74, 61, 0.12);
+      --shadow: 0 20px 60px rgba(55, 40, 31, 0.08);
+      --accent: #2c241f;
+      --a: #295ea8;
+      --b: #0f8b6d;
+      --c: #b35c15;
+      --d: #b4476b;
+      --radius: 18px;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      font-family: 'Noto Sans SC', 'PingFang SC', sans-serif;
+      color: var(--text-primary);
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,.85), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(255,243,228,.9), transparent 30%),
+        linear-gradient(135deg, #f4efe6 0%, #f8f5ee 55%, #efe7dc 100%);
+      display: flex;
+      justify-content: center;
+      padding: 0 20px 72px;
+    }
+    #progress-wrap {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 4px;
+      background: rgba(44, 36, 31, 0.08);
+      display: none;
+      z-index: 30;
+    }
+    #progress-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--a), var(--b), var(--c), var(--d));
+      transition: width .28s ease;
+    }
+    .shell {
+      width: 100%;
+      max-width: 860px;
+      padding-top: 28px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+    .logo {
+      font-family: 'Noto Serif SC', serif;
+      font-weight: 700;
+      letter-spacing: .06em;
+    }
+    .counter { display: none; }
+    .screen { display: none; }
+    .screen.active { display: block; animation: fadeIn .28s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .panel {
+      background: var(--surface);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    #screen-landing .hero {
+      padding: 72px 32px 44px;
+      text-align: center;
+    }
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      border: 1px solid var(--border);
+      padding: 7px 14px;
+      border-radius: 999px;
+      color: var(--text-muted);
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      background: rgba(255,255,255,.55);
+    }
+    .hero h1 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(30px, 6vw, 52px);
+      line-height: 1.22;
+      margin-bottom: 18px;
+    }
+    .hero p {
+      max-width: 620px;
+      margin: 0 auto;
+      color: var(--text-secondary);
+      line-height: 1.9;
+      font-size: 15px;
+    }
+    .hero .note {
+      margin-top: 14px;
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 34px 0;
+    }
+    .stat {
+      background: rgba(255,255,255,.62);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px 12px;
+    }
+    .stat .num {
+      display: block;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 30px;
+      margin-bottom: 4px;
+    }
+    .stat .label {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .type-pill {
+      border-radius: 20px;
+      padding: 16px 14px;
+      color: #fff;
+      text-align: left;
+    }
+    .type-pill strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .type-pill span {
+      display: block;
+      font-size: 12px;
+      line-height: 1.5;
+      opacity: .9;
+    }
+    .type-a { background: linear-gradient(135deg, #2d67b8, #214a89); }
+    .type-b { background: linear-gradient(135deg, #0f9b79, #0c6d56); }
+    .type-c { background: linear-gradient(135deg, #d07b30, #a95413); }
+    .type-d { background: linear-gradient(135deg, #ca5d85, #a83c62); }
+    .btn-primary, .btn-secondary {
+      border: none;
+      border-radius: 999px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease;
+    }
+    .btn-primary:hover, .btn-secondary:hover { transform: translateY(-1px); opacity: .92; }
+    .btn-primary {
+      margin-top: 28px;
+      padding: 15px 40px;
+      background: var(--accent);
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    #screen-question .panel { padding: 28px 28px 30px; }
+    .question-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+    .btn-back {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      cursor: pointer;
+      visibility: hidden;
+    }
+    .btn-back.visible { visibility: visible; }
+    .question-tag {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .question-title {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(22px, 4vw, 30px);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .options {
+      display: grid;
+      gap: 12px;
+    }
+    .option {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.72);
+      border-radius: 18px;
+      padding: 18px 18px 18px 16px;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      transition: transform .12s ease, border-color .15s ease, background .15s ease;
+      font-family: inherit;
+    }
+    .option:hover {
+      transform: translateX(4px);
+      border-color: rgba(44, 36, 31, 0.2);
+      background: rgba(255,255,255,.95);
+    }
+    .option.selected {
+      border-color: rgba(44, 36, 31, 0.22);
+      background: #fffdf9;
+    }
+    .option-letter {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+      background: #efe7dc;
+      border: 1px solid rgba(44, 36, 31, 0.08);
+    }
+    .option-text {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--text-primary);
+    }
+
+    #screen-result .panel { padding: 30px; }
+    .result-intro {
+      margin-bottom: 18px;
+      color: var(--text-muted);
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: var(--surface-strong);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px;
+    }
+    .card-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .card h2 {
+      font-family: 'Noto Serif SC', serif;
+      font-size: clamp(24px, 4vw, 34px);
+      margin-bottom: 8px;
+    }
+    .subline {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .mix-badge {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      color: white;
+      font-weight: 700;
+    }
+    .bars {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .bar-item {
+      background: var(--surface-strong);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px 16px;
+    }
+    .bar-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    .bar-name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .bar-pct {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .bar-bg {
+      height: 8px;
+      border-radius: 999px;
+      background: #ece5db;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+      transition: width .8s cubic-bezier(.16,1,.3,1);
+    }
+    .recommend {
+      background: var(--surface-strong);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+    .recommend h3 {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+    .recommend p {
+      color: var(--text-secondary);
+      line-height: 1.85;
+      font-size: 14px;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 14px 0 10px;
+    }
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #f1ebe3;
+      color: var(--text-secondary);
+      font-size: 12px;
+    }
+    .footnote {
+      color: var(--text-muted);
+      line-height: 1.8;
+      font-size: 13px;
+      margin-bottom: 24px;
+    }
+    .btn-secondary {
+      padding: 13px 28px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-size: 14px;
+    }
+    @media (max-width: 760px) {
+      .stats, .type-grid, .result-grid { grid-template-columns: 1fr; }
+      .hero { padding-left: 22px; padding-right: 22px; }
+      #screen-question .panel, #screen-result .panel { padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="progress-wrap"><div id="progress-fill"></div></div>
+  <div class="shell">
+    <div class="topbar">
+      <div class="logo">Major-TI · v3</div>
+      <div class="counter" id="counter"></div>
+    </div>
+
+    <section class="screen active" id="screen-landing">
+      <div class="panel hero">
+        <div class="eyebrow">Major / Career Inclination Test</div>
+        <h1>大学专业 / 职业方向<br />倾向测试 v3</h1>
+        <p>
+          这是一套用于初步探索专业方向的小测试。<br />
+          它不替代正式测评，但能帮你判断：你更偏向哪类任务、哪种环境、哪种成长路径。
+        </p>
+        <div class="note">按第一反应作答。没有标准答案，只有更稳定的偏好。</div>
+        <div class="stats">
+          <div class="stat"><span class="num" id="question-count">20</span><span class="label">道题目</span></div>
+          <div class="stat"><span class="num">4</span><span class="label">核心倾向</span></div>
+          <div class="stat"><span class="num">2</span><span class="label">主辅结果</span></div>
+        </div>
+        <div class="type-grid">
+          <div class="type-pill type-a"><strong>A 型</strong><span>工程 / 计算机 / 数学 / 数据</span></div>
+          <div class="type-pill type-b"><strong>B 型</strong><span>商业 / 管理 / 金融 / 创业</span></div>
+          <div class="type-pill type-c"><strong>C 型</strong><span>人文 / 法律 / 教育 / 传媒</span></div>
+          <div class="type-pill type-d"><strong>D 型</strong><span>艺术 / 设计 / 心理 / 社会服务</span></div>
+        </div>
+        <button class="btn-primary" id="btn-start">开始测试</button>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-question">
+      <div class="panel">
+        <div class="question-head">
+          <button class="btn-back" id="btn-back">← 上一题</button>
+          <div class="question-tag" id="question-tag">单选题</div>
+        </div>
+        <div class="question-title" id="question-title"></div>
+        <div class="options" id="options"></div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-result">
+      <div class="panel">
+        <div class="result-intro">你的测试结果</div>
+        <div class="result-grid">
+          <div class="card" id="primary-card"></div>
+          <div class="card" id="mix-card"></div>
+        </div>
+        <div class="bars" id="bars"></div>
+        <div class="recommend" id="recommend"></div>
+        <div class="footnote">
+          这份结果更适合做初步探索。真正选专业时，还要一起看成绩、长期投入意愿、家庭资源、学校课程设置和就业环境。
+        </div>
+        <button class="btn-secondary" id="btn-retry">再测一次</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const TRACKS = {
+      a: {
+        key: 'A',
+        name: '理性解谜者',
+        short: '工程 / 计算机 / 数学 / 数据',
+        majors: '计算机科学、人工智能、数据科学、软件工程、电子工程、机械工程、数学、统计、信息安全、金融工程',
+        desc: '你通常偏好结构清晰、逻辑严密、挑战明确的问题。复杂系统不会让你退缩，反而容易激发你的投入感。',
+        fit: '适合技术、分析、建模、系统设计和问题求解类路径。',
+        color: '#295ea8'
+      },
+      b: {
+        key: 'B',
+        name: '结果推进者',
+        short: '商业 / 管理 / 金融 / 创业',
+        majors: '金融、经济学、市场营销、管理学、会计、商业分析、创业管理、供应链管理、国际商务、房地产',
+        desc: '你更关注目标、资源、效率和结果。你擅长把想法变成计划，再把计划推进成成果。',
+        fit: '适合商业决策、项目推进、组织管理和资源整合类路径。',
+        color: '#0f8b6d'
+      },
+      c: {
+        key: 'C',
+        name: '表达思辨者',
+        short: '人文 / 法律 / 教育 / 传媒',
+        majors: '法律、教育学、新闻传播、社会学、政治学、历史、哲学、语言文学、国际关系、公共政策',
+        desc: '你关心观点、意义、表达和社会影响，擅长理解复杂的人与规则，并把它们讲清楚。',
+        fit: '适合写作、演讲、分析、教育、传播和公共讨论类路径。',
+        color: '#b35c15'
+      },
+      d: {
+        key: 'D',
+        name: '创意共情者',
+        short: '艺术 / 设计 / 心理 / 社会服务',
+        majors: '视觉传达、交互设计、工业设计、建筑、艺术、音乐、心理学、社会工作、护理、用户体验设计、咨询',
+        desc: '你对人的感受、体验、关系和美感更敏感，也更容易在陪伴、创作和体验设计中发挥优势。',
+        fit: '适合需要创意、审美、共情、陪伴和体验设计的路径。',
+        color: '#b4476b'
+      }
+    };
+
+    const MIX = {
+      'ab': {
+        name: 'A-B 型｜技术商业型',
+        desc: '你既有技术和分析能力，也有结果意识和现实判断。适合产品、数据、金融工程、商业分析、创业等复合路线。'
+      },
+      'ac': {
+        name: 'A-C 型｜技术表达型',
+        desc: '你既能理解技术，又愿意把复杂内容解释给别人。适合科技传播、教育科技、法律科技、AI 伦理、技术写作等方向。'
+      },
+      'ad': {
+        name: 'A-D 型｜技术创意型',
+        desc: '你不是单纯做技术，更适合把技术和体验结合。适合交互设计、游戏设计、用户体验、数字媒体、人机交互等方向。'
+      },
+      'bc': {
+        name: 'B-C 型｜商业传播型',
+        desc: '你既看结果，也会关注表达、叙事和影响力。适合市场营销、品牌、公关、传媒管理、公共政策、国际关系等方向。'
+      },
+      'bd': {
+        name: 'B-D 型｜体验运营型',
+        desc: '你既在意推进结果，也会在意人的感受和体验。适合用户研究、品牌设计、服务设计、活动策划、消费品和文旅相关方向。'
+      },
+      'cd': {
+        name: 'C-D 型｜人文关怀型',
+        desc: '你对人、意义和情绪变化都比较敏感。适合心理学、教育、社会工作、传媒、艺术治疗、公益和内容创作。'
+      }
+    };
+
+    const LETTER_CLASS = { A: 'letter-a', B: 'letter-b', C: 'letter-c', D: 'letter-d' };
+    const scoreState = { a: 0, b: 0, c: 0, d: 0 };
+    const history = [];
+
+    const QUESTIONS = [
+  {
+    "type": "choice",
+    "text": "小组作业刚开始时，你通常会先做什么？",
+    "options": [
+      {
+        "text": "先拆任务、定流程、看有没有工具能提高效率",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "先想目标、分工、截止时间和最终呈现效果",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "先讨论主题意义、受众是谁、怎么讲得更有说服力",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "先想风格、氛围和体验，怎么让人愿意看下去",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "周末突然空出一天，你更想怎么安排？",
+    "options": [
+      {
+        "text": "学个新工具、刷题或研究一个技术问题",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "规划副业、看商业案例或整理个人目标",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "看书、写东西、聊观点或看纪录片",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "画画、拍照、探店、做手工或陪朋友聊天",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "朋友遇到麻烦来找你时，你更可能怎么帮？",
+    "options": [
+      {
+        "text": "帮他分析原因，列出解决步骤",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "帮他判断利弊，做一个行动计划",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "听完后帮他整理表达，想清楚怎么沟通或争取权益",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "先安慰他，理解感受，再陪他慢慢找办法",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "如果参加一个校园活动，你最想负责哪部分？",
+    "options": [
+      {
+        "text": "报名系统、数据统计、设备技术支持",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "赞助、预算、人员安排、整体推进",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "主持稿、宣传文案、采访报道",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "海报视觉、现场布置、互动体验",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "哪种瞬间最容易让你有成就感？",
+    "options": [
+      {
+        "text": "把一个复杂问题算出来、修好了或优化掉了",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "把一件事组织得很顺利，还拿到了结果",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "把一个观点讲清楚，让别人理解或被说服",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "让别人感到被理解、被启发或被治愈",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "面对压力时，你更接近哪种状态？",
+    "options": [
+      {
+        "text": "越难越想破解，像在打副本",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "先稳住局面，抓重点、排优先级",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "找人讨论，理清逻辑和表达方式",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "先给自己一点情绪缓冲，再进入状态",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "如果你要做一个视频账号，你最想做什么内容？",
+    "options": [
+      {
+        "text": "科技测评、数据分析、AI 工具教程",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "商业观察、理财思维、创业记录",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "影评书评、社会议题、语言表达",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "生活美学、心理成长、穿搭设计",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "你看一部电影时，最容易关注什么？",
+    "options": [
+      {
+        "text": "世界观设定是否严密、逻辑有没有漏洞",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "人物如何做选择、资源和利益如何变化",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "台词、叙事、价值观和社会背景",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "画面、情绪、关系和人物内心",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "旅行前做攻略时，你通常会先做什么？",
+    "options": [
+      {
+        "text": "查路线、交通、时间表，做最优方案",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "控预算、订酒店、安排每天重点项目",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "查历史文化、当地故事和值得体验的地方",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "找好看的地方、咖啡店、展览和放松路线",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "如果老师让你自由选题做展示，你更可能选哪个？",
+    "options": [
+      {
+        "text": "AI 如何改变未来工作",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "一个品牌为什么能成功",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "社交媒体如何影响我们的观点",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "人为什么会焦虑，以及如何自我照顾",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "你更喜欢哪种任务？",
+    "options": [
+      {
+        "text": "有明确答案，但过程复杂",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "目标明确，需要协调资源",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "没有唯一答案，需要表达观点",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "开放自由，需要创意和共情",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "如果进入一个陌生团队，你通常会先做什么？",
+    "options": [
+      {
+        "text": "先观察系统怎么运行，找到自己的技术位置",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "主动了解目标和规则，看看哪里需要推进",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "和大家聊天，理解团队文化和沟通方式",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "关注氛围，看看谁需要支持、哪里可以改善体验",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "买东西时，你更容易被什么打动？",
+    "options": [
+      {
+        "text": "参数、性能、性价比、技术细节",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "品牌定位、长期价值、是否值得投资",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "故事、理念、评价、社会意义",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "颜值、手感、氛围、情绪价值",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "如果你要解决校园里的一个问题，你第一步更可能是什么？",
+    "options": [
+      {
+        "text": "收集数据，找出问题模式",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "找负责人，设计执行方案",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "采访同学，写一份有说服力的建议",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "组织活动，让大家更愿意参与改变",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "你更能接受哪种未来工作状态？",
+    "options": [
+      {
+        "text": "长时间专注研究、写代码、建模型",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "快节奏决策、沟通、竞争和结果导向",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "写作、表达、分析社会现象或规则",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "与人深度互动，帮助别人或创造体验",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "别人夸你时，你最希望听到哪一句？",
+    "options": [
+      {
+        "text": "你真的很聪明，逻辑很强",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "你很靠谱，能把事情做成",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "你表达得很清楚，很有思想",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "你很有感觉，也很懂人",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "遇到一个新软件或新工具，你通常会先关注什么？",
+    "options": [
+      {
+        "text": "自己摸索功能，甚至研究背后原理",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "它能不能帮我赚钱、提效或管理事情",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "它会如何影响人们沟通和生活方式",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "它界面好不好看、体验舒不舒服",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "你最不喜欢哪类任务？",
+    "options": [
+      {
+        "text": "纯聊天、没有结构、没有结论",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "重复细节很多但没有实际结果",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "只看数字，不看人和背景",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "太冷冰冰、没有创意或情感连接",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "如果有一笔经费让你做项目，你更想做什么？",
+    "options": [
+      {
+        "text": "做一个 App、模型、机器人或数据平台",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "创办一个小公司、社团或商业项目",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "做一个访谈节目、公众号或公共议题研究",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "做一个展览、疗愈空间、设计作品或公益活动",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  },
+  {
+    "type": "choice",
+    "text": "你理想中的“厉害”更接近哪一种？",
+    "options": [
+      {
+        "text": "能解决别人解决不了的难题",
+        "score": {
+          "a": 1
+        }
+      },
+      {
+        "text": "能带领团队，把资源变成成果",
+        "score": {
+          "b": 1
+        }
+      },
+      {
+        "text": "能影响观念、制度或公共讨论",
+        "score": {
+          "c": 1
+        }
+      },
+      {
+        "text": "能理解人、打动人、让世界更美好一点",
+        "score": {
+          "d": 1
+        }
+      }
+    ]
+  }
+];
+
+let currentQ = 0;
+    let allQuestions = [];
+
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach((screen) => screen.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function syncCounts() {
+      const count = String(QUESTIONS.length);
+      const counter = document.getElementById('question-count');
+      if (counter) counter.textContent = count;
+    }
+
+    function resetScores() {
+      Object.keys(scoreState).forEach((key) => { scoreState[key] = 0; });
+      history.length = 0;
+    }
+
+    function addScore(delta) {
+      Object.entries(delta || {}).forEach(([key, value]) => {
+        scoreState[key] = (scoreState[key] || 0) + value;
+      });
+    }
+
+    function subScore(delta) {
+      Object.entries(delta || {}).forEach(([key, value]) => {
+        scoreState[key] = (scoreState[key] || 0) - value;
+      });
+    }
+
+    function updateProgress() {
+      const total = allQuestions.length;
+      const pct = total ? (currentQ / total) * 100 : 0;
+      document.getElementById('progress-fill').style.width = pct + '%';
+      document.getElementById('counter').textContent = `${currentQ + 1} / ${total}`;
+      document.getElementById('btn-back').classList.toggle('visible', currentQ > 0);
+    }
+
+    function shuffleArray(items) {
+      const copy = [...items];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function startQuiz() {
+      allQuestions = shuffleArray(QUESTIONS).map((question) => ({
+        ...question,
+        options: shuffleArray(question.options.map((option) => ({ ...option })))
+      }));
+      currentQ = 0;
+      resetScores();
+      document.getElementById('progress-wrap').style.display = 'block';
+      document.getElementById('counter').style.display = 'block';
+      showScreen('screen-question');
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const question = allQuestions[currentQ];
+      updateProgress();
+      document.getElementById('question-title').textContent = question.text;
+      document.getElementById('question-tag').textContent = `单选题 · 第 ${currentQ + 1} 题`;
+      const options = document.getElementById('options');
+      options.innerHTML = '';
+
+      question.options.forEach((option, index) => {
+        const letter = ['A', 'B', 'C', 'D'][index];
+        const button = document.createElement('button');
+        button.className = 'option';
+        button.innerHTML = `
+          <span class="option-letter">${letter}</span>
+          <span class="option-text">${option.text}</span>
+        `;
+        button.addEventListener('click', () => {
+          button.classList.add('selected');
+          options.querySelectorAll('.option').forEach((node) => { node.style.pointerEvents = 'none'; });
+          addScore(option.score);
+          history.push(option.score || {});
+          setTimeout(nextQuestion, 220);
+        });
+        options.appendChild(button);
+      });
+    }
+
+    function nextQuestion() {
+      currentQ += 1;
+      if (currentQ < allQuestions.length) {
+        renderQuestion();
+      } else {
+        showResults();
+      }
+    }
+
+    function goBack() {
+      if (currentQ === 0) return;
+      currentQ -= 1;
+      const last = history.pop();
+      subScore(last);
+      showScreen('screen-question');
+      renderQuestion();
+    }
+
+    function sortedScores() {
+      return Object.entries(scoreState).sort((a, b) => b[1] - a[1]);
+    }
+
+    function getMix(primaryKey, secondaryKey) {
+      const pair = [primaryKey, secondaryKey].sort().join('');
+      return MIX[pair];
+    }
+
+    function renderBars() {
+      const bars = document.getElementById('bars');
+      bars.innerHTML = '';
+      sortedScores().forEach(([key, value]) => {
+        const meta = TRACKS[key];
+        const pct = Math.round((value / QUESTIONS.length) * 100);
+        const item = document.createElement('div');
+        item.className = 'bar-item';
+        item.innerHTML = `
+          <div class="bar-head">
+            <div class="bar-name">${meta.key} 型 · ${meta.name}</div>
+            <div class="bar-pct">${value} / ${QUESTIONS.length} · ${pct}%</div>
+          </div>
+          <div class="bar-bg">
+            <div class="bar-fill" style="background:${meta.color}" data-pct="${pct}"></div>
+          </div>
+        `;
+        bars.appendChild(item);
+      });
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.bar-fill').forEach((bar) => {
+          bar.style.width = `${bar.dataset.pct}%`;
+        });
+      });
+    }
+
+    function showResults() {
+      document.getElementById('progress-fill').style.width = '100%';
+      document.getElementById('counter').style.display = 'none';
+
+      const ranking = sortedScores();
+      const [primaryKey, primaryScore] = ranking[0];
+      const [secondaryKey, secondaryScore] = ranking[1];
+      const primary = TRACKS[primaryKey];
+      const secondary = TRACKS[secondaryKey];
+      const mix = getMix(primaryKey, secondaryKey);
+
+      const primaryCard = document.getElementById('primary-card');
+      primaryCard.style.borderColor = primary.color;
+      primaryCard.innerHTML = `
+        <div class="card-label">主倾向</div>
+        <div class="mix-badge" style="background:${primary.color}">${primary.key} 型</div>
+        <h2 style="color:${primary.color}">${primary.name}</h2>
+        <div class="subline">${primary.short}</div>
+        <div class="subline" style="margin-top:12px">${primary.desc}</div>
+      `;
+
+      const mixCard = document.getElementById('mix-card');
+      mixCard.style.borderColor = secondary.color;
+      mixCard.innerHTML = `
+        <div class="card-label">辅助倾向</div>
+        <div class="mix-badge" style="background:${secondary.color}">${secondary.key} 型</div>
+        <h2 style="color:${secondary.color}">${secondary.name}</h2>
+        <div class="subline">${secondary.short}</div>
+        <div class="subline" style="margin-top:12px">第二高分通常代表你的辅助优势。你不是单一路径型，往往更适合复合方向。</div>
+      `;
+
+      const recommend = document.getElementById('recommend');
+      recommend.innerHTML = `
+        <h3>${mix ? mix.name : `${primary.key}-${secondary.key} 型`}</h3>
+        <p>${mix ? mix.desc : '你的结果显示出明显的复合倾向，建议优先考虑跨学科或可自由组合课程的路径。'}</p>
+        <div class="chips">
+          <span class="chip">主倾向专业：${primary.majors}</span>
+          <span class="chip">辅助倾向专业：${secondary.majors}</span>
+        </div>
+        <p>${primary.fit} 同时，${secondary.name}这部分也说明你在另外一种任务环境中会更有手感。选专业时，不要只看名字，要看课程结构是否允许你把这两类优势真正组合起来。</p>
+      `;
+
+      renderBars();
+      showScreen('screen-result');
+    }
+
+    document.getElementById('btn-start').addEventListener('click', startQuiz);
+    document.getElementById('btn-back').addEventListener('click', goBack);
+    document.getElementById('btn-retry').addEventListener('click', () => {
+      document.getElementById('progress-wrap').style.display = 'none';
+      showScreen('screen-landing');
+    });
+
+    syncCounts();
+  </script>
+</body>
+</html>

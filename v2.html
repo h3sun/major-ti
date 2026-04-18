@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cognitive Paradigm Identification System · Major-TI</title>
+  <title>认知范式识别系统 v2 · Major-TI</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -16,7 +16,7 @@
     }
     html { scroll-behavior: smooth; }
     body {
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: 'Noto Sans SC','PingFang SC',sans-serif;
       background: var(--bg); color: var(--text-primary);
       min-height: 100vh; display: flex; flex-direction: column; align-items: center;
     }
@@ -30,7 +30,7 @@
       display:flex; align-items:center; justify-content:space-between;
     }
     .logo {
-      font-family:'Playfair Display',serif; font-size:14px; font-weight:600;
+      font-family:'Noto Serif SC',serif; font-size:14px; font-weight:600;
       letter-spacing:.05em; opacity:.6;
     }
     .q-counter { font-size:13px; color:var(--text-muted); display:none; }
@@ -40,6 +40,7 @@
     .fade-in { animation:fadeIn .3s forwards; }
     @keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
 
+    /* ── Landing ── */
     #screen-landing { padding-top:72px; text-align:center; }
     .landing-badge {
       display:inline-block; font-size:11px; font-weight:500; letter-spacing:.15em;
@@ -47,7 +48,7 @@
       border:1px solid var(--border); border-radius:100px; padding:5px 14px; margin-bottom:28px;
     }
     .landing-title {
-      font-family:'Playfair Display',serif;
+      font-family:'Noto Serif SC',serif;
       font-size:clamp(28px,5.5vw,44px); font-weight:700; line-height:1.25; margin-bottom:20px;
     }
     .landing-sub {
@@ -57,7 +58,7 @@
     .landing-note { font-size:12px; color:var(--text-muted); margin-bottom:44px; font-style:italic; }
     .landing-stats { display:flex; gap:28px; justify-content:center; margin-bottom:44px; flex-wrap:wrap; }
     .stat-item { display:flex; flex-direction:column; align-items:center; gap:4px; }
-    .stat-num { font-family:'Playfair Display',serif; font-size:22px; font-weight:700; }
+    .stat-num { font-family:'Noto Serif SC',serif; font-size:22px; font-weight:700; }
     .stat-label { font-size:11px; color:var(--text-muted); }
     .btn-start {
       display:inline-block; background:var(--accent); color:#fff;
@@ -73,6 +74,7 @@
       border:1px solid var(--border); border-radius:100px; color:var(--text-muted);
     }
 
+    /* ── Question ── */
     #screen-question { padding-top:48px; }
     .q-meta {
       display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;
@@ -91,7 +93,7 @@
     .badge-choice { color:#e8623a; border-color:#e8623a; }
     .badge-stance { color:#0891b2; border-color:#0891b2; }
     .q-text {
-      font-family:'Playfair Display',serif;
+      font-family:'Noto Serif SC',serif;
       font-size:clamp(17px,3vw,22px); font-weight:600; line-height:1.7;
       margin-bottom:32px;
     }
@@ -124,6 +126,7 @@
     .stance-word { font-size:16px; font-weight:700; }
     .stance-sub  { font-size:11px; color:var(--text-muted); text-align:center; line-height:1.4; }
 
+    /* ── Result ── */
     #screen-result { padding-top:48px; }
     .result-header-grid {
       display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px;
@@ -136,7 +139,7 @@
       font-size:10px; font-weight:600; letter-spacing:.15em; text-transform:uppercase;
       color:var(--text-muted); margin-bottom:10px;
     }
-    .rc-value { font-family:'Playfair Display',serif; font-size:clamp(18px,3vw,24px); font-weight:700; margin-bottom:4px; }
+    .rc-value { font-family:'Noto Serif SC',serif; font-size:clamp(18px,3vw,24px); font-weight:700; margin-bottom:4px; }
     .rc-en { font-size:12px; color:var(--text-muted); margin-bottom:12px; }
     .rc-desc { font-size:13px; line-height:1.8; color:var(--text-secondary); }
     .score-pill {
@@ -166,7 +169,7 @@
     .tf-result-list { display:flex; flex-direction:column; gap:8px; }
     .tf-result-row { display:flex; gap:10px; align-items:flex-start; font-size:13px; line-height:1.6; color:var(--text-secondary); }
     .tf-mark { flex-shrink:0; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; margin-top:1px; }
-    .result-quote { font-family:'Playfair Display',serif; font-size:14px; color:var(--text-muted); text-align:center; margin:0 0 36px; padding:0 12px; line-height:1.8; font-style:italic; }
+    .result-quote { font-family:'Noto Serif SC',serif; font-size:14px; color:var(--text-muted); text-align:center; margin:0 0 36px; padding:0 12px; line-height:1.8; font-style:italic; }
     .btn-retry {
       background:transparent; color:var(--text-primary); font-size:14px; font-weight:500;
       padding:12px 32px; border-radius:100px; border:1.5px solid var(--border);
@@ -179,37 +182,39 @@
 <body>
 <div id="progress-bar-wrap"><div id="progress-bar-fill"></div></div>
 <header class="site-header">
-  <div class="logo">Major-TI</div>
+  <div class="logo">Major-TI · v2</div>
   <div class="q-counter" id="q-counter"></div>
 </header>
 <main class="container">
 
+  <!-- LANDING -->
   <section class="screen active" id="screen-landing">
-    <div class="landing-badge">Four-Dimensional Cognitive Preference Identification System</div>
-    <h1 class="landing-title">The way you think<br/>reveals which discipline you resemble.</h1>
+    <div class="landing-badge">四维认知偏好识别系统</div>
+    <h1 class="landing-title">你的思维，<br/>会暴露你更像哪个学科</h1>
     <p class="landing-sub">
-      This is not a knowledge quiz, and it is not a test of standard answers.<br/>
-      Across 20 questions, it asks only one thing:<br/>
-      when facing complexity, which cognitive tools do you reach for first?
+      这不是知识竞赛，也不是标准答案测试。<br/>
+      <span id="landing-question-count-text">20</span> 道题只看一件事：面对复杂问题时，<br/>
+      你更自然调用哪套认知工具。
     </p>
-    <p class="landing-note">There are no correct answers, only more stable preferences.</p>
+    <p class="landing-note">没有正确答案，只有更稳定的偏好。</p>
     <div class="landing-stats">
-      <div class="stat-item"><span class="stat-num" id="landing-question-count">20</span><span class="stat-label">questions</span></div>
-      <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">cognitive dimensions</span></div>
-      <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">disciplinary archetypes</span></div>
+      <div class="stat-item"><span class="stat-num" id="landing-question-count">20</span><span class="stat-label">道题目</span></div>
+      <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">认知维度</span></div>
+      <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">专业原型</span></div>
     </div>
-    <button class="btn-start" id="btn-start">Start Diagnosis</button>
+    <button class="btn-start" id="btn-start">开始诊断</button>
     <div class="landing-chips">
-      <span class="dim-chip">Mechanism Orientation</span><span class="dim-chip">Narrative Orientation</span>
-      <span class="dim-chip">System Optimization</span><span class="dim-chip">Rule Adjudication</span>
-      <span class="dim-chip">Incentive Analysis</span><span class="dim-chip">Value Judgment</span>
-      <span class="dim-chip">Falsification Modeling</span><span class="dim-chip">Contextual Interpretation</span>
+      <span class="dim-chip">机制导向</span><span class="dim-chip">叙事导向</span>
+      <span class="dim-chip">系统优化</span><span class="dim-chip">规则裁决</span>
+      <span class="dim-chip">激励分析</span><span class="dim-chip">价值判断</span>
+      <span class="dim-chip">证据导向</span><span class="dim-chip">情境导向</span>
     </div>
   </section>
 
+  <!-- QUESTION -->
   <section class="screen" id="screen-question">
     <div class="q-meta">
-      <button class="btn-back" id="btn-back">← Previous</button>
+      <button class="btn-back" id="btn-back">← 上一题</button>
       <div style="display:flex;align-items:center;gap:8px">
         <span class="q-type-badge" id="q-type-badge"></span>
       </div>
@@ -218,200 +223,129 @@
     <div id="q-body"></div>
   </section>
 
+  <!-- RESULT -->
   <section class="screen" id="screen-result">
     <div style="margin-bottom:8px">
-      <span style="font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted)">Your Cognitive Profile</span>
+      <span style="font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted)">你的认知画像</span>
     </div>
     <div class="result-header-grid">
       <div class="result-card" id="edu-card"></div>
       <div class="result-card" id="spec-card"></div>
     </div>
     <div class="spec-chart">
-      <div class="spec-title">Disciplinary Archetype Distribution</div>
+      <div class="spec-title">专业原型分布</div>
       <div class="spec-row" id="spec-row"></div>
     </div>
     <div class="tf-summary">
-      <div class="tf-summary-title">Dimension Interpretation</div>
+      <div class="tf-summary-title">维度解读</div>
       <div class="tf-result-list" id="dimension-list"></div>
     </div>
     <p class="result-quote" id="result-quote"></p>
-    <button class="btn-retry" id="btn-retry">Retake</button>
+    <button class="btn-retry" id="btn-retry">再测一次</button>
   </section>
 
 </main>
 <script>
 const DIMENSIONS = {
   mn: {
-    label:'Mechanism Orientation vs Narrative Orientation',
-    left:'Mechanism Orientation',
-    right:'Narrative Orientation',
-    shortLeft:'M',
-    shortRight:'N',
+    label:'机制导向 vs 叙事导向',
+    left:'机制导向',
+    right:'叙事导向',
+    leftEn:'Mechanism',
+    rightEn:'Narrative',
+    shortLeft:'机',
+    shortRight:'叙',
+    codeLeft:'M',
+    codeRight:'N',
     color:'#3b82f6',
-    descLeft:'You tend to ask first about variables, structure, and causal chains. You assume the world has underlying mechanisms that can be broken down and examined.',
-    descRight:'You tend to look first at who is telling the story, who is being obscured, and how narration itself shapes the problem.'
+    descLeft:'你更习惯追问变量、结构和因果链条，默认世界背后有可拆解的运作机制。',
+    descRight:'你更习惯先看是谁在讲故事、谁被遮蔽、叙述如何塑造了问题本身。'
   },
   sr: {
-    label:'System Optimization vs Rule Adjudication',
-    left:'System Optimization',
-    right:'Rule Adjudication',
-    shortLeft:'S',
-    shortRight:'R',
+    label:'系统优化 vs 规则裁决',
+    left:'系统优化',
+    right:'规则裁决',
+    leftEn:'System',
+    rightEn:'Rule',
+    shortLeft:'系',
+    shortRight:'规',
+    codeLeft:'S',
+    codeRight:'R',
     color:'#e8623a',
-    descLeft:'You focus more on process, interfaces, feedback, and overall efficiency, treating problems as system-tuning tasks.',
-    descRight:'You focus more on boundaries, responsibility, procedure, and conditions of application, preferring to clarify rules before discussing outcomes.'
+    descLeft:'你更关注流程、接口、反馈和整体效率，倾向把问题当成系统调优。',
+    descRight:'你更关注边界、责任、程序与适用条件，倾向先把规则说清楚再谈结果。'
   },
   iv: {
-    label:'Incentive Analysis vs Value Judgment',
-    left:'Incentive Analysis',
-    right:'Value Judgment',
-    shortLeft:'I',
-    shortRight:'V',
+    label:'激励分析 vs 价值判断',
+    left:'激励分析',
+    right:'价值判断',
+    leftEn:'Incentive',
+    rightEn:'Value',
+    shortLeft:'激',
+    shortRight:'义',
+    codeLeft:'I',
+    codeRight:'V',
     color:'#059669',
-    descLeft:'You first ask why people behave this way, who benefits, and how institutions shape actions.',
-    descRight:'You first ask whether something is proper, dignified, or aligned with the value hierarchy you endorse.'
+    descLeft:'你会先看人为什么这样做，谁因此获益，制度如何塑造行为。',
+    descRight:'你会先看这件事是否正当、是否体面、是否符合你认可的价值排序。'
   },
-  fc: {
-    label:'Falsification Modeling vs Contextual Interpretation',
-    left:'Falsification Modeling',
-    right:'Contextual Interpretation',
-    shortLeft:'F',
-    shortRight:'C',
+  ec: {
+    label:'证据导向 vs 情境导向',
+    left:'证据导向',
+    right:'情境导向',
+    leftEn:'Evidence',
+    rightEn:'Context',
+    shortLeft:'证',
+    shortRight:'境',
+    codeLeft:'E',
+    codeRight:'C',
     color:'#7c3aed',
-    descLeft:'You prefer abstract models, testable propositions, and evidence with clear boundaries.',
-    descRight:'You prefer to preserve context, texture, and complexity, and you resist flattening reality into a single model too quickly.'
+    descLeft:'你更在意证据是否可靠、说法是否站得住，以及结论能不能被检验。',
+    descRight:'你更在意处境、语境和经验质地，不轻易把复杂现实压成一个统一答案。'
   }
 };
 
 const PROFILE_ARCHETYPES = {
   science: {
-    name:'Science Archetype',
+    name:'理科原型',
     en:'Natural Science',
     color:'#3b82f6',
-    desc:'You are inclined to treat the world as something that can be modeled and tested. Mechanisms, variables, error margins, and evidential boundaries enter your view before posture or rhetoric.'
+    desc:'你更像把世界当作可被建模和检验的对象。机制、变量、误差和证据边界，会比立场和姿态更先进入你的视野。'
   },
   engineering: {
-    name:'Engineering Archetype',
+    name:'工科原型',
     en:'Engineering',
     color:'#e8623a',
-    desc:'You naturally break real-world problems into systems, modules, and constraints. You care about where things are stuck, how to fix them, and how to make the whole run more reliably.'
+    desc:'你天然会把现实问题拆成系统、模块和约束条件。你关心的是哪里卡住了、怎么修、怎么让整体跑得更稳。'
   },
   economics: {
-    name:'Economics / Management Archetype',
+    name:'经管原型',
     en:'Economics / Management',
     color:'#059669',
-    desc:'You understand the world through incentives, games, and resource allocation. Rather than starting with moral judgments, you are quicker to ask how the structure induced those choices.'
+    desc:'你会从激励、博弈和资源配置理解世界。相比讨论善恶，你更容易先看结构如何诱导人做出那些选择。'
   },
   law: {
-    name:'Legal Archetype',
+    name:'法学原型',
     en:'Law / Political Science',
     color:'#7c3aed',
-    desc:'You instinctively ask about boundaries, responsibility, procedure, and legitimacy. For you, many disputes are not mainly about efficiency, but about who has authority and how rules apply.'
+    desc:'你会本能地追问边界、责任、程序和正当性。对你来说，很多争议不是效率问题，而是谁有权决定、规则如何适用。'
   },
   humanities: {
-    name:'Humanities Archetype',
+    name:'文史哲原型',
     en:'Humanities',
     color:'#db2777',
-    desc:'You notice narrative, context, historical layers, and value tensions first. You do not rush to flatten the world, and you care about what mechanism-centered descriptions leave out.'
+    desc:'你会优先看到叙事、语境、历史层次与价值张力。你不急着把世界压平，而更关心那些被机制叙述遗漏的部分。'
   }
 };
 
+// ─────────────────────────────────────────────
+//  题库 v2 — 日常场景，短题干，低门槛
+// ─────────────────────────────────────────────
 const QUESTIONS = [
   {
-    "type": "choice",
-    "dim": "Mechanism Orientation vs Narrative Orientation",
-    "text": "When many people suddenly resign from a company, your first reaction is more like—",
-    "options": [
-      {
-        "text": "First investigate what went wrong in the institution and workflow.",
-        "dimDelta": {
-          "mn": 2
-        },
-        "spec": {
-          "engineering": 1,
-          "economics": 1
-        }
-      },
-      {
-        "text": "First check which time periods and departments saw clustered resignations.",
-        "dimDelta": {
-          "mn": 1
-        },
-        "spec": {
-          "science": 1,
-          "economics": 1
-        }
-      },
-      {
-        "text": "First listen to what employees are actually complaining about in private.",
-        "dimDelta": {
-          "mn": -1
-        },
-        "spec": {
-          "humanities": 1
-        }
-      },
-      {
-        "text": "First ask who gets to define whether this even counts as a \"wave of resignations.\"",
-        "dimDelta": {
-          "mn": -2
-        },
-        "spec": {
-          "humanities": 2
-        }
-      }
-    ]
-  },
-  {
-    "type": "choice",
-    "dim": "Mechanism Orientation vs Narrative Orientation",
-    "text": "When you see an online controversy escalating, what do you want to clarify first—",
-    "options": [
-      {
-        "text": "How the platform and transmission mechanisms amplified it.",
-        "dimDelta": {
-          "mn": 2
-        },
-        "spec": {
-          "engineering": 1,
-          "economics": 1
-        }
-      },
-      {
-        "text": "At which node the information first became distorted.",
-        "dimDelta": {
-          "mn": 1
-        },
-        "spec": {
-          "science": 1,
-          "engineering": 1
-        }
-      },
-      {
-        "text": "How different people are telling the same event in different ways.",
-        "dimDelta": {
-          "mn": -1
-        },
-        "spec": {
-          "law": 1,
-          "humanities": 1
-        }
-      },
-      {
-        "text": "Who has the strongest ability to turn their version into \"common sense.\"",
-        "dimDelta": {
-          "mn": -2
-        },
-        "spec": {
-          "humanities": 2
-        }
-      }
-    ]
-  },
-  {
     "type": "stance",
-    "dim": "Mechanism Orientation vs Narrative Orientation",
-    "text": "When facing a long-unsolved problem, I prefer first to break down how it operates, rather than first looking at how different people describe it.",
+    "dim": "机制导向 vs 叙事导向",
+    "text": "一件事反复出问题时，我会先想它到底是怎么一步步变成这样的。",
     "stances": {
       "support": {
         "dimDelta": {
@@ -440,114 +374,130 @@ const QUESTIONS = [
   },
   {
     "type": "stance",
-    "dim": "Mechanism Orientation vs Narrative Orientation",
-    "text": "When I see a controversial event, I usually care more about how different people narrate it than about tracing the mechanism chain first.",
+    "dim": "机制导向 vs 叙事导向",
+    "text": "同一件事换个人来讲时，我很在意它的意思是不是已经变了。",
     "stances": {
       "support": {
         "dimDelta": {
           "mn": -2
         },
         "spec": {
-          "law": 1,
-          "humanities": 2
-        }
-      },
-      "neutral": {
-        "dimDelta": {
-          "mn": 0
-        },
-        "spec": {}
-      },
-      "oppose": {
-        "dimDelta": {
-          "mn": 2
-        },
-        "spec": {
-          "science": 1,
-          "engineering": 1
-        }
-      }
-    }
-  },
-  {
-    "type": "stance",
-    "dim": "Mechanism Orientation vs Narrative Orientation",
-    "text": "I trust \"finding the key link\" more than first debating whose account is more dominant.",
-    "stances": {
-      "support": {
-        "dimDelta": {
-          "mn": 2
-        },
-        "spec": {
-          "engineering": 1,
-          "economics": 1
-        }
-      },
-      "neutral": {
-        "dimDelta": {
-          "mn": 0
-        },
-        "spec": {}
-      },
-      "oppose": {
-        "dimDelta": {
-          "mn": -2
-        },
-        "spec": {
-          "humanities": 2
-        }
-      }
-    }
-  },
-  {
-    "type": "choice",
-    "dim": "System Optimization vs Rule Adjudication",
-    "text": "After a new app feature launches, user numbers clearly drop. You would first—",
-    "options": [
-      {
-        "text": "Find out exactly at which step users are dropping off.",
-        "dimDelta": {
-          "sr": 2
-        },
-        "spec": {
-          "engineering": 2
-        }
-      },
-      {
-        "text": "Smooth the path first and remove the annoying parts.",
-        "dimDelta": {
-          "sr": 1
-        },
-        "spec": {
-          "engineering": 1,
-          "economics": 1
-        }
-      },
-      {
-        "text": "Check whether boundaries are unclear in permissions, prompts, or default settings.",
-        "dimDelta": {
-          "sr": -1
-        },
-        "spec": {
+          "humanities": 2,
           "law": 1
         }
       },
-      {
-        "text": "Judge first whether this type of feature requires clearer boundaries and responsibilities.",
+      "neutral": {
         "dimDelta": {
-          "sr": -2
+          "mn": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "mn": 2
         },
         "spec": {
-          "law": 2,
-          "humanities": 1
+          "science": 1,
+          "engineering": 1
         }
       }
-    ]
+    }
   },
   {
     "type": "stance",
-    "dim": "System Optimization vs Rule Adjudication",
-    "text": "When a system has problems, I would rather optimize the process first than patch the rules first.",
+    "dim": "机制导向 vs 叙事导向",
+    "text": "遇到复杂的事，我会先找里面最关键的那个原因。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "mn": 2
+        },
+        "spec": {
+          "science": 1,
+          "engineering": 1
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "mn": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "mn": -2
+        },
+        "spec": {
+          "humanities": 1
+        }
+      }
+    }
+  },
+  {
+    "type": "stance",
+    "dim": "机制导向 vs 叙事导向",
+    "text": "讨论陷入僵局时，我会先确认大家说的是不是同一个意思。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "mn": -2
+        },
+        "spec": {
+          "humanities": 2,
+          "law": 1
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "mn": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "mn": 2
+        },
+        "spec": {
+          "engineering": 1,
+          "science": 1
+        }
+      }
+    }
+  },
+  {
+    "type": "stance",
+    "dim": "机制导向 vs 叙事导向",
+    "text": "听到一个说法时，我更容易先追问“它为什么会这样”，而不是“大家怎么看它”。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "mn": 2
+        },
+        "spec": {
+          "engineering": 1,
+          "economics": 1
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "mn": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "mn": -2
+        },
+        "spec": {
+          "humanities": 2
+        }
+      }
+    }
+  },
+  {
+    "type": "stance",
+    "dim": "系统优化 vs 规则裁决",
+    "text": "一件小事总是做不好时，我第一反应是把流程重新理顺。",
     "stances": {
       "support": {
         "dimDelta": {
@@ -575,8 +525,8 @@ const QUESTIONS = [
   },
   {
     "type": "stance",
-    "dim": "System Optimization vs Rule Adjudication",
-    "text": "No matter how complex something is, I still prefer first to clarify boundaries and responsibility, rather than first discussing efficiency improvements.",
+    "dim": "系统优化 vs 规则裁决",
+    "text": "事情搞砸时，我第一反应是先看这件事该谁负责。",
     "stances": {
       "support": {
         "dimDelta": {
@@ -597,15 +547,15 @@ const QUESTIONS = [
           "sr": 2
         },
         "spec": {
-          "engineering": 1
+          "engineering": 2
         }
       }
     }
   },
   {
     "type": "stance",
-    "dim": "System Optimization vs Rule Adjudication",
-    "text": "Rather than blocking loopholes one by one, I prefer changing the system so people naturally stop exploiting them.",
+    "dim": "系统优化 vs 规则裁决",
+    "text": "同样的问题老是反复出现，我宁愿重做流程，也不想一直靠提醒。",
     "stances": {
       "support": {
         "dimDelta": {
@@ -633,12 +583,40 @@ const QUESTIONS = [
     }
   },
   {
-    "type": "choice",
-    "dim": "System Optimization vs Rule Adjudication",
-    "text": "Shared bikes are being parked chaotically everywhere. You would rather first—",
-    "options": [
-      {
-        "text": "Design parking spots, dispatching, and feedback mechanisms more rationally.",
+    "type": "stance",
+    "dim": "系统优化 vs 规则裁决",
+    "text": "规则没写清楚时，我很难放心把事情往下推进。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "sr": -2
+        },
+        "spec": {
+          "law": 2
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "sr": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "sr": 2
+        },
+        "spec": {
+          "engineering": 1
+        }
+      }
+    }
+  },
+  {
+    "type": "stance",
+    "dim": "系统优化 vs 规则裁决",
+    "text": "一个流程老被人钻空子时，我更想直接把漏洞堵上。",
+    "stances": {
+      "support": {
         "dimDelta": {
           "sr": 2
         },
@@ -646,27 +624,13 @@ const QUESTIONS = [
           "engineering": 2
         }
       },
-      {
-        "text": "Use pricing and credit scores to steer users toward the right places.",
+      "neutral": {
         "dimDelta": {
-          "sr": 1
+          "sr": 0
         },
-        "spec": {
-          "engineering": 1,
-          "economics": 1
-        }
+        "spec": {}
       },
-      {
-        "text": "Clarify first where parking is allowed and who is responsible.",
-        "dimDelta": {
-          "sr": -1
-        },
-        "spec": {
-          "law": 2
-        }
-      },
-      {
-        "text": "Establish stable rules first, then talk about other optimizations.",
+      "oppose": {
         "dimDelta": {
           "sr": -2
         },
@@ -674,12 +638,12 @@ const QUESTIONS = [
           "law": 2
         }
       }
-    ]
+    }
   },
   {
     "type": "stance",
-    "dim": "Incentive Analysis vs Value Judgment",
-    "text": "When understanding something, I often first look at who it rewards and who it punishes, rather than first judging whether it is morally good.",
+    "dim": "激励分析 vs 价值判断",
+    "text": "听别人讲一件事时，我常会下意识想：最后是谁更占便宜。",
     "stances": {
       "support": {
         "dimDelta": {
@@ -707,8 +671,8 @@ const QUESTIONS = [
   },
   {
     "type": "stance",
-    "dim": "Incentive Analysis vs Value Judgment",
-    "text": "Even if something is effective, I still care more about whether it is right than whether it is useful.",
+    "dim": "激励分析 vs 价值判断",
+    "text": "一个办法就算更省事，只要我觉得不太对，我也会犹豫要不要用。",
     "stances": {
       "support": {
         "dimDelta": {
@@ -737,114 +701,85 @@ const QUESTIONS = [
   },
   {
     "type": "stance",
-    "dim": "Incentive Analysis vs Value Judgment",
-    "text": "In my view, the most important thing in institutional design is what behavior it ultimately pushes people toward, not how correct its slogan sounds.",
+    "dim": "激励分析 vs 价值判断",
+    "text": "看到有人走捷径获利时，我会先担心老实人以后会越来越吃亏。",
     "stances": {
       "support": {
         "dimDelta": {
           "iv": 2
         },
         "spec": {
-          "engineering": 1,
-          "economics": 2
-        }
-      },
-      "neutral": {
-        "dimDelta": {
-          "iv": 0
-        },
-        "spec": {}
-      },
-      "oppose": {
-        "dimDelta": {
-          "iv": -2
-        },
-        "spec": {
-          "humanities": 1
-        }
-      }
-    }
-  },
-  {
-    "type": "choice",
-    "dim": "Incentive Analysis vs Value Judgment",
-    "text": "A school uses large cash rewards to push students to win competitions. You are more inclined to—",
-    "options": [
-      {
-        "text": "First see where the rewards will direct students' time and energy.",
-        "dimDelta": {
-          "iv": 2
-        },
-        "spec": {
-          "economics": 2
-        }
-      },
-      {
-        "text": "First see whether this incentive setup makes truly important abilities get neglected.",
-        "dimDelta": {
-          "iv": 1
-        },
-        "spec": {
-          "engineering": 1,
-          "economics": 1
-        }
-      },
-      {
-        "text": "First see whether this fits your own understanding of what education should be.",
-        "dimDelta": {
-          "iv": -1
-        },
-        "spec": {
-          "humanities": 1
-        }
-      },
-      {
-        "text": "First ask what education ought to be driven by, rather than just looking at the reward effect.",
-        "dimDelta": {
-          "iv": -2
-        },
-        "spec": {
-          "humanities": 2
-        }
-      }
-    ]
-  },
-  {
-    "type": "choice",
-    "dim": "Incentive Analysis vs Value Judgment",
-    "text": "In an outpatient clinic, people often make appointments and then fail to show up. You would support first—",
-    "options": [
-      {
-        "text": "Charging a small no-show fee to correct the behavior first.",
-        "dimDelta": {
-          "iv": 2
-        },
-        "spec": {
-          "economics": 2
-        }
-      },
-      {
-        "text": "Separating different cases and then designing more detailed reminder methods.",
-        "dimDelta": {
-          "iv": 1
-        },
-        "spec": {
-          "economics": 1,
+          "economics": 2,
           "law": 1
         }
       },
-      {
-        "text": "First confirming whether the rule is fair enough to patients in different circumstances.",
+      "neutral": {
         "dimDelta": {
-          "iv": -1
+          "iv": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "iv": -2
         },
         "spec": {
-          "law": 1,
           "humanities": 1
         }
+      }
+    }
+  },
+  {
+    "type": "stance",
+    "dim": "激励分析 vs 价值判断",
+    "text": "一个办法再有效，只要它会让人越来越只盯结果，我就会警惕。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "iv": -2
+        },
+        "spec": {
+          "humanities": 2,
+          "law": 1
+        }
       },
-      {
-        "text": "First asking what should be preserved in medical settings besides efficiency.",
+      "neutral": {
+        "dimDelta": {
+          "iv": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "iv": 2
+        },
+        "spec": {
+          "economics": 1,
+          "engineering": 1
+        }
+      }
+    }
+  },
+  {
+    "type": "stance",
+    "dim": "激励分析 vs 价值判断",
+    "text": "一有奖励，我就会下意识想大家会不会开始只冲着奖励去。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "iv": 2
+        },
+        "spec": {
+          "economics": 2
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "iv": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
         "dimDelta": {
           "iv": -2
         },
@@ -852,16 +787,16 @@ const QUESTIONS = [
           "humanities": 2
         }
       }
-    ]
+    }
   },
   {
     "type": "stance",
-    "dim": "Falsification Modeling vs Contextual Interpretation",
-    "text": "When I see a conclusion, I first ask whether it can be verified or overturned, rather than first asking whether it fits concrete experience.",
+    "dim": "证据导向 vs 情境导向",
+    "text": "听到一个说法时，我常会先想：它是靠什么证明自己的？",
     "stances": {
       "support": {
         "dimDelta": {
-          "fc": 2
+          "ec": 2
         },
         "spec": {
           "science": 2
@@ -869,13 +804,13 @@ const QUESTIONS = [
       },
       "neutral": {
         "dimDelta": {
-          "fc": 0
+          "ec": 0
         },
         "spec": {}
       },
       "oppose": {
         "dimDelta": {
-          "fc": -2
+          "ec": -2
         },
         "spec": {
           "humanities": 1
@@ -885,12 +820,12 @@ const QUESTIONS = [
   },
   {
     "type": "stance",
-    "dim": "Falsification Modeling vs Contextual Interpretation",
-    "text": "Once many things are quantified, important information is often lost. To me that feels closer to reality than \"quantify first, discuss later.\"",
+    "dim": "证据导向 vs 情境导向",
+    "text": "很多事情一旦被量化打分，最重要的东西反而会看不见。",
     "stances": {
       "support": {
         "dimDelta": {
-          "fc": -2
+          "ec": -2
         },
         "spec": {
           "humanities": 2
@@ -898,13 +833,13 @@ const QUESTIONS = [
       },
       "neutral": {
         "dimDelta": {
-          "fc": 0
+          "ec": 0
         },
         "spec": {}
       },
       "oppose": {
         "dimDelta": {
-          "fc": 2
+          "ec": 2
         },
         "spec": {
           "science": 1,
@@ -915,12 +850,12 @@ const QUESTIONS = [
   },
   {
     "type": "stance",
-    "dim": "Falsification Modeling vs Contextual Interpretation",
-    "text": "Compared with individual stories, I trust recurring data patterns more than I trust feelings inside specific contexts.",
+    "dim": "证据导向 vs 情境导向",
+    "text": "比起一个特别打动人的例子，我更信反复出现的数据模式。",
     "stances": {
       "support": {
         "dimDelta": {
-          "fc": 2
+          "ec": 2
         },
         "spec": {
           "science": 2,
@@ -929,13 +864,13 @@ const QUESTIONS = [
       },
       "neutral": {
         "dimDelta": {
-          "fc": 0
+          "ec": 0
         },
         "spec": {}
       },
       "oppose": {
         "dimDelta": {
-          "fc": -2
+          "ec": -2
         },
         "spec": {
           "humanities": 1
@@ -944,100 +879,70 @@ const QUESTIONS = [
     }
   },
   {
-    "type": "choice",
-    "dim": "Falsification Modeling vs Contextual Interpretation",
-    "text": "A news story says, \"People who drink coffee every day live longer.\" Your first reaction is more like—",
-    "options": [
-      {
-        "text": "First look at how the study was done, then decide whether to believe it.",
+    "type": "stance",
+    "dim": "证据导向 vs 情境导向",
+    "text": "看到“研究说……”这样的结论时，我会先想这个研究靠不靠谱。",
+    "stances": {
+      "support": {
         "dimDelta": {
-          "fc": 2
+          "ec": 2
         },
         "spec": {
           "science": 2
         }
       },
-      {
-        "text": "Could some other key factor have been left out?",
+      "neutral": {
         "dimDelta": {
-          "fc": 1
+          "ec": 0
         },
-        "spec": {
-          "science": 1,
-          "economics": 1
-        }
+        "spec": {}
       },
-      {
-        "text": "Everyone lives differently. This kind of conclusion cuts across people too crudely.",
+      "oppose": {
         "dimDelta": {
-          "fc": -1
-        },
-        "spec": {
-          "humanities": 1
-        }
-      },
-      {
-        "text": "\"Live longer\" means different things in different contexts.",
-        "dimDelta": {
-          "fc": -2
+          "ec": -2
         },
         "spec": {
           "humanities": 2
         }
       }
-    ]
+    }
   },
   {
-    "type": "choice",
-    "dim": "Falsification Modeling vs Contextual Interpretation",
-    "text": "When reviewing a failed project, what kind of material do you trust most—",
-    "options": [
-      {
-        "text": "Timelines, data, and key decision points.",
+    "type": "stance",
+    "dim": "证据导向 vs 情境导向",
+    "text": "一段关系突然变远时，我不太相信一定能说清楚到底是哪一步开始变的。",
+    "stances": {
+      "support": {
         "dimDelta": {
-          "fc": 2
-        },
-        "spec": {
-          "science": 1,
-          "engineering": 1
-        }
-      },
-      {
-        "text": "Which judgments were later disproven by reality.",
-        "dimDelta": {
-          "fc": 1
-        },
-        "spec": {
-          "science": 1,
-          "engineering": 1
-        }
-      },
-      {
-        "text": "What situation the participants were in when they made those decisions.",
-        "dimDelta": {
-          "fc": -1
-        },
-        "spec": {
-          "humanities": 1
-        }
-      },
-      {
-        "text": "Many failures are caused by context and may not summarize into a stable model at all.",
-        "dimDelta": {
-          "fc": -2
+          "ec": -2
         },
         "spec": {
           "humanities": 2
         }
+      },
+      "neutral": {
+        "dimDelta": {
+          "ec": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "ec": 2
+        },
+        "spec": {
+          "science": 1,
+          "engineering": 1
+        }
       }
-    ]
+    }
   }
 ];
 
 let currentQ = 0;
 let allQuestions = [...QUESTIONS];
 const specScores = { science:0, engineering:0, economics:0, law:0, humanities:0 };
-const dimScores = { mn:0, sr:0, iv:0, fc:0 };
+const dimScores = { mn:0, sr:0, iv:0, ec:0 };
 const history = [];
 
 function addScore(target, delta) {
@@ -1068,8 +973,11 @@ function updateProgress() {
 }
 
 function syncLandingQuestionCount() {
-  const el = document.getElementById('landing-question-count');
-  if (el) el.textContent = String(QUESTIONS.length);
+  const count = String(QUESTIONS.length);
+  const statEl = document.getElementById('landing-question-count');
+  const textEl = document.getElementById('landing-question-count-text');
+  if (statEl) statEl.textContent = count;
+  if (textEl) textEl.textContent = count;
 }
 
 function shuffleArr(arr) {
@@ -1146,10 +1054,10 @@ function renderQuestion() {
   updateProgress();
   const badge = document.getElementById('q-type-badge');
   if (question.type === 'choice') {
-    badge.textContent = 'Scenario';
+    badge.textContent = '情境题';
     badge.className = 'q-type-badge badge-choice';
   } else {
-    badge.textContent = 'Stance';
+    badge.textContent = '立场题';
     badge.className = 'q-type-badge badge-stance';
   }
   document.getElementById('q-text').textContent = question.text;
@@ -1178,9 +1086,9 @@ function renderQuestion() {
     const wrap = document.createElement('div');
     wrap.className = 'stance-container';
     [
-      { key:'oppose', label:'Disagree', icon:'✕', cls:'stance-oppose', sel:'sel-oppose', sub:'This does not sound like me' },
-      { key:'neutral', label:'Neutral', icon:'−', cls:'stance-neutral', sel:'sel-neutral', sub:'Hard to say, depends on the case' },
-      { key:'support', label:'Agree', icon:'✓', cls:'stance-support', sel:'sel-support', sub:'This sounds more like me' }
+      { key:'oppose', label:'不同意', icon:'✕', cls:'stance-oppose', sel:'sel-oppose', sub:'不太像我' },
+      { key:'neutral', label:'不确定', icon:'−', cls:'stance-neutral', sel:'sel-neutral', sub:'看情况' },
+      { key:'support', label:'同意', icon:'✓', cls:'stance-support', sel:'sel-support', sub:'比较像我' }
     ].forEach(({ key, label, icon, cls, sel, sub }) => {
       const stance = question.stances[key];
       const btn = document.createElement('button');
@@ -1231,22 +1139,27 @@ function showResults() {
 
   const summaries = Object.keys(DIMENSIONS).map(getDimensionSummary);
   const profileCode = summaries.map(item => item.score >= 0 ? item.meta.shortLeft : item.meta.shortRight).join('');
-  const profileLine = summaries.map(item => `${item.score >= 0 ? item.meta.shortLeft : item.meta.shortRight} = ${item.leaning}`).join(' / ');
+  const profileCodeEn = summaries.map(item => item.score >= 0 ? item.meta.codeLeft : item.meta.codeRight).join('');
+  const profileLegend = summaries.map(item => {
+    const code = item.score >= 0 ? item.meta.codeLeft : item.meta.codeRight;
+    const termEn = item.score >= 0 ? item.meta.leftEn : item.meta.rightEn;
+    return `${code} = ${termEn}（${item.leaning}）`;
+  }).join(' / ');
 
   const profileCard = document.getElementById('edu-card');
   profileCard.style.borderColor = '#111827';
-  profileCard.innerHTML = `<div class="rc-label">Cognitive Code</div>
+  profileCard.innerHTML = `<div class="rc-label">认知编码</div>
     <span class="score-pill" style="background:#111827">4D Profile</span>
-    <div class="rc-value" style="color:#111827">${profileCode}-type</div>
-    <div class="rc-en">${profileLine}</div>
-    <div class="rc-desc">Your dominant tendencies across the four dimensions are: ${summaries.map(item => item.leaning).join(', ')}. This does not test factual correctness. It tests which method you instinctively use to understand complexity.</div>`;
+    <div class="rc-value" style="color:#111827">${profileCodeEn} 型</div>
+    <div class="rc-en">${profileCode}型 · ${profileLegend}</div>
+    <div class="rc-desc">${profileCodeEn} 型表示：${profileLegend}。你在四个维度上的主导偏向分别是：${summaries.map(item => item.leaning).join('、')}。这里测的不是知识对错，而是你更习惯用哪套方法理解复杂问题。</div>`;
 
   const normed = computeNormedSpec(allQuestions);
   const topSpec = Object.entries(normed).sort((a, b) => b[1] - a[1])[0][0];
   const archetype = PROFILE_ARCHETYPES[topSpec];
   const specCard = document.getElementById('spec-card');
   specCard.style.borderColor = archetype.color;
-  specCard.innerHTML = `<div class="rc-label">Inferred Disciplinary Archetype</div>
+  specCard.innerHTML = `<div class="rc-label">推断专业原型</div>
     <span class="score-pill" style="background:${archetype.color}">${archetype.en}</span>
     <div class="rc-value" style="color:${archetype.color}">${archetype.name}</div>
     <div class="rc-en">${archetype.en}</div>
@@ -1271,17 +1184,20 @@ function showResults() {
   const dimensionList = document.getElementById('dimension-list');
   dimensionList.innerHTML = '';
   summaries.forEach(item => {
+    const code = item.score >= 0 ? item.meta.codeLeft : item.meta.codeRight;
+    const term = item.score >= 0 ? item.meta.left : item.meta.right;
+    const termEn = item.score >= 0 ? item.meta.leftEn : item.meta.rightEn;
     const row = document.createElement('div');
     row.className = 'tf-result-row';
-    row.innerHTML = `<span class="tf-mark" style="background:${item.meta.color}">${item.score >= 0 ? item.meta.shortLeft : item.meta.shortRight}</span>
+    row.innerHTML = `<span class="tf-mark" style="background:${item.meta.color}">${code}</span>
       <div>
-        <div style="font-weight:500;margin-bottom:3px;font-size:12px;color:var(--text-primary)">${item.meta.label} · ${item.leaning} · Leaning ${item.strength}%</div>
+        <div style="font-weight:500;margin-bottom:3px;font-size:12px;color:var(--text-primary)">${code} = ${termEn}（${term}） · ${item.meta.label} · 倾向度 ${item.strength}%</div>
         <div>${item.score >= 0 ? item.meta.descLeft : item.meta.descRight}</div>
       </div>`;
     dimensionList.appendChild(row);
   });
 
-  document.getElementById('result-quote').textContent = `"${profileCode}-type" is not a standard answer. It is simply the tool that feels most natural in your hand when looking at the world.`;
+  document.getElementById('result-quote').textContent = `"${profileCodeEn} 型"不是标准答案，只是你看世界时最顺手的那套认知工具。`;
   showScreen('screen-result');
   requestAnimationFrame(() => requestAnimationFrame(() => {
     document.querySelectorAll('.spec-bar-fill').forEach(bar => {

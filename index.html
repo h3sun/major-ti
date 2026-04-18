@@ -256,7 +256,7 @@
     </p>
     <p class="landing-note">没有正确答案，只有更稳定的偏好。</p>
     <div class="landing-stats">
-      <div class="stat-item"><span class="stat-num">20</span><span class="stat-label">道题目</span></div>
+      <div class="stat-item"><span class="stat-num" id="landing-question-count">20</span><span class="stat-label">道题目</span></div>
       <div class="stat-item"><span class="stat-num">4</span><span class="stat-label">认知维度</span></div>
       <div class="stat-item"><span class="stat-num">5</span><span class="stat-label">专业原型</span></div>
     </div>
@@ -382,211 +382,718 @@ const PROFILE_ARCHETYPES = {
 
 const QUESTIONS = [
   {
-    type:'choice',
-    dim:'机制导向 vs 叙事导向',
-    text:'一家公司很多人突然离职，你第一反应更像——',
-    options:[
-      { text:'先查制度和流程哪里出了问题。', dimDelta:{ mn:2 }, spec:{ engineering:1, economics:1 } },
-      { text:'先看离职集中在哪些时间点和部门。', dimDelta:{ mn:1 }, spec:{ science:1, economics:1 } },
-      { text:'先听员工私下到底在抱怨什么。', dimDelta:{ mn:-1 }, spec:{ humanities:1 } },
-      { text:'先想是谁在定义这是不是“离职潮”。', dimDelta:{ mn:-2 }, spec:{ humanities:2 } }
+    "type": "choice",
+    "dim": "机制导向 vs 叙事导向",
+    "text": "一家公司很多人突然离职，你第一反应更像——",
+    "options": [
+      {
+        "text": "先查制度和流程哪里出了问题。",
+        "dimDelta": {
+          "mn": 2
+        },
+        "spec": {
+          "engineering": 1,
+          "economics": 1
+        }
+      },
+      {
+        "text": "先看离职集中在哪些时间点和部门。",
+        "dimDelta": {
+          "mn": 1
+        },
+        "spec": {
+          "science": 1,
+          "economics": 1
+        }
+      },
+      {
+        "text": "先听员工私下到底在抱怨什么。",
+        "dimDelta": {
+          "mn": -1
+        },
+        "spec": {
+          "humanities": 1
+        }
+      },
+      {
+        "text": "先想是谁在定义这是不是“离职潮”。",
+        "dimDelta": {
+          "mn": -2
+        },
+        "spec": {
+          "humanities": 2
+        }
+      }
     ]
   },
   {
-    type:'choice',
-    dim:'机制导向 vs 叙事导向',
-    text:'看到一场网上争议越吵越大，你更想先搞清楚——',
-    options:[
-      { text:'平台和传播机制是怎么把它推高的。', dimDelta:{ mn:2 }, spec:{ engineering:1, economics:1 } },
-      { text:'信息是从哪个节点开始走样的。', dimDelta:{ mn:1 }, spec:{ science:1, engineering:1 } },
-      { text:'不同人在用什么方式讲同一件事。', dimDelta:{ mn:-1 }, spec:{ humanities:1, law:1 } },
-      { text:'谁更有能力把自己的版本说成“常识”。', dimDelta:{ mn:-2 }, spec:{ humanities:2 } }
+    "type": "choice",
+    "dim": "机制导向 vs 叙事导向",
+    "text": "看到一场网上争议越吵越大，你更想先搞清楚——",
+    "options": [
+      {
+        "text": "平台和传播机制是怎么把它推高的。",
+        "dimDelta": {
+          "mn": 2
+        },
+        "spec": {
+          "engineering": 1,
+          "economics": 1
+        }
+      },
+      {
+        "text": "信息是从哪个节点开始走样的。",
+        "dimDelta": {
+          "mn": 1
+        },
+        "spec": {
+          "science": 1,
+          "engineering": 1
+        }
+      },
+      {
+        "text": "不同人在用什么方式讲同一件事。",
+        "dimDelta": {
+          "mn": -1
+        },
+        "spec": {
+          "law": 1,
+          "humanities": 1
+        }
+      },
+      {
+        "text": "谁更有能力把自己的版本说成“常识”。",
+        "dimDelta": {
+          "mn": -2
+        },
+        "spec": {
+          "humanities": 2
+        }
+      }
     ]
   },
   {
-    type:'stance',
-    dim:'机制导向 vs 叙事导向',
-    text:'遇到一个长期解决不掉的问题时，我更喜欢先拆它是怎么运作的，而不是先看大家各自怎么讲它。',
-    stances:{
-      support:{ dimDelta:{ mn:2 }, spec:{ science:1, engineering:1 } },
-      neutral:{ dimDelta:{ mn:0 }, spec:{} },
-      oppose:{ dimDelta:{ mn:-2 }, spec:{ humanities:1 } }
+    "type": "stance",
+    "dim": "机制导向 vs 叙事导向",
+    "text": "遇到一个长期解决不掉的问题时，我更喜欢先拆它是怎么运作的，而不是先看大家各自怎么讲它。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "mn": 2
+        },
+        "spec": {
+          "science": 1,
+          "engineering": 1
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "mn": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "mn": -2
+        },
+        "spec": {
+          "humanities": 1
+        }
+      }
     }
   },
   {
-    type:'stance',
-    dim:'机制导向 vs 叙事导向',
-    text:'看见争议事件时，我通常更在意不同的人是怎么讲述这件事的，而不是先追机制链条。',
-    stances:{
-      support:{ dimDelta:{ mn:-2 }, spec:{ humanities:2, law:1 } },
-      neutral:{ dimDelta:{ mn:0 }, spec:{} },
-      oppose:{ dimDelta:{ mn:2 }, spec:{ science:1, engineering:1 } }
+    "type": "stance",
+    "dim": "机制导向 vs 叙事导向",
+    "text": "看见争议事件时，我通常更在意不同的人是怎么讲述这件事的，而不是先追机制链条。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "mn": -2
+        },
+        "spec": {
+          "law": 1,
+          "humanities": 2
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "mn": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "mn": 2
+        },
+        "spec": {
+          "science": 1,
+          "engineering": 1
+        }
+      }
     }
   },
   {
-    type:'stance',
-    dim:'机制导向 vs 叙事导向',
-    text:'我更相信“找到关键环节”，而不是先讨论谁的说法更占上风。',
-    stances:{
-      support:{ dimDelta:{ mn:2 }, spec:{ engineering:1, economics:1 } },
-      neutral:{ dimDelta:{ mn:0 }, spec:{} },
-      oppose:{ dimDelta:{ mn:-2 }, spec:{ humanities:2 } }
+    "type": "stance",
+    "dim": "机制导向 vs 叙事导向",
+    "text": "我更相信“找到关键环节”，而不是先讨论谁的说法更占上风。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "mn": 2
+        },
+        "spec": {
+          "engineering": 1,
+          "economics": 1
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "mn": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "mn": -2
+        },
+        "spec": {
+          "humanities": 2
+        }
+      }
     }
   },
   {
-    type:'choice',
-    dim:'系统优化 vs 规则裁决',
-    text:'一个 App 新功能上线后，用户明显变少了，你会先——',
-    options:[
-      { text:'找出用户到底是在哪一步流失的。', dimDelta:{ sr:2 }, spec:{ engineering:2 } },
-      { text:'先把路径改顺，把麻烦的地方减掉。', dimDelta:{ sr:1 }, spec:{ engineering:1, economics:1 } },
-      { text:'检查它在授权、提示和默认设置上是不是边界不清。', dimDelta:{ sr:-1 }, spec:{ law:1 } },
-      { text:'先判断这类功能在边界和责任上是否需要先说清楚。', dimDelta:{ sr:-2 }, spec:{ law:2, humanities:1 } }
+    "type": "choice",
+    "dim": "系统优化 vs 规则裁决",
+    "text": "一个 App 新功能上线后，用户明显变少了，你会先——",
+    "options": [
+      {
+        "text": "找出用户到底是在哪一步流失的。",
+        "dimDelta": {
+          "sr": 2
+        },
+        "spec": {
+          "engineering": 2
+        }
+      },
+      {
+        "text": "先把路径改顺，把麻烦的地方减掉。",
+        "dimDelta": {
+          "sr": 1
+        },
+        "spec": {
+          "engineering": 1,
+          "economics": 1
+        }
+      },
+      {
+        "text": "检查它在授权、提示和默认设置上是不是边界不清。",
+        "dimDelta": {
+          "sr": -1
+        },
+        "spec": {
+          "law": 1
+        }
+      },
+      {
+        "text": "先判断这类功能在边界和责任上是否需要先说清楚。",
+        "dimDelta": {
+          "sr": -2
+        },
+        "spec": {
+          "law": 2,
+          "humanities": 1
+        }
+      }
     ]
   },
   {
-    type:'stance',
-    dim:'系统优化 vs 规则裁决',
-    text:'系统出问题时，我更想先优化流程，而不是先补规则。',
-    stances:{
-      support:{ dimDelta:{ sr:2 }, spec:{ engineering:2 } },
-      neutral:{ dimDelta:{ sr:0 }, spec:{} },
-      oppose:{ dimDelta:{ sr:-2 }, spec:{ law:2 } }
+    "type": "stance",
+    "dim": "系统优化 vs 规则裁决",
+    "text": "系统出问题时，我更想先优化流程，而不是先补规则。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "sr": 2
+        },
+        "spec": {
+          "engineering": 2
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "sr": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "sr": -2
+        },
+        "spec": {
+          "law": 2
+        }
+      }
     }
   },
   {
-    type:'stance',
-    dim:'系统优化 vs 规则裁决',
-    text:'再复杂的事情，我也更想先把边界和责任说清楚，而不是先讨论怎么提效。',
-    stances:{
-      support:{ dimDelta:{ sr:-2 }, spec:{ law:2 } },
-      neutral:{ dimDelta:{ sr:0 }, spec:{} },
-      oppose:{ dimDelta:{ sr:2 }, spec:{ engineering:1 } }
+    "type": "stance",
+    "dim": "系统优化 vs 规则裁决",
+    "text": "再复杂的事情，我也更想先把边界和责任说清楚，而不是先讨论怎么提效。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "sr": -2
+        },
+        "spec": {
+          "law": 2
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "sr": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "sr": 2
+        },
+        "spec": {
+          "engineering": 1
+        }
+      }
     }
   },
   {
-    type:'stance',
-    dim:'系统优化 vs 规则裁决',
-    text:'与其堵漏洞，我更倾向于改系统，让人自然不去钻漏洞，而不是一条条加限制。',
-    stances:{
-      support:{ dimDelta:{ sr:2 }, spec:{ engineering:2, economics:1 } },
-      neutral:{ dimDelta:{ sr:0 }, spec:{} },
-      oppose:{ dimDelta:{ sr:-2 }, spec:{ law:1 } }
+    "type": "stance",
+    "dim": "系统优化 vs 规则裁决",
+    "text": "与其堵漏洞，我更倾向于改系统，让人自然不去钻漏洞，而不是一条条加限制。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "sr": 2
+        },
+        "spec": {
+          "engineering": 2,
+          "economics": 1
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "sr": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "sr": -2
+        },
+        "spec": {
+          "law": 1
+        }
+      }
     }
   },
   {
-    type:'choice',
-    dim:'系统优化 vs 规则裁决',
-    text:'共享单车到处乱停，你更赞成先——',
-    options:[
-      { text:'把停车点、调度和反馈机制设计得更合理。', dimDelta:{ sr:2 }, spec:{ engineering:2 } },
-      { text:'用价格和信用分把用户往正确地方引导。', dimDelta:{ sr:1 }, spec:{ economics:1, engineering:1 } },
-      { text:'先把哪里能停、谁负责说清楚。', dimDelta:{ sr:-1 }, spec:{ law:2 } },
-      { text:'先有稳定规则，再谈别的优化。', dimDelta:{ sr:-2 }, spec:{ law:2 } }
+    "type": "choice",
+    "dim": "系统优化 vs 规则裁决",
+    "text": "共享单车到处乱停，你更赞成先——",
+    "options": [
+      {
+        "text": "把停车点、调度和反馈机制设计得更合理。",
+        "dimDelta": {
+          "sr": 2
+        },
+        "spec": {
+          "engineering": 2
+        }
+      },
+      {
+        "text": "用价格和信用分把用户往正确地方引导。",
+        "dimDelta": {
+          "sr": 1
+        },
+        "spec": {
+          "engineering": 1,
+          "economics": 1
+        }
+      },
+      {
+        "text": "先把哪里能停、谁负责说清楚。",
+        "dimDelta": {
+          "sr": -1
+        },
+        "spec": {
+          "law": 2
+        }
+      },
+      {
+        "text": "先有稳定规则，再谈别的优化。",
+        "dimDelta": {
+          "sr": -2
+        },
+        "spec": {
+          "law": 2
+        }
+      }
     ]
   },
   {
-    type:'stance',
-    dim:'激励分析 vs 价值判断',
-    text:'理解一件事时，我常常先看它在鼓励谁、惩罚谁，而不是先判断它在道德上好不好。',
-    stances:{
-      support:{ dimDelta:{ iv:2 }, spec:{ economics:2 } },
-      neutral:{ dimDelta:{ iv:0 }, spec:{} },
-      oppose:{ dimDelta:{ iv:-2 }, spec:{ humanities:1 } }
+    "type": "stance",
+    "dim": "激励分析 vs 价值判断",
+    "text": "理解一件事时，我常常先看它在鼓励谁、惩罚谁，而不是先判断它在道德上好不好。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "iv": 2
+        },
+        "spec": {
+          "economics": 2
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "iv": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "iv": -2
+        },
+        "spec": {
+          "humanities": 1
+        }
+      }
     }
   },
   {
-    type:'stance',
-    dim:'激励分析 vs 价值判断',
-    text:'有些事情即使有效，我也更在意它对不对，而不是它有没有用。',
-    stances:{
-      support:{ dimDelta:{ iv:-2 }, spec:{ humanities:2, law:1 } },
-      neutral:{ dimDelta:{ iv:0 }, spec:{} },
-      oppose:{ dimDelta:{ iv:2 }, spec:{ economics:1 } }
+    "type": "stance",
+    "dim": "激励分析 vs 价值判断",
+    "text": "有些事情即使有效，我也更在意它对不对，而不是它有没有用。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "iv": -2
+        },
+        "spec": {
+          "law": 1,
+          "humanities": 2
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "iv": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "iv": 2
+        },
+        "spec": {
+          "economics": 1
+        }
+      }
     }
   },
   {
-    type:'stance',
-    dim:'激励分析 vs 价值判断',
-    text:'制度设计最重要的，在我看来是看它最终会把人推向什么行为，而不是它口号上看起来多正确。',
-    stances:{
-      support:{ dimDelta:{ iv:2 }, spec:{ economics:2, engineering:1 } },
-      neutral:{ dimDelta:{ iv:0 }, spec:{} },
-      oppose:{ dimDelta:{ iv:-2 }, spec:{ humanities:1 } }
+    "type": "stance",
+    "dim": "激励分析 vs 价值判断",
+    "text": "制度设计最重要的，在我看来是看它最终会把人推向什么行为，而不是它口号上看起来多正确。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "iv": 2
+        },
+        "spec": {
+          "engineering": 1,
+          "economics": 2
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "iv": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "iv": -2
+        },
+        "spec": {
+          "humanities": 1
+        }
+      }
     }
   },
   {
-    type:'choice',
-    dim:'激励分析 vs 价值判断',
-    text:'学校用高奖金刺激学生拿竞赛奖，你更偏向——',
-    options:[
-      { text:'先看奖金会把学生的时间和精力引向哪里。', dimDelta:{ iv:2 }, spec:{ economics:2 } },
-      { text:'先看这套激励会不会让真正重要的能力被忽略。', dimDelta:{ iv:1 }, spec:{ economics:1, engineering:1 } },
-      { text:'先看这种做法是否符合你心里对教育的理解。', dimDelta:{ iv:-1 }, spec:{ humanities:1 } },
-      { text:'先想教育更应该靠什么来驱动，而不只是看奖励效果。', dimDelta:{ iv:-2 }, spec:{ humanities:2 } }
+    "type": "choice",
+    "dim": "激励分析 vs 价值判断",
+    "text": "学校用高奖金刺激学生拿竞赛奖，你更偏向——",
+    "options": [
+      {
+        "text": "先看奖金会把学生的时间和精力引向哪里。",
+        "dimDelta": {
+          "iv": 2
+        },
+        "spec": {
+          "economics": 2
+        }
+      },
+      {
+        "text": "先看这套激励会不会让真正重要的能力被忽略。",
+        "dimDelta": {
+          "iv": 1
+        },
+        "spec": {
+          "engineering": 1,
+          "economics": 1
+        }
+      },
+      {
+        "text": "先看这种做法是否符合你心里对教育的理解。",
+        "dimDelta": {
+          "iv": -1
+        },
+        "spec": {
+          "humanities": 1
+        }
+      },
+      {
+        "text": "先想教育更应该靠什么来驱动，而不只是看奖励效果。",
+        "dimDelta": {
+          "iv": -2
+        },
+        "spec": {
+          "humanities": 2
+        }
+      }
     ]
   },
   {
-    type:'choice',
-    dim:'激励分析 vs 价值判断',
-    text:'门诊经常有人预约了又不来，你更支持先——',
-    options:[
-      { text:'收点违约金，先把行为改过来。', dimDelta:{ iv:2 }, spec:{ economics:2 } },
-      { text:'不同情况分开处理，再设计更细的提醒办法。', dimDelta:{ iv:1 }, spec:{ economics:1, law:1 } },
-      { text:'先确认规则对不同处境的患者是否足够公平。', dimDelta:{ iv:-1 }, spec:{ law:1, humanities:1 } },
-      { text:'先想医疗场景里除了效率，还应优先保留什么。', dimDelta:{ iv:-2 }, spec:{ humanities:2 } }
+    "type": "choice",
+    "dim": "激励分析 vs 价值判断",
+    "text": "门诊经常有人预约了又不来，你更支持先——",
+    "options": [
+      {
+        "text": "收点违约金，先把行为改过来。",
+        "dimDelta": {
+          "iv": 2
+        },
+        "spec": {
+          "economics": 2
+        }
+      },
+      {
+        "text": "不同情况分开处理，再设计更细的提醒办法。",
+        "dimDelta": {
+          "iv": 1
+        },
+        "spec": {
+          "economics": 1,
+          "law": 1
+        }
+      },
+      {
+        "text": "先确认规则对不同处境的患者是否足够公平。",
+        "dimDelta": {
+          "iv": -1
+        },
+        "spec": {
+          "law": 1,
+          "humanities": 1
+        }
+      },
+      {
+        "text": "先想医疗场景里除了效率，还应优先保留什么。",
+        "dimDelta": {
+          "iv": -2
+        },
+        "spec": {
+          "humanities": 2
+        }
+      }
     ]
   },
   {
-    type:'stance',
-    dim:'证伪建模 vs 情境诠释',
-    text:'看到一个结论时，我会先想它能不能被验证或推翻，而不是先看它是否贴近具体经验。',
-    stances:{
-      support:{ dimDelta:{ fc:2 }, spec:{ science:2 } },
-      neutral:{ dimDelta:{ fc:0 }, spec:{} },
-      oppose:{ dimDelta:{ fc:-2 }, spec:{ humanities:1 } }
+    "type": "stance",
+    "dim": "证伪建模 vs 情境诠释",
+    "text": "看到一个结论时，我会先想它能不能被验证或推翻，而不是先看它是否贴近具体经验。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "fc": 2
+        },
+        "spec": {
+          "science": 2
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "fc": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "fc": -2
+        },
+        "spec": {
+          "humanities": 1
+        }
+      }
     }
   },
   {
-    type:'stance',
-    dim:'证伪建模 vs 情境诠释',
-    text:'很多事情一旦被量化，反而会失去重要信息，这对我来说比“先量化再讨论”更接近真实。',
-    stances:{
-      support:{ dimDelta:{ fc:-2 }, spec:{ humanities:2 } },
-      neutral:{ dimDelta:{ fc:0 }, spec:{} },
-      oppose:{ dimDelta:{ fc:2 }, spec:{ science:1, engineering:1 } }
+    "type": "stance",
+    "dim": "证伪建模 vs 情境诠释",
+    "text": "很多事情一旦被量化，反而会失去重要信息，这对我来说比“先量化再讨论”更接近真实。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "fc": -2
+        },
+        "spec": {
+          "humanities": 2
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "fc": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "fc": 2
+        },
+        "spec": {
+          "science": 1,
+          "engineering": 1
+        }
+      }
     }
   },
   {
-    type:'stance',
-    dim:'证伪建模 vs 情境诠释',
-    text:'相比个别人的故事，我更相信能重复出现的数据模式，而不是更相信具体情境里的感受。',
-    stances:{
-      support:{ dimDelta:{ fc:2 }, spec:{ science:2, engineering:1 } },
-      neutral:{ dimDelta:{ fc:0 }, spec:{} },
-      oppose:{ dimDelta:{ fc:-2 }, spec:{ humanities:1 } }
+    "type": "stance",
+    "dim": "证伪建模 vs 情境诠释",
+    "text": "相比个别人的故事，我更相信能重复出现的数据模式，而不是更相信具体情境里的感受。",
+    "stances": {
+      "support": {
+        "dimDelta": {
+          "fc": 2
+        },
+        "spec": {
+          "science": 2,
+          "engineering": 1
+        }
+      },
+      "neutral": {
+        "dimDelta": {
+          "fc": 0
+        },
+        "spec": {}
+      },
+      "oppose": {
+        "dimDelta": {
+          "fc": -2
+        },
+        "spec": {
+          "humanities": 1
+        }
+      }
     }
   },
   {
-    type:'choice',
-    dim:'证伪建模 vs 情境诠释',
-    text:'新闻说“每天喝咖啡的人更长寿”，你第一反应更像——',
-    options:[
-      { text:'先看研究怎么做的，再说信不信。', dimDelta:{ fc:2 }, spec:{ science:2 } },
-      { text:'是不是漏掉了别的关键因素。', dimDelta:{ fc:1 }, spec:{ science:1, economics:1 } },
-      { text:'每个人生活都不一样，这种结论太容易一刀切。', dimDelta:{ fc:-1 }, spec:{ humanities:1 } },
-      { text:'“更长寿”放在不同语境里意思都不一样。', dimDelta:{ fc:-2 }, spec:{ humanities:2 } }
+    "type": "choice",
+    "dim": "证伪建模 vs 情境诠释",
+    "text": "新闻说“每天喝咖啡的人更长寿”，你第一反应更像——",
+    "options": [
+      {
+        "text": "先看研究怎么做的，再说信不信。",
+        "dimDelta": {
+          "fc": 2
+        },
+        "spec": {
+          "science": 2
+        }
+      },
+      {
+        "text": "是不是漏掉了别的关键因素。",
+        "dimDelta": {
+          "fc": 1
+        },
+        "spec": {
+          "science": 1,
+          "economics": 1
+        }
+      },
+      {
+        "text": "每个人生活都不一样，这种结论太容易一刀切。",
+        "dimDelta": {
+          "fc": -1
+        },
+        "spec": {
+          "humanities": 1
+        }
+      },
+      {
+        "text": "“更长寿”放在不同语境里意思都不一样。",
+        "dimDelta": {
+          "fc": -2
+        },
+        "spec": {
+          "humanities": 2
+        }
+      }
     ]
   },
   {
-    type:'choice',
-    dim:'证伪建模 vs 情境诠释',
-    text:'复盘一个失败项目时，你最相信哪类材料——',
-    options:[
-      { text:'时间线、数据和关键决策点。', dimDelta:{ fc:2 }, spec:{ engineering:1, science:1 } },
-      { text:'当时哪些判断后来被事实打脸了。', dimDelta:{ fc:1 }, spec:{ science:1, engineering:1 } },
-      { text:'参与的人当时在什么处境里做决定。', dimDelta:{ fc:-1 }, spec:{ humanities:1 } },
-      { text:'很多失败就是情境造成的，未必能总结成固定模型。', dimDelta:{ fc:-2 }, spec:{ humanities:2 } }
+    "type": "choice",
+    "dim": "证伪建模 vs 情境诠释",
+    "text": "复盘一个失败项目时，你最相信哪类材料——",
+    "options": [
+      {
+        "text": "时间线、数据和关键决策点。",
+        "dimDelta": {
+          "fc": 2
+        },
+        "spec": {
+          "science": 1,
+          "engineering": 1
+        }
+      },
+      {
+        "text": "当时哪些判断后来被事实打脸了。",
+        "dimDelta": {
+          "fc": 1
+        },
+        "spec": {
+          "science": 1,
+          "engineering": 1
+        }
+      },
+      {
+        "text": "参与的人当时在什么处境里做决定。",
+        "dimDelta": {
+          "fc": -1
+        },
+        "spec": {
+          "humanities": 1
+        }
+      },
+      {
+        "text": "很多失败就是情境造成的，未必能总结成固定模型。",
+        "dimDelta": {
+          "fc": -2
+        },
+        "spec": {
+          "humanities": 2
+        }
+      }
     ]
   }
 ];
@@ -622,6 +1129,11 @@ function updateProgress() {
   document.getElementById('progress-bar-fill').style.width = pct + '%';
   document.getElementById('q-counter').textContent = `${currentQ + 1} / ${total}`;
   document.getElementById('btn-back').classList.toggle('visible', currentQ > 0);
+}
+
+function syncLandingQuestionCount() {
+  const el = document.getElementById('landing-question-count');
+  if (el) el.textContent = String(QUESTIONS.length);
 }
 
 function shuffleArr(arr) {
@@ -848,6 +1360,7 @@ document.getElementById('btn-retry').addEventListener('click', () => {
   document.getElementById('progress-bar-wrap').style.display = 'none';
   showScreen('screen-landing');
 });
+syncLandingQuestionCount();
 </script>
 </body>
 </html>
