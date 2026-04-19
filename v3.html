@@ -375,6 +375,62 @@
       color: var(--text-secondary);
       font-size: 12px;
     }
+    .catalog {
+      background: var(--surface-strong);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+    .catalog h3 {
+      font-size: 16px;
+      margin-bottom: 16px;
+    }
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .catalog-card {
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 16px;
+      background: rgba(255,255,255,.6);
+    }
+    .catalog-card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .catalog-badge {
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      color: white;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .catalog-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .catalog-short {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .catalog-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 6px;
+    }
+    .catalog-fit {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
     .footnote {
       color: var(--text-muted);
       line-height: 1.8;
@@ -389,7 +445,7 @@
       font-size: 14px;
     }
     @media (max-width: 760px) {
-      .stats, .type-grid, .result-grid { grid-template-columns: 1fr; }
+      .stats, .type-grid, .result-grid, .catalog-grid { grid-template-columns: 1fr; }
       .hero { padding-left: 22px; padding-right: 22px; }
       #screen-question .panel, #screen-result .panel { padding: 22px; }
     }
@@ -419,7 +475,7 @@
           <div class="stat"><span class="num">2</span><span class="label">主辅结果</span></div>
         </div>
         <div class="type-grid">
-          <div class="type-pill type-a"><strong>A 型</strong><span>工程 / 计算机 / 数学 / 数据</span></div>
+          <div class="type-pill type-a"><strong>A 型</strong><span>工程 / 计算机 / 数学 / 数据 / 医学</span></div>
           <div class="type-pill type-b"><strong>B 型</strong><span>商业 / 管理 / 金融 / 创业</span></div>
           <div class="type-pill type-c"><strong>C 型</strong><span>人文 / 法律 / 教育 / 传媒</span></div>
           <div class="type-pill type-d"><strong>D 型</strong><span>艺术 / 设计 / 心理 / 社会服务</span></div>
@@ -448,6 +504,10 @@
         </div>
         <div class="bars" id="bars"></div>
         <div class="recommend" id="recommend"></div>
+        <div class="catalog">
+          <h3>四型全图鉴</h3>
+          <div class="catalog-grid" id="catalog-grid"></div>
+        </div>
         <div class="footnote">
           这份结果更适合做初步探索。真正选专业时，还要一起看成绩、长期投入意愿、家庭资源、学校课程设置和就业环境。
         </div>
@@ -461,8 +521,8 @@
       a: {
         key: 'A',
         name: '理性解谜者',
-        short: '工程 / 计算机 / 数学 / 数据',
-        majors: '计算机科学、人工智能、数据科学、软件工程、电子工程、机械工程、数学、统计、信息安全、金融工程',
+        short: '工程 / 计算机 / 数学 / 数据 / 医学',
+        majors: '计算机科学、人工智能、数据科学、软件工程、电子工程、机械工程、数学、统计、信息安全、金融工程、临床医学、药学、生物医学工程、公共卫生',
         desc: '你通常偏好结构清晰、逻辑严密、挑战明确的问题。复杂系统不会让你退缩，反而容易激发你的投入感。',
         fit: '适合技术、分析、建模、系统设计和问题求解类路径。',
         color: '#295ea8'
@@ -1314,7 +1374,27 @@ let currentQ = 0;
       `;
 
       renderBars();
+      renderCatalog();
       showScreen('screen-result');
+    }
+
+    function renderCatalog() {
+      const grid = document.getElementById('catalog-grid');
+      grid.innerHTML = '';
+      Object.entries(TRACKS).forEach(([, track]) => {
+        const card = document.createElement('div');
+        card.className = 'catalog-card';
+        card.innerHTML = `
+          <div class="catalog-card-header">
+            <span class="catalog-badge" style="background:${track.color}">${track.key} 型</span>
+            <span class="catalog-name">${track.name}</span>
+          </div>
+          <div class="catalog-short">${track.short}</div>
+          <div class="catalog-desc">${track.desc}</div>
+          <div class="catalog-fit">${track.fit}</div>
+        `;
+        grid.appendChild(card);
+      });
     }
 
     document.getElementById('btn-start').addEventListener('click', startQuiz);
